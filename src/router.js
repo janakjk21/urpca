@@ -9,6 +9,8 @@ import Consulting from './components/Consulting/Consulting';
 import CaseStudy from './components/CaseStudy/CaseStudy';
 import CaseStudySingle from './components/CaseStudy/CaseStudySingle';
 import Dashboard from './components/Dashboard/Dashboard';
+import Faqfullpage from './components/FAQ/Faqfullpage';
+import Login from './components/login/Login';
 // import './Assets/css/responsive.css';
 // import './Assets/css/custom-animation.css';
 // import './Assets/css/magnific-popup.css';
@@ -27,6 +29,10 @@ export const router = createBrowserRouter([
 	{
 		path: '/faq',
 		element: <Faq />,
+	},
+	{
+		path: '/faqfullpage',
+		element: <Faqfullpage />,
 	},
 	{
 		path: '/Pricing',
@@ -56,5 +62,9 @@ export const router = createBrowserRouter([
 	{
 		path: '/dashboard',
 		element: <Dashboard></Dashboard>,
+	},
+	{
+		path: '/login',
+		element: <Login></Login>,
 	},
 ]);

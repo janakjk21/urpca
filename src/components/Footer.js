@@ -153,13 +153,13 @@ export default function Footer() {
 							<div className='col-xl-12'>
 								<div className='text-center'>
 									<span className='text-light-gray'>
-										Copyright © 2020 by{' '}
+										Copyright © 2023 by{' '}
 										<a
 											className='text-primary-color'
 											target='_blank'
 											href='https://themeforest.net/user/webextheme'>
 											{' '}
-											WebexTheme
+											Janak / Sanjo
 										</a>{' '}
 										| All rights reserved{' '}
 									</span>
