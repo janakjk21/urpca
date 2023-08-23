@@ -11,11 +11,16 @@ import CaseStudySingle from './components/CaseStudy/CaseStudySingle';
 import Dashboard from './components/Dashboard/Dashboard';
 import Faqfullpage from './components/FAQ/Faqfullpage';
 import Login from './components/login/Login';
+import Orderlist from './components/Dashboard/Orderlist';
 // import './Assets/css/responsive.css';
 // import './Assets/css/custom-animation.css';
 // import './Assets/css/magnific-popup.css';
 // import './Assets/css/meanmenu.min.css';
 // import './Assets/css/owl.carousel.min.css';
+import CaseStudyform from './components/Dashboard/CaseStudy';
+import FAQForm from './components/Dashboard/FAQForm ';
+import Book from './components/books/Book';
+import Booksform from './components/Dashboard/Booksform';
 
 export const router = createBrowserRouter([
 	{
@@ -66,5 +71,25 @@ export const router = createBrowserRouter([
 	{
 		path: '/login',
 		element: <Login></Login>,
+	},
+	{
+		path: '/orderlist',
+		element: <Orderlist></Orderlist>,
+	},
+	{
+		path: '/editcase',
+		element: <CaseStudyform></CaseStudyform>,
+	},
+	{
+		path: '/faqform',
+		element: <FAQForm></FAQForm>,
+	},
+	{
+		path: '/books',
+		element: <Book></Book>,
+	},
+	{
+		path: '/bookform',
+		element: <Booksform></Booksform>,
 	},
 ]);
