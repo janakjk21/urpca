@@ -1,6 +1,6 @@
 import { createBrowserRouter, useParams } from 'react-router-dom';
 import Home from './components/Home/Hero';
-// import './Assets/css/bootstrap.min.css';
+
 import './Assets/css/style.css';
 import Aboutus from './components/Aboutus/Aboutus';
 import Faq from './components/FAQ/Faq';
@@ -12,11 +12,7 @@ import Dashboard from './components/Dashboard/Dashboard';
 import Faqfullpage from './components/FAQ/Faqfullpage';
 import Login from './components/login/Login';
 import Orderlist from './components/Dashboard/Orderlist';
-// import './Assets/css/responsive.css';
-// import './Assets/css/custom-animation.css';
-// import './Assets/css/magnific-popup.css';
-// import './Assets/css/meanmenu.min.css';
-// import './Assets/css/owl.carousel.min.css';
+
 import CaseStudyform from './components/Dashboard/CaseStudy';
 import FAQForm from './components/Dashboard/FAQForm ';
 import Book from './components/books/Book';

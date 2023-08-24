@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import logo from '../Assets/images/logo.png';
 import {
 	FaFacebookF,
@@ -7,315 +7,212 @@ import {
 	FaGooglePlusG,
 } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
+import Dropdown from 'rc-dropdown';
+import 'rc-dropdown/assets/index.css';
+import { Divider, MenuItem } from '@chakra-ui/react';
 
 export default function Nav() {
+	const [isSmallScreen, setIsSmallScreen] = useState(false);
+
+	useEffect(() => {
+		const handleResize = () => {
+			setIsSmallScreen(window.innerWidth <= 768); // You can adjust the breakpoint
+		};
+
+		window.addEventListener('resize', handleResize);
+		handleResize(); // Initial check
+
+		return () => {
+			window.removeEventListener('resize', handleResize);
+		};
+	}, []);
+	return <>{isSmallScreen ? <Navformobile /> : <Navfordesktop />}</>;
+}
+
+const Navfordesktop = (props) => {
 	return (
-		<>
-			{' '}
-			<header className='header-style-two'>
-				<div className='header-wrapper'>
-					<div className='header-top-area bg-gradient-color d-none d-lg-block'>
-						<div className='container'>
-							<div className='row'>
-								<div className='col-lg-6 header-top-left-part'>
-									<span className='address'>
-										<i className='webexflaticon flaticon-placeholder-1' /> 121
-										King Street, Melbourne
-									</span>
-									<span className='phone'>
-										<i className='webexflaticon flaticon-send' />{' '}
-										example@gmail.com
-									</span>
-								</div>
-								<div className='col-lg-6 header-top-right-part text-right'>
-									<ul className='social-links'>
-										<li>
-											<a href='#'>
-												<FaFacebookF />
-											</a>
-										</li>
-										<li>
-											<a href='#'>
-												<FaTwitter />
-											</a>
-										</li>
-										<li>
-											<a href='#'>
-												<FaLinkedinIn />
-											</a>
-										</li>
-										<li>
-											<a href='#'>
-												<FaGooglePlusG />
-											</a>
-										</li>
-									</ul>
-								</div>
+		<header className='header-style-two'>
+			<div className='header-wrapper'>
+				<div className='header-top-area bg-gradient-color d-none d-lg-block'>
+					<div className='container'>
+						<div className='row'>
+							<div className='col-lg-6 header-top-left-part'>
+								<span className='address'>
+									<i className='webexflaticon flaticon-placeholder-1' /> 121
+									King Street, Melbourne
+								</span>
+								<span className='phone'>
+									<i className='webexflaticon flaticon-send' />{' '}
+									example@gmail.com
+								</span>
+							</div>
+							<div className='col-lg-6 header-top-right-part text-right'>
+								<ul className='social-links'>
+									<li>
+										<a href='#'>
+											<FaFacebookF />
+										</a>
+									</li>
+									<li>
+										<a href='#'>
+											<FaTwitter />
+										</a>
+									</li>
+									<li>
+										<a href='#'>
+											<FaLinkedinIn />
+										</a>
+									</li>
+									<li>
+										<a href='#'>
+											<FaGooglePlusG />
+										</a>
+									</li>
+								</ul>
 							</div>
 						</div>
 					</div>
-					<div className='bt_blank_nav' />
-					<div className='header-navigation-area two-layers-header header-middlee bt_stick bt_sticky'>
-						<div className='container'>
-							<div className='row'>
-								<div className='col-md-12'>
-									<a
-										className='navbar-brand logo f-left mrt-10 mrt-md-0'
-										href='index.html'>
-										<img
-											id='logo-image'
-											className='img-center'
-											src={logo}
-											alt=''
-										/>
-									</a>
-									<div className='mobile-menu-right' />
-									<div className='header-searchbox-style-two d-none d-xl-block'>
-										<div className='side-panel side-panel-trigger text-right d-none d-lg-block'>
-											<span className='bar1' />
-											<span className='bar2' />
-											<span className='bar3' />
-										</div>
-										<div className='show-searchbox'>
-											<a href='#'>
-												<i className='webex-icon-Search' />
-											</a>
-										</div>
-										<div className='toggle-searchbox'>
-											<form action='#' id='searchform-all' method='get'>
-												<div>
-													<input
-														type='text'
-														id='s'
-														className='form-control'
-														placeholder='Search...'
-													/>
-													<div className='input-box'>
-														<input
-															type='submit'
-															defaultValue
-															id='searchsubmit'
-														/>
-														<i className='fas fa-search' />
-													</div>
-												</div>
-											</form>
-										</div>
-									</div>
-									<div className='side-panel-content'>
-										<div className='close-icon'>
-											<button>
-												<i className='webex-icon-cross' />
-											</button>
-										</div>
-										<div className='side-panel-logo mrb-30'>
-											<a href='index.html'>
-												<img src='images/logo-sidebar-dark.png' alt='' />
-											</a>
-										</div>
-										<div className='side-info mrb-30'>
-											<div className='side-panel-element mrb-25'>
-												<h4 className='mrb-10'>Office Address</h4>
-												<ul className='list-items'>
+				</div>
+				<div className='bt_blank_nav' />
+				<div className='header-navigation-area two-layers-header header-middlee bt_stick bt_sticky'>
+					<div className='container'>
+						<div className='row'>
+							<div className='col-md-12'>
+								<Link
+									className='navbar-brand logo f-left mrt-10 mrt-md-0'
+									to='/'>
+									<img
+										id='logo-image'
+										className='img-center'
+										src={logo}
+										alt=''
+									/>
+								</Link>
+								<div className='mobile-menu-right' />
+
+								<div className='main-menu f-right'>
+									<nav id='mobile-menu-right'>
+										<ul>
+											<li className='has-sub'>
+												<Link to='/'>Home</Link>
+											</li>
+											<li>
+												<Link to='/aboutus'>About</Link>
+											</li>
+											<li className='has-sub'>
+												<Link to='/faq'>Faq</Link>
+												<ul className='sub-menu'>
 													<li>
-														<span className='fa fa-map-marker-alt mrr-10 text-primary-color' />
-														121 King Street, Australia
+														<Link to='/faq'>Faq</Link>
 													</li>
 													<li>
-														<span className='fas fa-envelope mrr-10 text-primary-color' />
-														example@gmail.com
+														<Link to='/faqfullpage'>Faq fullpage</Link>
 													</li>
 													<li>
-														<span className='fas fa-phone-alt mrr-10 text-primary-color' />
-														(00) 2500-123-4567
+														<Link to='/Pricing'>Pricing</Link>
 													</li>
 												</ul>
-											</div>
-											<div className='side-panel-element mrb-30'>
-												<h4 className='mrb-15'>Pintarest</h4>
-												<ul className='pintarest-list'>
-													<li>
-														<a href='#'>
-															<img
-																className='img-full'
-																src='images/side-panel/1.jpg'
-																alt=''
-															/>
-														</a>
-													</li>
-													<li>
-														<a href='#'>
-															<img
-																className='img-full'
-																src='images/side-panel/2.jpg'
-																alt=''
-															/>
-														</a>
-													</li>
-													<li>
-														<a href='#'>
-															<img
-																className='img-full'
-																src='images/side-panel/3.jpg'
-																alt=''
-															/>
-														</a>
-													</li>
-													<li>
-														<a href='#'>
-															<img
-																className='img-full'
-																src='images/side-panel/4.jpg'
-																alt=''
-															/>
-														</a>
-													</li>
-													<li>
-														<a href='#'>
-															<img
-																className='img-full'
-																src='images/side-panel/5.jpg'
-																alt=''
-															/>
-														</a>
-													</li>
-													<li>
-														<a href='#'>
-															<img
-																className='img-full'
-																src='images/side-panel/6.jpg'
-																alt=''
-															/>
-														</a>
-													</li>
+											</li>
+											<li className='has-sub'>
+												<Link to='/Consulting'>Services</Link>
+												<ul className='sub-menu'>
+													{/* ... (other service links) */}
 												</ul>
-											</div>
-										</div>
-										<h4 className='mrb-15'>Social List</h4>
-										<ul className='social-list'>
-											<li>
-												<a href='#'>
-													<i className='fab fa-facebook' />
-												</a>
 											</li>
-											<li>
-												<a href='#'>
-													<i className='fab fa-twitter' />
-												</a>
+											<li className='has-sub right-view'>
+												<Link to='/casestudy'>Case Study</Link>
+												<ul className='sub-menu'>
+													{/* ... (other case study links) */}
+												</ul>
 											</li>
-											<li>
-												<a href='#'>
-													<i className='fab fa-instagram' />
-												</a>
-											</li>
-											<li>
-												<a href='#'>
-													<i className='fab fa-google-plus' />
-												</a>
+											<li className='has-sub right-view'>
+												<Link to='/login'>Login</Link>
+												<ul className='sub-menu'>
+													{/* ... (other news links) */}
+												</ul>
 											</li>
 										</ul>
-									</div>
-									<div className='main-menu f-right'>
-										<nav id='mobile-menu-right'>
-											<ul>
-												<li className='has-sub'>
-													<Link to='/'>Home</Link>
-												</li>
-												<li>
-													<Link to='/aboutus'> About</Link>
-												</li>
-												<li className='has-sub'>
-													<a href='#'>Faq</a>
-													<ul className='sub-menu'>
-														<li>
-															<Link> Faq</Link>
-														</li>
-														<li>
-															<Link> Pricing</Link>
-														</li>
-													</ul>
-												</li>
-												<li className='has-sub'>
-													<a href='#'>Services</a>
-													<ul className='sub-menu'>
-														<li>
-															<a href='page-all-services.html'>All Services</a>
-														</li>
-														<li>
-															<a href='service-business-maintanance.html'>
-																Business Maintanance
-															</a>
-														</li>
-														<li>
-															<a href='service-finance-and-management.html'>
-																Finance &amp; Management
-															</a>
-														</li>
-														<li>
-															<a href='service-business-consulting.html'>
-																Business Consulting
-															</a>
-														</li>
-														<li>
-															<a href='service-business-partnership.html'>
-																Business Partnership
-															</a>
-														</li>
-														<li>
-															<a href='service-company-development.html'>
-																Company Development
-															</a>
-														</li>
-														<li>
-															<a href='service-investment-planning.html'>
-																Investment Planning
-															</a>
-														</li>
-													</ul>
-												</li>
-												<li className='has-sub right-view'>
-													<a href='#'>Case Study</a>
-													<ul className='sub-menu'>
-														<li>
-															<a href='page-case-study.html'>All Case Study</a>
-														</li>
-														<li>
-															<a href='page-single-case-study.html'>
-																Single Case Study
-															</a>
-														</li>
-													</ul>
-												</li>
-												<li className='has-sub right-view'>
-													<a href='#'>News</a>
-													<ul className='sub-menu'>
-														<li>
-															<a href='page-news.html'>News Classic</a>
-														</li>
-														<li>
-															<a href='page-news-left-sidebar.html'>
-																News Left Sidebar
-															</a>
-														</li>
-														<li>
-															<a href='page-news-right-sidebar.html'>
-																News Right Sidebar
-															</a>
-														</li>
-														<li>
-															<a href='page-single-news.html'>Single News</a>
-														</li>
-													</ul>
-												</li>
-											</ul>
-										</nav>
-									</div>
+									</nav>
 								</div>
 							</div>
 						</div>
 					</div>
 				</div>
-			</header>
+			</div>
+		</header>
+	);
+};
+
+const Navformobile = (props) => {
+	const [isDropdownVisible, setIsDropdownVisible] = useState(false);
+
+	const handleDropdownVisibleChange = (visible) => {
+		setIsDropdownVisible(visible);
+	};
+
+	const dropdownMenu = (
+		<>
+			<div className='mobile-menu-right mean-container'>
+				<div className='mean-bar'>
+					<nav className='mean-nav'>
+						<ul style={{ display: 'block' }}>
+							<li className='has-sub'>
+								<Link to='/'>Home</Link>
+							</li>
+							<li>
+								<Link to='/aboutus'>About</Link>
+							</li>
+							<li className='has-sub'>
+								<Link to='#'>Page</Link>
+							</li>
+							<li className='has-sub'>
+								<li>
+									<Link to='/faq'>Faq</Link>
+								</li>
+								<li>
+									<Link to='/faqfullpage'>Faq fullpage</Link>
+								</li>
+								<li>
+									<Link to='/Pricing'>Pricing</Link>
+								</li>
+							</li>
+							<li className='has-sub right-view'>
+								<Link to='/casestudy'>Case Study</Link>
+							</li>
+							<li className='has-sub right-view'>
+								<Link to='/Consulting'>Services</Link>
+							</li>
+						</ul>
+					</nav>
+				</div>
+			</div>
 		</>
 	);
-}
+
+	return (
+		<>
+			<nav className='navbar navbar-expand-lg navbar-light bg-light'>
+				<a className='navbar-brand  mrt-10 mrt-md-0' href='index.html'>
+					<img
+						id='logo-image'
+						className='img-center'
+						src={logo}
+						alt=''
+						style={{ left: '0px', padding: '0px', margin: '0px' }}
+					/>
+				</a>
+
+				<Dropdown
+					visible={isDropdownVisible}
+					onVisibleChange={handleDropdownVisibleChange}
+					overlay={dropdownMenu}
+					animation='slide-up'
+					trigger={['click']}>
+					<button className='navbar-toggler'>
+						<span className='navbar-toggler-icon' />
+					</button>
+				</Dropdown>
+			</nav>
+		</>
+	);
+};
