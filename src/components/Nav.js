@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import logo from '../Assets/images/logo.png';
+import logo from '../Assets/images/logo1.png';
 import {
 	FaFacebookF,
 	FaTwitter,
@@ -84,6 +84,7 @@ const Navfordesktop = (props) => {
 									<img
 										id='logo-image'
 										className='img-center'
+										style={{ color: 'black', backgroundColor: '#2552B4' }}
 										src={logo}
 										alt=''
 									/>
