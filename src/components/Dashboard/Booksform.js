@@ -2,12 +2,12 @@ import React from 'react';
 import { useState } from 'react';
 import Nav from './Nav';
 import Sidebar from './Sidebar';
+import NavSidebar from './NavSidebar';
 
 export default function Booksform() {
 	return (
 		<div className='wrapper'>
-			<Nav></Nav>
-			<Sidebar></Sidebar>
+			<NavSidebar></NavSidebar>
 
 			<div className='content-page'>
 				<div className='content'>

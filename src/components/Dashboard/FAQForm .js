@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import Nav from './Nav';
 import Sidebar from './Sidebar';
+import NavSidebar from './NavSidebar';
 
 const FAQForm = ({ data }) => {
 	const [title, setTitle] = useState('');
@@ -17,8 +18,7 @@ const FAQForm = ({ data }) => {
 	return (
 		<div className='wrapper'>
 			<div className='wrapper'>
-				<Nav></Nav>
-				<Sidebar></Sidebar>
+				<NavSidebar></NavSidebar>
 				<div className='content-page'>
 					<div className='content'>
 						<div className='container-fluid'>

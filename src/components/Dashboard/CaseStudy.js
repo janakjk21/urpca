@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import Nav from './Nav';
 import Sidebar from './Sidebar';
+import NavSidebar from './NavSidebar';
 
 const CaseStudy = () => {
 	const [formData, setFormData] = useState({
@@ -48,8 +49,7 @@ const CaseStudy = () => {
 	return (
 		<div className='wrapper'>
 			<div className='wrapper'>
-				<Nav></Nav>
-				<Sidebar></Sidebar>
+				<NavSidebar></NavSidebar>
 				<div className='content-page'>
 					<div className='content'>
 						<div className='container-fluid'>

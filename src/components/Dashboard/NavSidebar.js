@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
+import Nav from './Nav';
 
+import Sidebar from './Sidebar';
 import Content1 from './Content1';
 import '../../Assets/css/app-modern.min.css';
-import NavSidebar from './NavSidebar';
-export default function Dashboard() {
+export default function NavSidebar() {
 	const [isSmallScreen, setIsSmallScreen] = useState(false);
 
 	useEffect(() => {
@@ -19,9 +20,18 @@ export default function Dashboard() {
 		};
 	}, []);
 	return (
-		<div className='wrapper'>
-			<NavSidebar></NavSidebar>
-			<Content1></Content1>
-		</div>
+		<>
+			{isSmallScreen ? (
+				<>
+					<Nav></Nav>
+				</>
+			) : (
+				<>
+					{' '}
+					<Nav></Nav>
+					<Sidebar></Sidebar>
+				</>
+			)}
+		</>
 	);
 }

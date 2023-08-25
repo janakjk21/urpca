@@ -1,7 +1,41 @@
-import React from 'react'
+import React from 'react';
 
 export default function Content1() {
-  return (
+	const campaignCardsData = [
+		{
+			title: 'Campaign Sent',
+			value: '9,184',
+			percentage: '3.27',
+			color: 'text-success',
+			arrow: 'mdi-arrow-up-bold',
+			chartColor: '#727cf5',
+		},
+		{
+			title: 'New Leads',
+			value: '3,254',
+			percentage: '5.38',
+			color: 'text-danger',
+			arrow: 'mdi-arrow-down-bold',
+			chartColor: '#0acf97',
+		},
+		{
+			title: 'Deals',
+			value: '861',
+			percentage: '4.87',
+			color: 'text-success',
+			arrow: 'mdi-arrow-up-bold',
+			chartColor: '#727cf5',
+		},
+		{
+			title: 'Booked Revenue',
+			value: '$253k',
+			percentage: '11.7',
+			color: 'text-success',
+			arrow: 'mdi-arrow-up-bold',
+			chartColor: '#f46a6a',
+		},
+	];
+	return (
 		<div>
 			<div className='content-page'>
 				<div className='content'>
@@ -12,9 +46,7 @@ export default function Content1() {
 							<div className='col-12'>
 								<div className='page-title-box'>
 									<div className='page-title-right'>
-										<ol className='breadcrumb m-0'>
-											
-										</ol>
+										<ol className='breadcrumb m-0'></ol>
 									</div>
 									<h4 className='page-title'>CRM</h4>
 								</div>
@@ -22,129 +54,17 @@ export default function Content1() {
 						</div>
 						{/* end page title */}
 						<div className='row'>
-							<div className='col-md-6 col-xl-3'>
-								<div className='card'>
-									<div className='card-body'>
-										<div className='row align-items-center'>
-											<div className='col-6'>
-												<h5
-													className='text-muted fw-normal mt-0 text-truncate'
-													title='Campaign Sent'>
-													Campaign Sent
-												</h5>
-												<h3 className='my-2 py-1'>9,184</h3>
-												<p className='mb-0 text-muted'>
-													<span className='text-success me-2'>
-														<i className='mdi mdi-arrow-up-bold' /> 3.27%
-													</span>
-												</p>
-											</div>
-											<div className='col-6'>
-												<div className='text-end'>
-													<div id='campaign-sent-chart' data-colors='#727cf5' />
-												</div>
-											</div>
-										</div>{' '}
-										{/* end row*/}
-									</div>{' '}
-									{/* end card-body */}
-								</div>{' '}
-								{/* end card */}
-							</div>{' '}
-							{/* end col */}
-							<div className='col-md-6 col-xl-3'>
-								<div className='card'>
-									<div className='card-body'>
-										<div className='row align-items-center'>
-											<div className='col-6'>
-												<h5
-													className='text-muted fw-normal mt-0 text-truncate'
-													title='New Leads'>
-													New Leads
-												</h5>
-												<h3 className='my-2 py-1'>3,254</h3>
-												<p className='mb-0 text-muted'>
-													<span className='text-danger me-2'>
-														<i className='mdi mdi-arrow-down-bold' /> 5.38%
-													</span>
-												</p>
-											</div>
-											<div className='col-6'>
-												<div className='text-end'>
-													<div id='new-leads-chart' data-colors='#0acf97' />
-												</div>
-											</div>
-										</div>{' '}
-										{/* end row*/}
-									</div>{' '}
-									{/* end card-body */}
-								</div>{' '}
-								{/* end card */}
-							</div>{' '}
-							{/* end col */}
-							<div className='col-md-6 col-xl-3'>
-								<div className='card'>
-									<div className='card-body'>
-										<div className='row align-items-center'>
-											<div className='col-6'>
-												<h5
-													className='text-muted fw-normal mt-0 text-truncate'
-													title='Deals'>
-													Deals
-												</h5>
-												<h3 className='my-2 py-1'>861</h3>
-												<p className='mb-0 text-muted'>
-													<span className='text-success me-2'>
-														<i className='mdi mdi-arrow-up-bold' /> 4.87%
-													</span>
-												</p>
-											</div>
-											<div className='col-6'>
-												<div className='text-end'>
-													<div id='deals-chart' data-colors='#727cf5' />
-												</div>
-											</div>
-										</div>{' '}
-										{/* end row*/}
-									</div>{' '}
-									{/* end card-body */}
-								</div>{' '}
-								{/* end card */}
-							</div>{' '}
-							{/* end col */}
-							<div className='col-md-6 col-xl-3'>
-								<div className='card'>
-									<div className='card-body'>
-										<div className='row align-items-center'>
-											<div className='col-6'>
-												<h5
-													className='text-muted fw-normal mt-0 text-truncate'
-													title='Booked Revenue'>
-													Booked Revenue
-												</h5>
-												<h3 className='my-2 py-1'>$253k</h3>
-												<p className='mb-0 text-muted'>
-													<span className='text-success me-2'>
-														<i className='mdi mdi-arrow-up-bold' /> 11.7%
-													</span>
-												</p>
-											</div>
-											<div className='col-6'>
-												<div className='text-end'>
-													<div
-														id='booked-revenue-chart'
-														data-colors='#0acf97'
-													/>
-												</div>
-											</div>
-										</div>{' '}
-										{/* end row*/}
-									</div>{' '}
-									{/* end card-body */}
-								</div>{' '}
-								{/* end card */}
-							</div>{' '}
-							{/* end col */}
+							{campaignCardsData.map((card, index) => (
+								<CampaignCard
+									key={index}
+									name={card.title}
+									price={card.value}
+									percentage={card.percentage}
+									color={card.color}
+									arrow={card.arrow}
+									chartColor={card.chartColor}
+								/>
+							))}
 						</div>
 						{/* end row */}
 						<div className='row'>
@@ -637,9 +557,9 @@ export default function Content1() {
 							<div className='col-md-6'>© Hyper Janak/Sunjog </div>
 							<div className='col-md-6'>
 								<div className='text-md-end footer-links d-none d-md-block'>
-									<a href='javascript: void(0);'>About</a>
-									<a href='javascript: void(0);'>Support</a>
-									<a href='javascript: void(0);'>Contact Us</a>
+									<a href='javasc'>About</a>
+									<a href='javascrip'>Support</a>
+									<a href='javascrip'>Contact Us</a>
 								</div>
 							</div>
 						</div>
@@ -650,3 +570,51 @@ export default function Content1() {
 		</div>
 	);
 }
+
+const CampaignCard = ({ name, price, percentage, chartColor }) => {
+	const isIncrease = parseFloat(percentage) > 0;
+
+	return (
+		<div className='col-md-6 col-xl-3'>
+			<div className='card'>
+				<div className='card-body'>
+					<div className='row align-items-center'>
+						<div className='col-6'>
+							<h5
+								className='text-muted fw-normal mt-0 text-truncate'
+								title={name}>
+								{name}
+							</h5>
+							<h3 className='my-2 py-1'>{price}</h3>
+							<p className='mb-0 text-muted'>
+								<span
+									className={
+										isIncrease ? 'text-success me-2' : 'text-danger me-2'
+									}
+									style={{ color: `${chartColor}` }}>
+									<i
+										style={{ color: `${chartColor}` }}
+										className={
+											isIncrease
+												? 'mdi mdi-arrow-up-bold'
+												: 'mdi mdi-arrow-down-bold'
+										}
+									/>{' '}
+									{percentage}%
+								</span>
+							</p>
+						</div>
+						<div className='col-6'>
+							<div className='text-end'>
+								<div
+									id='campaign-sent-chart'
+									data-colors={isIncrease ? '#00c292' : '#f46a6a'}
+								/>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	);
+};

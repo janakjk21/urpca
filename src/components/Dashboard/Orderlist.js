@@ -3,6 +3,7 @@ import Nav from './Nav';
 import Sidebar from './Sidebar';
 import { FaEdit, FaTrash } from 'react-icons/fa';
 import { DeleteIcon } from '@chakra-ui/icons';
+import NavSidebar from './NavSidebar';
 export default function Orderlist() {
 	const orders = [
 		{
@@ -22,8 +23,7 @@ export default function Orderlist() {
 	];
 	return (
 		<div className='wrapper'>
-			<Nav></Nav>
-			<Sidebar></Sidebar>
+			<NavSidebar></NavSidebar>
 			<div className='content-page'>
 				<div className='content'>
 					<div className='container-fluid'>

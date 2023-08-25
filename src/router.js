@@ -59,6 +59,10 @@ export const router = createBrowserRouter([
 		path: '/case-studies/:id',
 		element: <CaseStudySingle />,
 	},
+	{
+		path: '/books',
+		element: <Book></Book>,
+	},
 
 	{
 		path: '/dashboard',
@@ -80,10 +84,7 @@ export const router = createBrowserRouter([
 		path: '/faqform',
 		element: <FAQForm></FAQForm>,
 	},
-	{
-		path: '/books',
-		element: <Book></Book>,
-	},
+
 	{
 		path: '/bookform',
 		element: <Booksform></Booksform>,
