@@ -25,7 +25,7 @@ export default function Hero() {
 			<Nav></Nav>
 			<Header_Section></Header_Section>
 			<Home_Section></Home_Section>
-			<Feature_Section></Feature_Section>
+			{/* <Feature_Section></Feature_Section> */}
 			<Service_Section></Service_Section>
 
 			<Team_Title_section></Team_Title_section>

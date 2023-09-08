@@ -17,6 +17,12 @@ import CaseStudyform from './components/Dashboard/CaseStudy';
 import FAQForm from './components/Dashboard/FAQForm ';
 import Book from './components/books/Book';
 import Booksform from './components/Dashboard/Booksform';
+import HomeSlider from './components/Dashboard/HomeSlider';
+import Services from './components/Dashboard/Services';
+import Personaldetails from './components/personaldetails/Personaldetails';
+import Singlenews from './components/News/Singlenews';
+import News from './components/News/News';
+import NewsForm from './components/Dashboard/NewsForm';
 
 export const router = createBrowserRouter([
 	{
@@ -39,13 +45,10 @@ export const router = createBrowserRouter([
 		path: '/Pricing',
 		element: <Pricingplan />,
 	},
+
 	{
-		path: '/Consulting',
-		element: <Consulting Title='Business Consulting' />,
-	},
-	{
-		path: '/Consulting/finance',
-		element: <Consulting Title='Finance Consulting' />,
+		path: '/Consulting/:id',
+		element: <Consulting />,
 	},
 	{
 		path: '/Casestudy',
@@ -88,5 +91,25 @@ export const router = createBrowserRouter([
 	{
 		path: '/bookform',
 		element: <Booksform></Booksform>,
+	},
+	{
+		path: '/homesliderform',
+		element: <HomeSlider></HomeSlider>,
+	},
+	{
+		path: '/serviceform',
+		element: <Services></Services>,
+	},
+	{
+		path: '/personaldetails/:id',
+		element: <Personaldetails />,
+	},
+	{
+		path: 'news/:id',
+		element: <News></News>,
+	},
+	{
+		path: 'newsform',
+		element: <NewsForm></NewsForm>,
 	},
 ]);

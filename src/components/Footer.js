@@ -9,7 +9,7 @@ export default function Footer() {
 	const iconSize = 20;
 	return (
 		<>
-			<footer className='footer'>
+			<footer className=''>
 				<div
 					className='footer-main-area'
 					data-background='images/footer-bg.png'>

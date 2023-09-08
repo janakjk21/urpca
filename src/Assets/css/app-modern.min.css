@@ -255,7 +255,7 @@ html[data-bs-theme='dark'][data-topbar-color='light'] {
 	--ct-danger-border-subtle: #993737;
 	--ct-light-border-subtle: #6c757d;
 	--ct-dark-border-subtle: #343a40;
-	--ct-heading-color: #aab8c5;
+	--ct-heading-color: #000000;
 	--ct-link-color: #98a7f0;
 	--ct-link-hover-color: #a7b4f2;
 	--ct-link-color-rgb: 152, 167, 240;
@@ -303,6 +303,10 @@ hr {
 	opacity: 1;
 }
 
+.blue-icon {
+	color: var(--ct-blue);
+}
+
 .h1,
 .h2,
 .h3,
@@ -319,7 +323,7 @@ h6 {
 	margin-bottom: 10px;
 	font-weight: 700;
 	line-height: 1.1;
-	color: var(--ct-heading-color);
+	color: #000000;
 }
 
 .h1,

@@ -21,6 +21,7 @@ export default function Header_Section() {
 		nextArrow: <SampleNextArrow />,
 		prevArrow: <SamplePrevArrow />,
 		fade: true,
+		autoplay: true,
 	};
 	return (
 		<>

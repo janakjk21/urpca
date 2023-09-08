@@ -7,6 +7,9 @@ import {
 	FaInstagram,
 	FaGooglePlus,
 } from 'react-icons/fa';
+
+import CustomAccordion from '../FAQ/CustomAccordion';
+import 'react-accessible-accordion/dist/fancy-example.css';
 export default function Team_Title_section() {
 	return (
 		<>
@@ -42,7 +45,7 @@ export default function Team_Title_section() {
 				data-background='images/bg/abs-bg1.png'>
 				<div className='section-content'>
 					<div className='container'>
-						<div className='row'>
+						<div className='row  d-flex justify-content-center'>
 							<SingleTeam
 								imgSrc={team1}
 								name='Jack Mehoff'
@@ -64,7 +67,7 @@ export default function Team_Title_section() {
 								designation='Engineer'
 							/>
 						</div>
-						<ProfessionalSkillsSection></ProfessionalSkillsSection>
+						<FAQ></FAQ>
 					</div>
 				</div>
 			</section>
@@ -112,155 +115,61 @@ const SingleTeam = ({ imgSrc, name, designation }) => {
 	);
 };
 
-const ProfessionalSkillsSection = () => {
-	const skillsData = [
-		{ title: 'Business Consulting', percentage: 85, speed: 2100 },
-		{ title: 'Market Analysis', percentage: 96, speed: 2000 },
-		{ title: 'Money Management', percentage: 90, speed: 1900 },
-		{ title: 'Business Growth', percentage: 88, speed: 1800 },
-	];
-
-	const skillRefs = useRef([]);
-	const observer = useRef(null);
-
-	useEffect(() => {
-		observer.current = new IntersectionObserver((entries) => {
-			entries.forEach((entry) => {
-				if (entry.isIntersecting) {
-					const index = skillRefs.current.indexOf(entry.target);
-					if (index !== -1) {
-						const { percentage, speed } = skillsData[index];
-						let currentPercentage = 0;
-						const interval = setInterval(() => {
-							if (currentPercentage <= percentage) {
-								const skillPercentageElem =
-									skillRefs.current[index].querySelector('.count-box');
-								const progressBarElem =
-									skillRefs.current[index].querySelector('.progress-line');
-
-								if (skillPercentageElem && progressBarElem) {
-									skillPercentageElem.textContent = currentPercentage + '%';
-									progressBarElem.style.width = currentPercentage + '%';
-									currentPercentage++;
-								}
-							} else {
-								clearInterval(interval);
-							}
-						}, speed / percentage);
-					}
-				}
-			});
-		});
-
-		skillRefs.current.forEach((ref) => {
-			observer.current.observe(ref);
-		});
-
-		return () => {
-			observer.current.disconnect();
-		};
-	}, []);
-
-	const faqData = [
+function FAQ() {
+	const data = [
 		{
-			question: "What happens during Freshers' Week?",
-			answer: 'Leverage agile frameworks to provide a robust synopsis...',
+			title: 'Q: What happens during Freshers',
+			content:
+				' Leverage agile frameworks to provide a robust synopsis forhigh level overviews. Iterative approaches to corporatestrategy foster collaborative thinking to further the overallvalue proposition. Organically grow the holistic world view ofdisruptive innovation via workplace diversity and empowerment',
+		},
+
+		{
+			title: 'Two',
+			content:
+				' Leverage agile frameworks to provide a robust synopsis forhigh level overviews. Iterative approaches to corporatestrategy foster collaborative thinking to further the overallvalue proposition. Organically grow the holistic world view ofdisruptive innovation via workplace diversity and empowerment',
 		},
 		{
-			question: 'What is the transfer application process?',
-			answer: 'Leverage agile frameworks to provide a robust synopsis...',
+			title: 'Q: What happens during Freshers',
+			content:
+				' Leverage agile frameworks to provide a robust synopsis forhigh level overviews. Iterative approaches to corporatestrategy foster collaborative thinking to further the overallvalue proposition. Organically grow the holistic world view ofdisruptive innovation via workplace diversity and empowerment',
 		},
 		{
-			question: 'Why should I attend community college?',
-			answer: 'Leverage agile frameworks to provide a robust synopsis...',
+			title: 'Q: What happens during Freshers',
+			content:
+				' Leverage agile frameworks to provide a robust synopsis forhigh level overviews. Iterative approaches to corporatestrategy foster collaborative thinking to further the overallvalue proposition. Organically grow the holistic world view ofdisruptive innovation via workplace diversity and empowerment',
 		},
 	];
-
 	return (
-		<div className='row align-items-center pdt-80'>
-			<div className='col-md-12 col-xl-6'>
-				<h5 className='mrb-15 text-primary-color sub-title-side-line'>
-					Professional Skills
-				</h5>
-				<h2 className='mrb-30'>
-					We Help You to Grow <br />
-					<span className='f-weight-400'>Your Business</span> Quickly
-				</h2>
-				<p className='mrb-30'>
-					Distinctively exploit optimal alignments for intuitive. Quickly
-					coordinate business applications through revolutionary cataly
-					technologies rather than development optimal alignments for intuitive.
-				</p>
-				<div className='skills mrb-lg-60'>
-					{skillsData.map((skill, index) => (
-						<div
-							className='skill-item'
-							key={index}
-							ref={(el) => (skillRefs.current[index] = el)}>
-							<div className='skill-header'>
-								<h6 className='skill-title'>{skill.title}</h6>
-								<div className='skill-bar'>
-									<div className='bar-inner'>
-										<div
-											className='bar progress-line'
-											style={{
-												width: `${skill.percentage}%`,
-												backgroundColor: 'blue',
-											}}
-										/>
-									</div>
-								</div>
-								<div className='skill-percentage'>
-									<div className='count-box'>0%</div>
-								</div>
+		<>
+			<section
+				className='request-a-call-back pdt-110 pdb-95'
+				data-background='img/bg/6.html'>
+				<div className='container'>
+					<div className='row'>
+						<div className='col-lg-5'>
+							<h5 className='sub-title-side-line text-primary-color mrt-0 mrb-15'>
+								Frequently Asked Question
+							</h5>
+							<h2 className='faq-title mrb-30'>Have Any Questions?</h2>
+							<p className='mrb-40'>
+								Distinctively exploit revolutionary catalysts for chang the
+								Seamlessly optimal rather than just in web &amp; apps
+								development optimal alignments for intuitive.
+							</p>
+							<a
+								href='#'
+								className='cs-btn-one btn-gradient-color btn-md mrb-lg-60'>
+								More Question?
+							</a>
+						</div>
+						<div className='col-lg-7'>
+							<div className='faq-block'>
+								<CustomAccordion items={data} />
 							</div>
 						</div>
-					))}
-				</div>
-			</div>
-			{/* faq quesiton */}
-			<div
-				className='col-md-12 col-xl-6 wow fadeInLeft mrb-lg-40'
-				data-wow-delay='0ms'
-				data-wow-duration='1000ms'>
-				<h5 className='mrb-15 text-primary-color sub-title-side-line'>
-					Some Important FAQ's
-				</h5>
-				<h2 className='mrb-20'>Common Frequently Asked Questions</h2>
-				<div className='faq-block'>
-					<div className='accordion'>
-						{faqData.map((faq, index) => (
-							<FAQItem
-								key={index}
-								question={faq.question}
-								answer={faq.answer}
-							/>
-						))}
 					</div>
 				</div>
-			</div>
-		</div>
+			</section>
+		</>
 	);
-};
-
-const FAQItem = ({ question, answer }) => {
-	const [isOpen, setIsOpen] = useState(false);
-
-	const toggleAccordion = () => {
-		setIsOpen(!isOpen);
-	};
-
-	return (
-		<div className={`accordion-item ${isOpen ? 'active' : ''}`}>
-			<div className='accordion-header' onClick={toggleAccordion}>
-				<h5 className='title'>{`Q: ${question}`}</h5>
-				<span className={`fas fa-arrow-${isOpen ? 'down' : 'right'}`} />
-			</div>
-			{isOpen && (
-				<div className='accordion-body'>
-					<p>{`A: ${answer}`}</p>
-				</div>
-			)}
-		</div>
-	);
-};
+}

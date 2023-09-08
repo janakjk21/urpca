@@ -5,6 +5,9 @@ import {
 	FaTwitter,
 	FaLinkedinIn,
 	FaGooglePlusG,
+	FaArrowDown,
+	FaAngleDown,
+	FaNewspaper,
 } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 import Dropdown from 'rc-dropdown';
@@ -100,8 +103,40 @@ const Navfordesktop = (props) => {
 											<li>
 												<Link to='/aboutus'>About</Link>
 											</li>
+
 											<li className='has-sub'>
-												<Link to='/faq'>Faq</Link>
+												<Link to='/Consulting'>
+													Services <FaAngleDown></FaAngleDown>
+												</Link>
+												<ul className='sub-menu'>
+													<li>
+														<Link to='/faq'>Tax Filings</Link>
+													</li>
+													<li>
+														<Link to='/faqfullpage'>Audit & Assurance</Link>
+													</li>
+												</ul>
+											</li>
+											<li className='has-sub right-view'>
+												<Link to='/casestudy'>
+													Industries <FaAngleDown></FaAngleDown>
+												</Link>
+												<ul className='sub-menu'>
+													{/* ... (other case study links) */}
+												</ul>
+											</li>
+											<li className='has-sub right-view'>
+												<Link to='/casestudy'>
+													Tax <FaAngleDown></FaAngleDown>
+												</Link>
+												<ul className='sub-menu'>
+													{/* ... (other case study links) */}
+												</ul>
+											</li>
+											<li className='has-sub'>
+												<Link to='/faq'>
+													Invest In Nepal <FaAngleDown></FaAngleDown>
+												</Link>
 												<ul className='sub-menu'>
 													<li>
 														<Link to='/faq'>Faq</Link>
@@ -109,21 +144,34 @@ const Navfordesktop = (props) => {
 													<li>
 														<Link to='/faqfullpage'>Faq fullpage</Link>
 													</li>
-													<li>
-														<Link to='/Pricing'>Pricing</Link>
-													</li>
 												</ul>
 											</li>
 											<li className='has-sub'>
-												<Link to='/Consulting'>Services</Link>
+												<Link to='/faq'>
+													Resources <FaAngleDown></FaAngleDown>
+												</Link>
 												<ul className='sub-menu'>
-													{/* ... (other service links) */}
+													<li>
+														<Link to='/faq'>News </Link>
+													</li>
+													<li>
+														<Link to='/faqfullpage'>Faq</Link>
+													</li>
+													<li>
+														<Link to='/faqfullpage'>Articles</Link>
+													</li>
 												</ul>
 											</li>
-											<li className='has-sub right-view'>
-												<Link to='/casestudy'>Case Study</Link>
+
+											<li className='has-sub'>
+												<Link to='/faq'>Books</Link>
 												<ul className='sub-menu'>
-													{/* ... (other case study links) */}
+													<li>
+														<Link to='/faq'>Faq</Link>
+													</li>
+													<li>
+														<Link to='/faqfullpage'>Faq fullpage</Link>
+													</li>
 												</ul>
 											</li>
 											<li className='has-sub right-view'>
