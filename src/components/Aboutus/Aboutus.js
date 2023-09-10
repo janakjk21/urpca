@@ -19,7 +19,7 @@ export default function Aboutus() {
 			<Home_Section></Home_Section>
 			<Feature_Section></Feature_Section>
 			<Team_Title_section></Team_Title_section>
-			<Personaldetails></Personaldetails>
+			{/* <Personaldetails></Personaldetails> */}
 			<Footer></Footer>
 		</>
 	);

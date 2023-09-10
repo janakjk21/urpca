@@ -6,9 +6,10 @@ import {
 	AiOutlineComment,
 	AiOutlineDashboard,
 	AiOutlineSolution,
+	AiOutlineFile,
+	AiOutlineAppstore,
 } from 'react-icons/ai';
 import logo from '../../Assets/images/logo.png';
-import { position } from '@chakra-ui/react';
 
 export default function Sidebar() {
 	return (
@@ -69,23 +70,20 @@ const Sidebar1 = () => {
 				{/* ... Other links ... */}
 				<li className='side-nav-title'>Apps</li>
 				<li className='side-nav-item'>
-					<Link to='apps-calendar.html' className='side-nav-link'>
+					<Link to='/orderlist' className='side-nav-link'>
 						<AiOutlineCalendar />
-						<span>
-							{' '}
-							<Link to='/orderlist'>Orders List</Link>
-						</span>
+						<span> Orders List</span>
 					</Link>
 				</li>
 				<li className='side-nav-item'>
 					<Link to='/faqform' className='side-nav-link'>
 						<AiOutlineComment />
-						<span> Faq Question</span>
+						<span> FAQ Question</span>
 					</Link>
 				</li>
 				<li className='side-nav-item'>
 					<Link
-						to='/dashboard'
+						to='/editcase'
 						className='side-nav-link'
 						data-bs-toggle='collapse'
 						data-bs-target='#sidebarCrm'
@@ -93,24 +91,28 @@ const Sidebar1 = () => {
 						aria-controls='sidebarCrm'>
 						<AiOutlineSolution />
 						<span className='badge bg-danger text-white float-end'>New</span>
-						<span>
-							{' '}
-							<li>
-								<Link to='/editcase'>Projects</Link>
-							</li>
-						</span>
+						<span> Projects</span>
 					</Link>
 				</li>
-				{/* Other menu items... */}
 				<li className='side-nav-item'>
-					<Link to='apps-social-feed.html' className='side-nav-link'>
+					<Link to='/bookform' className='side-nav-link'>
 						<AiOutlineSolution />
-						<span>
-							{' '}
-							<Link to='/bookform'>Management</Link>
-						</span>
+						<span> Management</span>
 					</Link>
 				</li>
+				<li className='side-nav-item'>
+					<Link to='/newsform' className='side-nav-link'>
+						<AiOutlineFile />
+						<span> News Form</span>
+					</Link>
+				</li>
+				<li className='side-nav-item'>
+					<Link to='/serviceform' className='side-nav-link'>
+						<AiOutlineAppstore />
+						<span> Service Form</span>
+					</Link>
+				</li>
+				{/* Add more links here */}
 			</ul>
 		</div>
 	);

@@ -23,6 +23,7 @@ import Personaldetails from './components/personaldetails/Personaldetails';
 import Singlenews from './components/News/Singlenews';
 import News from './components/News/News';
 import NewsForm from './components/Dashboard/NewsForm';
+import Industries from './components/Industries/Industries';
 
 export const router = createBrowserRouter([
 	{
@@ -34,6 +35,22 @@ export const router = createBrowserRouter([
 		element: <Aboutus />,
 	},
 	{
+		path: '/services/:id',
+		element: <Consulting />,
+	},
+	{
+		path: '/industry/:id',
+		element: <Industries />,
+	},
+	{
+		path: '/tax',
+		element: <CaseStudy />,
+	},
+	{
+		path: '/tax/:id',
+		element: <CaseStudySingle />,
+	},
+	{
 		path: '/faq',
 		element: <Faq />,
 	},
@@ -42,26 +59,14 @@ export const router = createBrowserRouter([
 		element: <Faqfullpage />,
 	},
 	{
-		path: '/Pricing',
-		element: <Pricingplan />,
+		path: '/personaldetails/:id',
+		element: <Personaldetails />,
+	},
+	{
+		path: 'news/:id',
+		element: <News></News>,
 	},
 
-	{
-		path: '/Consulting/:id',
-		element: <Consulting />,
-	},
-	{
-		path: '/Casestudy',
-		element: <CaseStudy />,
-	},
-	{
-		path: '/case-studies/:id',
-		element: <CaseStudySingle />,
-	},
-	{
-		path: '/case-studies/:id',
-		element: <CaseStudySingle />,
-	},
 	{
 		path: '/books',
 		element: <Book></Book>,
@@ -100,14 +105,7 @@ export const router = createBrowserRouter([
 		path: '/serviceform',
 		element: <Services></Services>,
 	},
-	{
-		path: '/personaldetails/:id',
-		element: <Personaldetails />,
-	},
-	{
-		path: 'news/:id',
-		element: <News></News>,
-	},
+
 	{
 		path: 'newsform',
 		element: <NewsForm></NewsForm>,

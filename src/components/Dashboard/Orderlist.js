@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import Nav from './Nav';
 import Sidebar from './Sidebar';
 import { FaEdit, FaTrash } from 'react-icons/fa';
-import { DeleteIcon } from '@chakra-ui/icons';
 import NavSidebar from './NavSidebar';
 export default function Orderlist() {
 	const orders = [

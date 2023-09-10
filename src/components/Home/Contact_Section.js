@@ -1,7 +1,35 @@
-import React from 'react';
+import React, { useState } from 'react';
 import contactus_background from '../../Assets/images/bg/vid.jpg';
 
-export default function () {
+export default function ContactForm() {
+	const [formData, setFormData] = useState({
+		name: '',
+		phone: '',
+		email: '',
+		serviceType: '',
+	});
+
+	const handleChange = (e) => {
+		const { name, value } = e.target;
+		setFormData({
+			...formData,
+			[name]: value,
+		});
+	};
+
+	const handleSubmit = (e) => {
+		e.preventDefault();
+		// You can perform form submission logic here
+		console.log('Form data submitted:', formData);
+		// Reset the form if needed
+		setFormData({
+			name: '',
+			phone: '',
+			email: '',
+			serviceType: '',
+		});
+	};
+
 	return (
 		<section
 			className='pdb-110'
@@ -37,7 +65,7 @@ export default function () {
 									Distinctively exploit optimal alignments for intuitive
 									coordinate business applications technologies
 								</p>
-								<form action='#'>
+								<form onSubmit={handleSubmit}>
 									<div className='row'>
 										<div className='col-lg-12'>
 											<div className='form-group'>
@@ -45,6 +73,10 @@ export default function () {
 													type='text'
 													placeholder='Name'
 													className='form-control'
+													name='name'
+													value={formData.name}
+													onChange={handleChange}
+													required
 												/>
 											</div>
 										</div>
@@ -54,6 +86,10 @@ export default function () {
 													type='text'
 													placeholder='Phone'
 													className='form-control'
+													name='phone'
+													value={formData.phone}
+													onChange={handleChange}
+													required
 												/>
 											</div>
 										</div>
@@ -63,22 +99,28 @@ export default function () {
 													type='email'
 													placeholder='Email'
 													className='form-control'
+													name='email'
+													value={formData.email}
+													onChange={handleChange}
+													required
 												/>
 											</div>
 										</div>
 										<div className='col-lg-12'>
 											<div className='form-group'>
 												<select
-													name='categories'
+													name='serviceType'
 													className='custom-select-categories'
+													value={formData.serviceType}
+													onChange={handleChange}
 													required>
-													<option value>Choose Service Type</option>
-													<option>Computer</option>
-													<option>Business</option>
-													<option>Chemistry</option>
-													<option>Physics</option>
-													<option>Photoshop</option>
-													<option>Management</option>
+													<option value=''>Choose Service Type</option>
+													<option value='Computer'>Computer</option>
+													<option value='Business'>Business</option>
+													<option value='Chemistry'>Chemistry</option>
+													<option value='Physics'>Physics</option>
+													<option value='Photoshop'>Photoshop</option>
+													<option value='Management'>Management</option>
 												</select>
 											</div>
 										</div>

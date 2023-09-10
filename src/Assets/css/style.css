@@ -58,12 +58,13 @@
 @import url("../fonts/fontawesome/css/all.css");
 @import url("../fonts/webexicon/style.css"); */
 @import url("owl.carousel.min.css");
-@import url("magnific-popup.css");
+/* @import url("magnific-popup.css"); */
 @import url("animate.css");
 @import url("custom-animation.css");
 @import url("meanmenu.min.css");
 
 @import url("responsive.css");
+@import url("./app-modern.min.css");
 /*========================================*/
 /*-------------- [_Colors] ---------------*/
 /*========================================*/

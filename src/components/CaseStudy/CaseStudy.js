@@ -35,7 +35,6 @@ export default function CaseStudy() {
 		// Add more case study data
 	];
 
-	
 	return (
 		<div>
 			<Nav></Nav>
@@ -71,7 +70,7 @@ const CaseStudyItem = ({ id, imageSrc, category, title }) => {
 				<div className='case-study-thumb'>
 					<img className='img-full' src={imageSrc} alt='' />
 					<div className='case-study-link-icon'>
-						<Link to={`/case-studies/${id}`}>
+						<Link to={`/industry/${id}`}>
 							<i className='webex-icon-attachment1' />
 						</Link>
 					</div>

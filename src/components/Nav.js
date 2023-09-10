@@ -12,7 +12,6 @@ import {
 import { Link } from 'react-router-dom';
 import Dropdown from 'rc-dropdown';
 import 'rc-dropdown/assets/index.css';
-import { Divider, MenuItem } from '@chakra-ui/react';
 
 export default function Nav() {
 	const [isSmallScreen, setIsSmallScreen] = useState(false);
