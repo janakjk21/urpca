@@ -149,14 +149,22 @@ const Navformobile = (props) => {
 									data-bs-toggle='collapse'
 									data-bs-target='#sidebarCrm'
 									aria-expanded='false'
-									aria-controls='sidebarCrm'></Link>
+									aria-controls='sidebarCrm'>
+									Projects
+								</Link>
 							</li>
-
 							<li>
 								<Link to='/editcase'>Projects</Link>
 							</li>
 							<li>
 								<Link to='/bookform'>Management</Link>
+							</li>
+							{/* Add more links here */}
+							<li>
+								<Link to='/newsform'>News Form</Link>
+							</li>
+							<li>
+								<Link to='/serviceform'>Service Form</Link>
 							</li>
 						</ul>
 					</nav>

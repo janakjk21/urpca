@@ -6,14 +6,14 @@ import Aboutus from './components/Aboutus/Aboutus';
 import Faq from './components/FAQ/Faq';
 import Pricingplan from './components/Pricing/Pricingplan1';
 import Consulting from './components/Consulting/Consulting';
-import CaseStudy from './components/CaseStudy/CaseStudy';
-import CaseStudySingle from './components/CaseStudy/CaseStudySingle';
+import CaseStudy from './components/Tax/Tax';
+import CaseStudySingle from './components/Tax/CaseStudySingle';
 import Dashboard from './components/Dashboard/Dashboard';
 import Faqfullpage from './components/FAQ/Faqfullpage';
 import Login from './components/login/Login';
 import Orderlist from './components/Dashboard/Orderlist';
 
-import CaseStudyform from './components/Dashboard/CaseStudy';
+import Taxform from './components/Dashboard/Tax';
 import FAQForm from './components/Dashboard/FAQForm ';
 import Book from './components/books/Book';
 import Booksform from './components/Dashboard/Booksform';
@@ -24,6 +24,12 @@ import Singlenews from './components/News/Singlenews';
 import News from './components/News/News';
 import NewsForm from './components/Dashboard/NewsForm';
 import Industries from './components/Industries/Industries';
+import EmployeForm from './components/Dashboard/EmployeForm';
+import Tax from './components/Tax/Tax';
+import Investinnepal from './components/investinnepal/Investinnepal';
+import Industriesform from './components/Dashboard/Industriesform';
+import InvestNepalform from './components/Dashboard/InvestNepalform';
+import { Usertable } from './components/Dashboard/Usertable';
 
 export const router = createBrowserRouter([
 	{
@@ -44,12 +50,13 @@ export const router = createBrowserRouter([
 	},
 	{
 		path: '/tax',
-		element: <CaseStudy />,
+		element: <Tax />,
 	},
 	{
 		path: '/tax/:id',
 		element: <CaseStudySingle />,
 	},
+	{ path: '/investinnepal/:id', element: <Investinnepal></Investinnepal> },
 	{
 		path: '/faq',
 		element: <Faq />,
@@ -85,8 +92,8 @@ export const router = createBrowserRouter([
 		element: <Orderlist></Orderlist>,
 	},
 	{
-		path: '/editcase',
-		element: <CaseStudyform></CaseStudyform>,
+		path: '/taxform',
+		element: <Taxform></Taxform>,
 	},
 	{
 		path: '/faqform',
@@ -109,5 +116,21 @@ export const router = createBrowserRouter([
 	{
 		path: 'newsform',
 		element: <NewsForm></NewsForm>,
+	},
+	{
+		path: 'employeform',
+		element: <EmployeForm></EmployeForm>,
+	},
+	{
+		path: 'industryform',
+		element: <Industriesform></Industriesform>,
+	},
+	{
+		path: 'investnepalform',
+		element: <InvestNepalform></InvestNepalform>,
+	},
+	{
+		path: 'usertable',
+		element: <Usertable></Usertable>,
 	},
 ]);

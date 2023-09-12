@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import NavSidebar from './NavSidebar';
 
-export default function NewsForm() {
+export default function InvestNepalform() {
 	return (
 		<div className='wrapper'>
 			<div className='wrapper'>

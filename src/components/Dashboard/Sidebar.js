@@ -83,21 +83,32 @@ const Sidebar1 = () => {
 				</li>
 				<li className='side-nav-item'>
 					<Link
-						to='/editcase'
+						to='/taxform'
 						className='side-nav-link'
 						data-bs-toggle='collapse'
 						data-bs-target='#sidebarCrm'
 						aria-expanded='false'
 						aria-controls='sidebarCrm'>
 						<AiOutlineSolution />
-						<span className='badge bg-danger text-white float-end'>New</span>
-						<span> Projects</span>
+						<span> Tax form</span>
+					</Link>
+				</li>
+				<li className='side-nav-item'>
+					<Link
+						to='/homesliderform'
+						className='side-nav-link'
+						data-bs-toggle='collapse'
+						data-bs-target='#sidebarCrm'
+						aria-expanded='false'
+						aria-controls='sidebarCrm'>
+						<AiOutlineSolution />
+						<span> Home Slider</span>
 					</Link>
 				</li>
 				<li className='side-nav-item'>
 					<Link to='/bookform' className='side-nav-link'>
 						<AiOutlineSolution />
-						<span> Management</span>
+						<span> Book form</span>
 					</Link>
 				</li>
 				<li className='side-nav-item'>
@@ -110,6 +121,30 @@ const Sidebar1 = () => {
 					<Link to='/serviceform' className='side-nav-link'>
 						<AiOutlineAppstore />
 						<span> Service Form</span>
+					</Link>
+				</li>
+				<li className='side-nav-item'>
+					<Link to='/industryform' className='side-nav-link'>
+						<AiOutlineAppstore />
+						<span> industryform</span>
+					</Link>
+				</li>
+				<li className='side-nav-item'>
+					<Link to='/investnepalform' className='side-nav-link'>
+						<AiOutlineAppstore />
+						<span> investnepalform</span>
+					</Link>
+				</li>
+				<li className='side-nav-item'>
+					<Link to='/employeform' className='side-nav-link'>
+						<AiOutlineAppstore />
+						<span> employeform</span>
+					</Link>
+				</li>
+				<li className='side-nav-item'>
+					<Link to='/usertable' className='side-nav-link'>
+						<AiOutlineAppstore />
+						<span> usertable</span>
 					</Link>
 				</li>
 				{/* Add more links here */}

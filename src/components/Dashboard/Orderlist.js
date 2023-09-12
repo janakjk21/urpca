@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import Nav from './Nav';
 import Sidebar from './Sidebar';
-import { FaEdit, FaTrash } from 'react-icons/fa';
+import { FaCheck, FaEdit, FaTrash } from 'react-icons/fa';
 import NavSidebar from './NavSidebar';
 export default function Orderlist() {
 	const orders = [
@@ -222,6 +222,7 @@ const TableRow = ({ order }) => {
 			</td>
 			<td>
 				<FaEdit size={20}></FaEdit> <FaTrash size={20} color='red'></FaTrash>
+				<FaCheck></FaCheck>
 			</td>
 		</tr>
 	);

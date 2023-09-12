@@ -5,7 +5,7 @@ import Nav from '../Nav';
 import Pagetitle from '../Pagetitle';
 import Footer from '../Footer';
 
-export default function CaseStudy() {
+export default function Tax() {
 	const pageTitle = 'About Us';
 
 	const breadcrumbs = [{ label: 'Home', link: '/' }, { label: 'CaseStudy' }];

@@ -9,11 +9,11 @@ const initialFormData = {
 	imageAlt: 'Service Image',
 	additionalDescription: '',
 	innerImage1Src: '',
-
+	innerImage1Alt: 'Inner Image 1',
 	subtitle: 'we do the bestt',
 };
 
-export default function Services() {
+export default function Industriesform() {
 	return (
 		<div>
 			<div className='wrapper'>
@@ -66,7 +66,7 @@ const ServiceDataForm = () => {
 							<div className='card'>
 								<div className='card-body'>
 									<div>
-										<h1>Service Form</h1>
+										<h1>Industries Form</h1>
 										<form onSubmit={handleSubmit}>
 											<div className='mb-3'>
 												<label htmlFor='title' className='form-label'>

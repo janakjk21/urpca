@@ -104,7 +104,7 @@ const Navfordesktop = (props) => {
 											</li>
 
 											<li className='has-sub'>
-												<Link to='/Consulting'>
+												<Link to='/services/1'>
 													Services <FaAngleDown></FaAngleDown>
 												</Link>
 												<ul className='sub-menu'>
@@ -117,7 +117,7 @@ const Navfordesktop = (props) => {
 												</ul>
 											</li>
 											<li className='has-sub right-view'>
-												<Link to='/casestudy'>
+												<Link to='/industry/1'>
 													Industries <FaAngleDown></FaAngleDown>
 												</Link>
 												<ul className='sub-menu'>
@@ -125,7 +125,7 @@ const Navfordesktop = (props) => {
 												</ul>
 											</li>
 											<li className='has-sub right-view'>
-												<Link to='/casestudy'>
+												<Link to='/tax/1'>
 													Tax <FaAngleDown></FaAngleDown>
 												</Link>
 												<ul className='sub-menu'>
@@ -133,7 +133,7 @@ const Navfordesktop = (props) => {
 												</ul>
 											</li>
 											<li className='has-sub'>
-												<Link to='/faq'>
+												<Link to='/investinnepal/1'>
 													Invest In Nepal <FaAngleDown></FaAngleDown>
 												</Link>
 												<ul className='sub-menu'>
@@ -151,7 +151,7 @@ const Navfordesktop = (props) => {
 												</Link>
 												<ul className='sub-menu'>
 													<li>
-														<Link to='/faq'>News </Link>
+														<Link to='/news/1'>News </Link>
 													</li>
 													<li>
 														<Link to='/faqfullpage'>Faq</Link>
