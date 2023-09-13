@@ -1,7 +1,7 @@
 import React from 'react';
 import Nav from '../Nav';
 import Pagetitle from '../Pagetitle';
-import Singlenews from './Singlenews';
+import Singlenews from './Singlenews.jsx';
 
 export default function News() {
 	const pageTitle = 'News';

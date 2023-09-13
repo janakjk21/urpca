@@ -1,70 +1,280 @@
-# Getting Started with Create React App
+# MY REACT APP WITH WEBPACK 5
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Install React JS
 
-## Available Scripts
+``` shell
+npm install -g create-react-app
+```
 
-In the project directory, you can run:
+## Start a new React project
 
-### `npm start`
+``` shell
+npx create-react-app project
+```
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## Add redux
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+``` shell
+npm i @reduxjs/toolkit redux react-redux
+```
 
-### `npm test`
+## Add .babelrc
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+``` shell
+npm i -D regenerator-runtime @babel/core babel-loader @babel/preset-env @babel/preset-react @babel/plugin-proposal-class-properties`
+```
 
-### `npm run build`
+Create a new `.babelrc` and add the following:
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+``` js
+{
+    presets: [
+        "@babel/preset-env",
+        "@babel/preset-react"
+    ],
+    plugins: [
+        [
+            "@babel/plugin-proposal-class-properties",
+            {
+                "loose": true
+            }
+        ]
+    ]
+}
+```
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## Add postcss.config.js
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+``` shell
+npm i -D sass-loader postcss-loader css-loader style-loader postcss-preset-env node-sass
+```
 
-### `npm run eject`
+Create a new `.postcss.config.js` and add the following:
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+``` js
+module.exports = {
+    plugins: {
+        'postcss-preset-env': {
+            browsers: 'last 2 versions',
+        },
+    },
+}
+```
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## Add Webpack 5 and the needed plugins
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+``` shell
+npm i -D webpack webpack-cli
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+npm i -D html-webpack-plugin clean-webpack-plugin mini-css-extract-plugin copy-webpack-plugin
+```
 
-## Learn More
+Create a `webpack.config.js` and add the following:
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+``` js
+const HtmlWebPackPlugin = require("html-webpack-plugin");
+const { CleanWebpackPlugin } = require('clean-webpack-plugin')
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const CopyWebpackPlugin = require('copy-webpack-plugin');
+const path = require('path');
+var webpack = require('webpack');
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+module.exports = {
+    entry: {
+        main: path.resolve(__dirname, './src/index.js'),
+    },
+    output: {
+        path: path.resolve(__dirname, 'react-webpack'),
+        filename: 'main.js',
+        publicPath: '/' // For production - Change to base directory folder name Eg. "https://localhost/BASENAME/" - publicPath: 'BASENAME'
+    },
+    mode: 'development',
+    devServer: {
+        historyApiFallback: true,
+        static: path.resolve(__dirname, 'react-webpack'),
+        open: true,
+        compress: true,
+        hot: true,
+        host: '0.0.0.0', // or 0.0.0.0
+        port: 8080, // For production - You may need to change this to 80
+    },
+    watchOptions: {
+        aggregateTimeout: 500, // delay before reloading
+        poll: 1000 // enable polling since fsevents are not supported in docker
+    },
+    module: {
+        rules: [
+            {
+                test: /\.(js|jsx)$/,
+                exclude: path.resolve(__dirname, './node_modules'),
+                use: {
+                    loader: "babel-loader"
+                }
+            },
+            {
+                test: /\.ts$/,
+                exclude: path.resolve(__dirname, './node_modules'),
+                use: {
+                    loader: "ts-loader"
+                }
+            },
+            {
+                test: /\.html$/,
+                use: [
+                    {
+                        loader: "html-loader",
+                        options:
+                        {
+                            minimize: true
+                        }
+                    }
+                ]
+            },
+            {
+                test: /\.(?:ico|gif|png|jpg|jpeg|cur)$/i,
+                type: 'asset/resource',
+            },
+            {
+                test: /\.(woff(2)?|eot|ttf|otf|svg|)$/,
+                type: 'asset/inline',
+            },
+            {
+                test: /\.(scss|css)$/,
+                use: [MiniCssExtractPlugin.loader, 'css-loader', 'postcss-loader', 'sass-loader']
+            },
+        ]
+    },
+    plugins: [
+        new HtmlWebPackPlugin({
+            template: "./src/index.html",
+            filename: "./index.html"
+        }),
+        new MiniCssExtractPlugin({ 
+            filename: "[name].css", 
+            chunkFilename: "[id].css" 
+        }),
+        new CopyWebpackPlugin({
+          patterns: [
+            { from: "src/assets", to: "assets" },
+          ],
+        }),
+        new CleanWebpackPlugin(),
+        new webpack.HotModuleReplacementPlugin(),
+        new webpack.ProvidePlugin({
+            $: 'jquery',
+            jQuery: 'jquery',
+            'window.jQuery': 'jquery',
+            axios: 'axios',
+            'window.axios': 'axios',
+            Toastify: 'toastify-js',
+            'window.Toastify': 'toastify-js',
+            _: 'lodash',
+            'window._': 'lodash'
+        }),
+    ]
+};
+```
 
-### Code Splitting
+## Add jest.config.js
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+Create a `svgTransform.js` and add the following:
 
-### Analyzing the Bundle Size
+``` js
+module.exports = {
+    process() {
+      return {
+        code: `module.exports = {};`,
+      };
+    },
+    getCacheKey() {
+      // The output is always the same.
+      return "svgTransform";
+    },
+};
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+Create a `jest.config.js` and add the following:
 
-### Making a Progressive Web App
+``` js
+module.exports = {
+    transform: {
+        "^.+\\.jsx?$": "babel-jest",
+        "^.+\\.svg$": "<rootDir>/svgTransform.js"
+    },
+    moduleNameMapper: {
+     "^@/(.*svg)(\\?inline)$": "<rootDir>/src/$1",
+     "\\.(css|less|scss|sass)$": "identity-obj-proxy"
+   },
+}
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+Within the `package.json` and make this edit:
 
-### Advanced Configuration
+``` json
+"scripts": {
+    "dev": "webpack-dev-server",
+    "build": "webpack",
+    "test": "jest --env=jsdom"
+  },
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+## WRAPPING UP
 
-### Deployment
+- Copy the `index.html, favicon.ico, manifest.json` file and all your directory folders into the src folder
+- You can delete the public folder
+- Inside the `index.html` file remove any %PUBLIC_FOLDER% in the link tags
+- Run `npm start`
+- To build `npm run build`
+- In your production file, create an .htaccess file and add the following lines.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+``` .htaccess
+# Map all non-existing URLs to be processed by index.html,
+# so any URL that doesn't point to a JS file, CSS file, etc etc...
+# goes through my React app.
 
-### `npm run build` fails to minify
+<IfModule mod_rewrite.c> 
+    <IfModule mod_negotiation.c>
+        Options -MultiViews -Indexes
+    </IfModule>
+RewriteEngine on
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_URI} !=/favicon.ico
+RewriteRule ^ index.html [L]
+</IfModule>
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+## DOCKERIZE YOUR REACT APP (LIVE RELOAD INCLUSIVE)
+
+- Create a new ``Dockerfile`` and add the following lines:
+
+``` dockerfile
+FROM node:16-alpine3.15
+WORKDIR /app
+COPY . /app
+EXPOSE 8080
+RUN apk add --no-cache python3 make g++
+RUN npm install
+CMD ["npm", "run", "dev"]
+```
+
+Create a new `docker-compose.yml` and add the following lines:
+
+``` yml
+version: "3.9"
+
+services:
+  app:
+    build:
+      context: .
+    ports:
+    - "8080:8080"
+    environment:
+      CHOKIDAR_USEPOLLING: "true"
+    volumes:
+      - /app/node_modules
+      - .:/app
+```
+
+- To start run `docker-compose up`
+- To add new packages after installing them run `docker-compose down -v`, `docker-compose build` and `docker-compose up`

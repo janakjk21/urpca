@@ -1,3 +1,5 @@
+import React from 'react';
+
 import { createBrowserRouter, useParams } from 'react-router-dom';
 import Home from './components/Home/Hero';
 
@@ -15,12 +17,12 @@ import Orderlist from './components/Dashboard/Orderlist';
 
 import Taxform from './components/Dashboard/Tax';
 import FAQForm from './components/Dashboard/FAQForm ';
-import Book from './components/books/Book';
+// import Book from './components/books/Book';
 import Booksform from './components/Dashboard/Booksform';
 import HomeSlider from './components/Dashboard/HomeSlider';
 import Services from './components/Dashboard/Services';
 import Personaldetails from './components/personaldetails/Personaldetails';
-import Singlenews from './components/News/Singlenews';
+import Singlenews from './components/News/Singlenews.jsx';
 import News from './components/News/News';
 import NewsForm from './components/Dashboard/NewsForm';
 import Industries from './components/Industries/Industries';
@@ -74,10 +76,10 @@ export const router = createBrowserRouter([
 		element: <News></News>,
 	},
 
-	{
-		path: '/books',
-		element: <Book></Book>,
-	},
+	// {
+	// 	path: '/books',
+	// 	element: <Book></Book>,
+	// },
 
 	{
 		path: '/dashboard',

@@ -61,9 +61,9 @@ const CustomAccordion = ({ items }) => {
 								</h4>
 							</div>
 						}>
-						<div class='accordion-item'>
-							<div class='accordion-header active'></div>
-							<div class='accordion-body'>
+						<div className='accordion-item'>
+							<div className='accordion-header active'></div>
+							<div className='accordion-body'>
 								<p>{item.content}</p>
 							</div>
 						</div>

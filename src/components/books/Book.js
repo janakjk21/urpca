@@ -6,7 +6,7 @@ import {
 	FaTags,
 } from 'react-icons/fa';
 import { FaStar } from 'react-icons/fa';
-import book1 from '../../Assets/Image-8-480x693.jpg.webp';
+import book1 from '../../Assets/book1.webp';
 import Nav from '../Nav';
 import Pagetitle from '../Pagetitle';
 import feature1 from '../../Assets/images/feature/f1.png';

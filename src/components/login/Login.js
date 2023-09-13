@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import contactus_background from '../../Assets/images/bg/vid.jpg';
 import Nav from '../Nav';
 import './login.css';
+import { useDispatch } from 'react-redux';
+
 export default function Login() {
 	return (
 		<>
@@ -12,6 +14,7 @@ export default function Login() {
 }
 
 const Formsection = () => {
+	const dispatch = useDispatch();
 	const [signIn, setSignIn] = useState(true);
 	const [name, setName] = useState(''); // State for name input
 	const [email, setEmail] = useState(''); // State for email input
@@ -32,7 +35,19 @@ const Formsection = () => {
 	const handlePasswordChange = (event) => {
 		setPassword(event.target.value);
 	};
+	const handleSubmit = (event) => {
+		event.preventDefault();
+		if (signIn) {
+		} else {
+			const userData = {
+				name,
+				email,
+				password,
+			};
 
+			console.log(name, email, password);
+		}
+	};
 	console.log(email, password);
 	return (
 		<div
@@ -72,7 +87,12 @@ const Formsection = () => {
 						/>
 					</form>
 					<a href='#'>Forgot your password?</a>
-					<button>{signIn ? 'Sign in' : 'Sign up'}</button>
+					<button
+						onClick={(e) => {
+							handleSubmit(e);
+						}}>
+						{signIn ? 'Sign in' : 'Sign up'}
+					</button>
 				</div>
 				<div className='Panel ActionPanel'>
 					<h2>{signIn ? 'Hello friend!' : 'Welcome back!'}</h2>
