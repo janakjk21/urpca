@@ -1,9 +1,5 @@
-import { combineReducers } from 'redux'
+import { combineReducers } from 'redux';
 
-import globalsReducer from './globals'
+const rootReducer = combineReducers({});
 
-const rootReducer = combineReducers({
-    globals: globalsReducer,
-})
-
-export default rootReducer
+export default rootReducer;
