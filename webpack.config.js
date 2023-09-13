@@ -84,7 +84,7 @@ module.exports = {
 			chunkFilename: '[id].css',
 		}),
 		new CopyWebpackPlugin({
-			patterns: [{ from: 'src/assets', to: 'assets' }],
+			patterns: [{ from: 'src/Assets', to: 'assets' }],
 		}),
 		new CleanWebpackPlugin(),
 		new webpack.HotModuleReplacementPlugin(),

@@ -9,13 +9,14 @@ import rootReducer from './components/redux';
 import App from './App';
 
 import 'regenerator-runtime/runtime.js';
+import { router } from './router';
 
 const store = configureStore({ reducer: rootReducer });
 
 test('renders learn react link', () => {
 	const { getByText } = render(
 		<Provider store={store}>
-			<App />
+			<RouterProvider router={router} />
 		</Provider>
 	);
 	const linkElement = getByText(/learn react/i);

@@ -5,20 +5,19 @@ on:
   pull_request:
 
 jobs:
-
   byte_level:
-    name: "Byte-level"
-    runs-on: "ubuntu-latest"
+    name: 'Byte-level'
+    runs-on: 'ubuntu-latest'
     steps:
-      - name: "Checkout code"
-        uses: "actions/checkout@v3"
-      - name: "Check file permissions"
+      - name: 'Checkout code'
+        uses: 'actions/checkout@v3'
+      - name: 'Check file permissions'
         run: |
           test "$(find . -type f -not -path './.git/*' -executable)" == ""
   unit_tests:
-    name: "Unit Tests"
+    name: 'Unit Tests'
     needs:
-      - "byte_level"
+      - 'byte_level'
     runs-on: ubuntu-latest
     steps:
       - name: Clone repository
@@ -31,4 +30,5 @@ jobs:
         run: npm install
       - name: Build
         run: npm run build
-  
+      - name: Test
+        run: npm test
