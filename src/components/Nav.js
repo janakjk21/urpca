@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import logo from '../Assets/images/logo1.png';
+import logo from '../Assets/images/logo.png';
 import {
 	FaFacebookF,
 	FaTwitter,

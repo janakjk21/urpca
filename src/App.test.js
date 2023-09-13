@@ -5,7 +5,6 @@ import '@testing-library/jest-dom';
 import { configureStore } from '@reduxjs/toolkit';
 import { Provider } from 'react-redux';
 import rootReducer from './components/redux';
-import rootReducer from './components/redux';
 import { router } from './router';
 
 import 'regenerator-runtime/runtime.js';
