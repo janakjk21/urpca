@@ -1,19 +1,19 @@
 import React, { useState } from 'react';
 import NavSidebar from './NavSidebar';
+import { useDispatch } from 'react-redux';
+import { postFAQData } from '../redux/dashboardslicers/faqFormSlice';
 
 const FAQForm = ({ data }) => {
-	const [title, setTitle] = useState('');
-	const [content, setContent] = useState('');
-	const [paymentStatus, setPaymentStatus] = useState(''); // State for the dropdown selection
+	const dispatch = useDispatch();
+	const [question, setQuestion] = useState('');
+	const [answer, setAnswer] = useState('');
+	const [ispaid, setIspaid] = useState(false); // Updated to boolean
 
 	const handleSubmit = (e) => {
 		e.preventDefault();
+		const formData = { question, answer, ispaid }; // Updated
 
-		// Do something with title, content, and paymentStatus here
-
-		setTitle('');
-		setContent('');
-		setPaymentStatus('');
+		dispatch(postFAQData(formData));
 	};
 
 	return (
@@ -30,43 +30,46 @@ const FAQForm = ({ data }) => {
 											<h1>FAQ Form</h1>
 											<form onSubmit={handleSubmit}>
 												<div className='mb-3'>
-													<label htmlFor='title' className='form-label'>
-														Title
+													<label htmlFor='question' className='form-label'>
+														Question
 													</label>
 													<input
 														type='text'
-														id='title'
+														id='question'
 														className='form-control'
-														value={title}
-														onChange={(e) => setTitle(e.target.value)}
+														value={question}
+														onChange={(e) => setQuestion(e.target.value)}
 													/>
 												</div>
 
 												<div className='mb-3'>
-													<label htmlFor='content' className='form-label'>
-														Content
+													<label htmlFor='answer' className='form-label'>
+														Answer
 													</label>
 													<textarea
-														id='content'
+														id='answer'
 														className='form-control'
-														value={content}
-														onChange={(e) => setContent(e.target.value)}
+														value={answer}
+														onChange={(e) => setAnswer(e.target.value)}
 													/>
 												</div>
 
-												{/* Dropdown menu for payment status */}
+												{/* Dropdown menu for ispaid */}
 												<div className='mb-3'>
-													<label htmlFor='paymentStatus' className='form-label'>
+													<label htmlFor='ispaid' className='form-label'>
 														Payment Status
 													</label>
 													<select
-														id='paymentStatus'
+														id='ispaid'
 														className='form-select'
-														value={paymentStatus}
-														onChange={(e) => setPaymentStatus(e.target.value)}>
-														<option value=''>Select Payment Status</option>
-														<option value='paid'>Paid</option>
-														<option value='unpaid'>Unpaid</option>
+														value={ispaid}
+														onChange={(e) =>
+															setIspaid(e.target.value === 'true')
+														} // Updated
+													>
+														<option value={true}> paid</option> {/* Updated */}
+														<option value={false}>Unpaid</option>{' '}
+														{/* Updated */}
 													</select>
 												</div>
 

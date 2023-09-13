@@ -10,7 +10,7 @@ module.exports = {
 		main: path.resolve(__dirname, './src/index.js'),
 	},
 	output: {
-		path: path.resolve(__dirname, 'react-webpack'),
+		path: path.resolve(__dirname, 'build'),
 		filename: 'main.js',
 		publicPath: '/', // For production - Change to base directory folder name Eg. "https://localhost/BASENAME/" - publicPath: 'BASENAME'
 	},

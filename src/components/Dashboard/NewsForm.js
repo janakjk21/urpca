@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import NavSidebar from './NavSidebar';
+import { postNewsData } from '../redux/dashboardslicers/newsFormSlice';
+import { useDispatch } from 'react-redux';
 
 export default function NewsForm() {
 	return (
@@ -30,19 +32,15 @@ export default function NewsForm() {
 }
 
 function Form({ addNewsItem }) {
+	const dispatch = useDispatch();
 	const [formData, setFormData] = useState({
 		category: '',
 		author: '',
-		date: '',
 		title: '',
 		content: '',
-		quote: {
-			text: '',
-			author: '',
-		},
 	});
 
-	const { category, author, date, title, content, quote } = formData;
+	const { category, author, title, content } = formData;
 
 	const handleChange = (e) => {
 		setFormData({
@@ -51,34 +49,10 @@ function Form({ addNewsItem }) {
 		});
 	};
 
-	const handleContentChange = (e, index) => {
-		const updatedContent = [...content];
-		updatedContent[index] = e.target.value;
-		setFormData({
-			...formData,
-			content: updatedContent,
-		});
-	};
-
-	const handleQuoteChange = (e) => {
-		setFormData({
-			...formData,
-			quote: {
-				...quote,
-				[e.target.name]: e.target.value,
-			},
-		});
-	};
-
-	const addContentField = () => {
-		setFormData({
-			...formData,
-			content: [...content, ''],
-		});
-	};
-
 	const handleSubmit = (e) => {
 		e.preventDefault();
+		const formData = { category, author, title, content };
+		dispatch(postNewsData(formData));
 		console.log(formData);
 		// Handle form submission here
 	};
@@ -133,11 +107,12 @@ function Form({ addNewsItem }) {
 				<label htmlFor='content' className='form-label'>
 					Content
 				</label>
+
 				<input
 					type='text'
 					id='author'
 					className='form-control'
-					name='author'
+					name='content'
 					value={content}
 					onChange={handleChange}
 					required

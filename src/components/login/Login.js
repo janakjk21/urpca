@@ -3,6 +3,8 @@ import contactus_background from '../../Assets/images/bg/vid.jpg';
 import Nav from '../Nav';
 import './login.css';
 import { useDispatch } from 'react-redux';
+import { registerUser } from '../redux/registrationSlice';
+import { fetchUserData } from '../redux/userSlice';
 
 export default function Login() {
 	return (
@@ -38,12 +40,15 @@ const Formsection = () => {
 	const handleSubmit = (event) => {
 		event.preventDefault();
 		if (signIn) {
+			const data = dispatch(fetchUserData());
+			console.log(data);
 		} else {
 			const userData = {
 				name,
 				email,
 				password,
 			};
+			dispatch(registerUser(userData));
 
 			console.log(name, email, password);
 		}

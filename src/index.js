@@ -4,12 +4,12 @@ import * as serviceWorker from './serviceWorker';
 import { RouterProvider } from 'react-router-dom';
 import { configureStore } from '@reduxjs/toolkit';
 import { Provider } from 'react-redux';
-import rootReducer from './components/redux';
+
 import { router } from './router';
 
 import 'regenerator-runtime/runtime.js';
 
-const store = configureStore({ reducer: rootReducer });
+import store from './components/redux/store';
 
 ReactDOM.render(
 	<Provider store={store}>
