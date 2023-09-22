@@ -37,22 +37,23 @@ const Formsection = () => {
 	const handlePasswordChange = (event) => {
 		setPassword(event.target.value);
 	};
-	const handleSubmit = (event) => {
-		event.preventDefault();
-		if (signIn) {
-			const data = dispatch(fetchUserData());
-			console.log(data);
-		} else {
-			const userData = {
-				name,
-				email,
-				password,
+	 const handleLogin = () => {
+			// Replace with actual credentials
+			const credentials = {
+				username: 'example_user',
+				password: 'example_password',
 			};
-			dispatch(registerUser(userData));
 
-			console.log(name, email, password);
-		}
-	};
+			dispatch(login(credentials))
+				.then((response) => {
+					console.log('Login successful!', response);
+					// Handle success (e.g., redirect to a new page)
+				})
+				.catch((error) => {
+					console.error('Login failed:', error);
+					// Handle error (e.g., show an error message)
+				});
+		};
 	console.log(email, password);
 	return (
 		<div

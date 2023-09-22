@@ -1,14 +1,22 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Pagetitle from '../Pagetitle';
 import Nav from '../Nav';
 import CustomAccordion from './CustomAccordion';
 import 'react-accessible-accordion/dist/fancy-example.css';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchFAQData } from '../redux/dashboardslicers/faqFormSlice';
 
 export default function FAQ() {
 	const pageTitle = 'Frequently Asked Questions';
 
 	const breadcrumbs = [{ label: 'Home', link: '/' }, { label: 'FAQ' }];
+	const dispatch = useDispatch();
+	const faqData = useSelector((state) => state.faqForm.data);
+	const status = useSelector((state) => state.faqForm.status);
 
+	useEffect(() => {
+		dispatch(fetchFAQData());
+	}, [dispatch]);
 	const data = [
 		{
 			title: 'Q: What happens during Freshers',
@@ -32,6 +40,7 @@ export default function FAQ() {
 				' Leverage agile frameworks to provide a robust synopsis forhigh level overviews. Iterative approaches to corporatestrategy foster collaborative thinking to further the overallvalue proposition. Organically grow the holistic world view ofdisruptive innovation via workplace diversity and empowerment',
 		},
 	];
+	console.log(faqData, 'data');
 	return (
 		<>
 			<Nav></Nav>
@@ -59,7 +68,12 @@ export default function FAQ() {
 						</div>
 						<div className='col-lg-7'>
 							<div className='faq-block'>
-								<CustomAccordion items={data} />
+								{status === 'succeeded' ? (
+									<CustomAccordion items={faqData} />
+								) : (
+									<div>Loading...</div>
+								)}
+								{}
 							</div>
 						</div>
 					</div>

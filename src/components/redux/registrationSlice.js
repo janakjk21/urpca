@@ -4,6 +4,7 @@ import axios from 'axios';
 
 // Define an initial state for registration
 const initialState = {
+	name: 'registration',
 	user: null,
 	status: 'idle',
 	error: null,

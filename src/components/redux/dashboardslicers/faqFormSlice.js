@@ -4,6 +4,7 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 
 // Define your initial state here
 const initialState = {
+	name: 'faqForm', // Name is required
 	data: null,
 	status: 'idle',
 	error: null,
@@ -48,12 +49,67 @@ const postFAQData = createAsyncThunk(
 		}
 	}
 );
+const editFAQData = createAsyncThunk(
+	'faqForm/editFAQData',
+	async ({ id, formData }) => {
+		try {
+			const response = await fetch(`https://hello231.onrender.com/faq/${id}`, {
+				method: 'PUT',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify(formData),
+			});
+			if (!response.ok) {
+				throw new Error('Network response was not ok');
+			}
+			const data = await response.json();
+			return data;
+		} catch (error) {
+			throw error;
+		}
+	}
+);
 
-// Create a slice with reducers and actions
+const deleteFAQData = createAsyncThunk('faqForm/deleteFAQData', async (id) => {
+	console.log(id, 'indise the deleteFAQData');
+	try {
+		const response = await fetch(`https://hello231.onrender.com/faq/${id}`, {
+			method: 'DELETE',
+		});
+		if (!response.ok) {
+			throw new Error('Network response was not ok');
+		}
+		const data = await response.json();
+		return data;
+	} catch (error) {
+		throw error;
+	}
+});
+
+const getFAQDataById = createAsyncThunk(
+	'faqForm/getFAQDataById',
+	async (id) => {
+		try {
+			const response = await fetch(`https://hello231.onrender.com/faq/${id}`);
+			if (!response.ok) {
+				throw new Error('Network response was not ok');
+			}
+			const data = await response.json();
+			return data;
+		} catch (error) {
+			throw error;
+		}
+	}
+);
+
+// ... rest of the code ...
+
 const faqFormSlice = createSlice({
-	name: 'faqForm',
+	name: initialState.name,
 	initialState,
-	reducers: {},
+
+	// ... rest of the code ...
 	extraReducers: (builder) => {
 		builder
 			.addCase(fetchFAQData.pending, (state) => {
@@ -63,25 +119,30 @@ const faqFormSlice = createSlice({
 				state.status = 'succeeded';
 				state.data = action.payload;
 			})
-			.addCase(fetchFAQData.rejected, (state, action) => {
-				state.status = 'failed';
-				state.error = action.error.message;
-			})
-			.addCase(postFAQData.pending, (state) => {
-				state.status = 'loading';
-			})
-			.addCase(postFAQData.fulfilled, (state, action) => {
+			// ... rest of the code ...
+			.addCase(editFAQData.fulfilled, (state, action) => {
 				state.status = 'succeeded';
-				// Handle the successful POST response data if needed
+				// Handle the successful EDIT response data if needed
 			})
-			.addCase(postFAQData.rejected, (state, action) => {
-				state.status = 'failed';
-				state.error = action.error.message;
+			.addCase(deleteFAQData.fulfilled, (state, action) => {
+				state.status = 'succeeded';
+				state.data = action.payload;
+				// Handle the successful DELETE response data if needed
+			})
+			.addCase(getFAQDataById.fulfilled, (state, action) => {
+				state.status = 'succeeded';
+				state.data = action.payload;
 			});
+		// ... rest of the code ...
 	},
 });
 
-// Export the async thunks and the reducer
-export { fetchFAQData, postFAQData };
-
+export {
+	fetchFAQData,
+	postFAQData,
+	editFAQData,
+	deleteFAQData,
+	getFAQDataById,
+};
+// Create a slice with reducers and actions
 export default faqFormSlice.reducer;

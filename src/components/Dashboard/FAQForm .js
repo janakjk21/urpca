@@ -1,7 +1,20 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import NavSidebar from './NavSidebar';
 import { useDispatch } from 'react-redux';
 import { postFAQData } from '../redux/dashboardslicers/faqFormSlice';
+import { useSelector } from 'react-redux';
+import {
+	fetchFAQData,
+	deleteFAQData,
+} from '../redux/dashboardslicers/faqFormSlice';
+import {
+	FaEdit,
+	FaHeart,
+	FaLongArrowAltRight,
+	FaShoppingCart,
+	FaStar,
+	FaTrash,
+} from 'react-icons/fa';
 
 const FAQForm = ({ data }) => {
 	const dispatch = useDispatch();
@@ -13,9 +26,25 @@ const FAQForm = ({ data }) => {
 		e.preventDefault();
 		const formData = { question, answer, ispaid }; // Updated
 
-		dispatch(postFAQData(formData));
+		const data = dispatch(postFAQData(formData));
+		console.log(data);
+	};
+	const book = {
+		name: 'The Great Book',
+		author: 'John Doe',
+		price: 25,
+		discountPrice: 20,
+		discountPercent: 20,
+		description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit...',
+		imageUrl: 'JANAK',
 	};
 
+	const faqData = useSelector((state) => state.faqForm.data);
+	const status = useSelector((state) => state.faqForm.status);
+
+	useEffect(() => {
+		dispatch(fetchFAQData());
+	}, [dispatch]);
 	return (
 		<div className='wrapper'>
 			<NavSidebar></NavSidebar>
@@ -84,9 +113,64 @@ const FAQForm = ({ data }) => {
 						</div>
 					</div>
 				</div>
+				{status === 'succeeded' ? (
+					<ProductCard data={faqData} />
+				) : (
+					<div>Loading...</div>
+				)}
 			</div>
 		</div>
 	);
 };
 
 export default FAQForm;
+
+const ProductCard = ({ data }) => {
+	const dispatch = useDispatch();
+	const handledelete = (e, id) => {
+		console.log(id);
+		e.preventDefault();
+
+		const data = dispatch(deleteFAQData(id));
+		console.log(data);
+
+		console.log('delete');
+	};
+	return (
+		<>
+			{' '}
+			{data.map((item, index) => (
+				<div className='row justify-content-center ' key={index}>
+					<div className='col-md-12 col-xl-10'>
+						<div className='card shadow-0 border rounded-3'>
+							<div className='card-body'>
+								<div className='row'>
+									<div className='col-md-9 col-lg-9 col-xl-9'>
+										<h5>{item.question}</h5>
+
+										<p className='text-truncate mb-4 mb-md-0'>{item.answer}</p>
+									</div>
+									<div className='col-md-4 col-lg-3 col-xl-3 border-sm-start-none border-start'>
+										<div className='d-flex flex mt-4'>
+											<button
+												className='btn btn-danger btn-sm m-2 '
+												type='button'
+												onClick={(e) => {
+													handledelete(e, item._id);
+												}}>
+												<FaTrash />
+											</button>
+											<button className='btn btn-primary btn-sm' type='button'>
+												<FaEdit />{' '}
+											</button>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			))}
+		</>
+	);
+};

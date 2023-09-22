@@ -37,6 +37,7 @@ const CustomAccordion = ({ items }) => {
 		fontSize: '20px',
 		marginRight: '5px',
 	};
+	console.log('items', items)
 	return (
 		<>
 			<div className='accordion'>
@@ -47,7 +48,7 @@ const CustomAccordion = ({ items }) => {
 						easing='ease-in-out'
 						trigger={
 							<div
-								className='accordion-header active'
+								// className='accordion-header active'
 								style={{
 									...triggerStyles,
 								}}>
@@ -57,14 +58,14 @@ const CustomAccordion = ({ items }) => {
 										className={item.open ? 'active' : ''}
 										style={arrowStyles}
 									/>
-									{`${item.title}`}
+									{`${item.question}`}
 								</h4>
 							</div>
 						}>
 						<div className='accordion-item'>
 							<div className='accordion-header active'></div>
 							<div className='accordion-body'>
-								<p>{item.content}</p>
+								<p>{item.answer}</p>
 							</div>
 						</div>
 					</Collapsible>

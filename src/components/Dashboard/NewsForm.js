@@ -38,20 +38,29 @@ function Form({ addNewsItem }) {
 		author: '',
 		title: '',
 		content: '',
+		paymentStatus: '',
+		image: null, // Store the image file here
 	});
 
-	const { category, author, title, content } = formData;
+	const { category, author, title, content, paymentStatus, image } = formData;
 
 	const handleChange = (e) => {
-		setFormData({
-			...formData,
-			[e.target.name]: e.target.value,
-		});
+		if (e.target.name === 'image') {
+			setFormData({
+				...formData,
+				image: e.target.files[0], // Update image file
+			});
+		} else {
+			setFormData({
+				...formData,
+				[e.target.name]: e.target.value,
+			});
+		}
 	};
 
 	const handleSubmit = (e) => {
 		e.preventDefault();
-		const formData = { category, author, title, content };
+		const formData = { category, author, title, content, paymentStatus, image };
 		dispatch(postNewsData(formData));
 		console.log(formData);
 		// Handle form submission here
@@ -116,6 +125,33 @@ function Form({ addNewsItem }) {
 					value={content}
 					onChange={handleChange}
 					required
+				/>
+			</div>
+			<div className='mb-3'>
+				<label htmlFor='paymentStatus' className='form-label'>
+					Payment Status
+				</label>
+				<select
+					id='paymentStatus'
+					className='form-select'
+					value={formData.paymentStatus}
+					onChange={handleChange}>
+					<option value=''>Select Payment Status</option>
+					<option value='true'>Paid</option>
+					<option value='false'>Unpaid</option>
+				</select>
+			</div>
+			<div className='mb-3'>
+				<label htmlFor='image' className='form-label'>
+					Image
+				</label>
+				<input
+					type='file'
+					id='image'
+					className='form-control'
+					name='image'
+					onChange={handleChange}
+					accept='image/*' // Allow only image files
 				/>
 			</div>
 

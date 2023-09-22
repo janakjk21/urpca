@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import NavSidebar from './NavSidebar';
+import { useSelector, useDispatch } from 'react-redux'
+// import { addEmployee } from '../../redux/actions/employeeActions'
 
 export default function EmployeForm() {
 	return (
@@ -45,6 +47,7 @@ function EmployeeForm() {
 				[e.target.name]: e.target.files[0],
 			});
 		} else {
+			
 			// For other input fields (name and designation)
 			setFormData({
 				...formData,
@@ -55,8 +58,8 @@ function EmployeeForm() {
 
 	const handleSubmit = (e) => {
 		e.preventDefault();
-		// Handle form submission here, including handling the image file
-		console.log(formData); // You can replace this with your submission logic
+		// You would normally send formData and imageFile to your backend here
+
 	};
 
 	return (
