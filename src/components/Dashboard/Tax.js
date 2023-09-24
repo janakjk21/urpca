@@ -8,6 +8,9 @@ import {
 	fetchWorkData,
 } from '../redux/dashboardslicers/taxFormSlice';
 import { useDispatch, useSelector } from 'react-redux';
+import axios from 'axios';
+import { async } from 'regenerator-runtime';
+import { FaEdit, FaTrash } from 'react-icons/fa';
 const Tax = () => {
 	const dispatch = useDispatch();
 	const [formData, setFormData] = useState({
@@ -33,19 +36,26 @@ const Tax = () => {
 		}
 	};
 
-	const handleSubmit = (e) => {
+	const handleSubmit = async (e) => {
 		e.preventDefault();
 
 		// You would normally send formData and imageFile to your backend here
 
 		// Reset the form after submission
-		const data = dispatch(postWorkData(formData));
-		console.log(data);
-		console.log('Form data submitted:', formData);
-	};
+		// const data = dispatch(postWorkData(formData));
 
+		const taxData = {
+			title: formData.name,
+			description: formData.description,
+			ispaid: formData.paymentStatus,
+			image: formData.imageFile,
+		};
+		dispatch(postWorkData(taxData));
+	};
+	const taxData = useSelector((state) => state.tax.data);
+	const status = useSelector((state) => state.tax.status);
 	useEffect(() => {
-		const data = fetchWorkData();
+		const data = dispatch(fetchWorkData());
 		console.log(data, 'this is data ');
 	}, [dispatch]);
 
@@ -128,7 +138,11 @@ const Tax = () => {
 					</div>
 				</div>
 			</div>
-			<div></div>
+			{status === 'succeeded' ? (
+				<ProductCard data={taxData} />
+			) : (
+				<div>Loading...</div>
+			)}
 		</div>
 	);
 };
@@ -141,10 +155,7 @@ const ProductCard = ({ data }) => {
 		console.log(id);
 		e.preventDefault();
 
-		const data = dispatch(deleteFAQData(id));
-		console.log(data);
-
-		console.log('delete');
+		dispatch(deleteWorkData(id));
 	};
 	return (
 		<>
@@ -156,9 +167,11 @@ const ProductCard = ({ data }) => {
 							<div className='card-body'>
 								<div className='row'>
 									<div className='col-md-9 col-lg-9 col-xl-9'>
-										<h5>{item.question}</h5>
+										{/* <h5>{item.question}</h5> */}
 
-										<p className='text-truncate mb-4 mb-md-0'>{item.answer}</p>
+										<p className='text-truncate mb-4 mb-md-0'>
+											{item.description}
+										</p>
 									</div>
 									<div className='col-md-4 col-lg-3 col-xl-3 border-sm-start-none border-start'>
 										<div className='d-flex flex mt-4'>

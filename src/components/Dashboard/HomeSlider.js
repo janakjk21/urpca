@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import NavSidebar from './NavSidebar';
-
+import { useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
+import { postHomeSliderData } from '../redux/dashboardslicers/homeSlicer';
 export default function HomeSlider() {
 	return (
 		<div className='wrapper'>

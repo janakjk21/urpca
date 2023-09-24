@@ -3,6 +3,8 @@ import { useState } from 'react';
 import Nav from './Nav';
 import Sidebar from './Sidebar';
 import NavSidebar from './NavSidebar';
+import axios from 'axios';
+import { async } from 'regenerator-runtime';
 
 export default function Booksform() {
 	return (
@@ -66,8 +68,21 @@ const ProductForm = () => {
 		}
 	};
 
-	const handleSubmit = (event) => {
+	const handleSubmit = async (event) => {
 		event.preventDefault();
+		const taxData = {
+			name: formData.name,
+			author: formData.author,
+			price: formData.price,
+			image: formData.imageUrl,
+		};
+		try {
+			const response = await axios.post('http://localhost:3000/book', taxData);
+			console.log('Tax record created:', response.data);
+		} catch (error) {
+			console.error('Error creating tax record:', error);
+		}
+		console.log('Form data submitted:', formData);
 		console.log(formData);
 		// You can perform further actions here, such as sending the data to the backend
 	};

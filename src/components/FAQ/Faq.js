@@ -71,7 +71,7 @@ export default function FAQ() {
 								{status === 'succeeded' ? (
 									<CustomAccordion items={faqData} />
 								) : (
-									<div>Loading...</div>
+									<div class='preloader'></div>
 								)}
 								{}
 							</div>
