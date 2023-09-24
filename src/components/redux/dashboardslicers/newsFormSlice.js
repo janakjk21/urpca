@@ -14,7 +14,7 @@ const initialState = {
 export const fetchNewsData = createAsyncThunk(
 	'newsForm/fetchNewsData',
 	async () => {
-		const response = await fetch('https://hello231.onrender.com/news'); // Replace with your API endpoint
+		const response = await fetch('http://localhost:3000/news'); // Replace with your API endpoint
 		const data = await response.json();
 		return data;
 	}
@@ -24,24 +24,33 @@ export const fetchNewsData = createAsyncThunk(
 export const postNewsData = createAsyncThunk(
 	'newsForm/postNewsData',
 	async (formData) => {
-		console.log(formData);
-		const response = await fetch('https://hello231.onrender.com/news', {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json',
-			},
-			body: JSON.stringify(formData),
-		});
-		const data = await response.json();
-		console.log(data);
-		return data;
+		console.log(formData, 'inside the data');
+		try {
+			const formDataObj = new FormData();
+			for (const key in formData) {
+				formDataObj.append(key, formData[key]);
+			}
+
+			const response = await fetch('http://localhost:3000/news', {
+				method: 'POST',
+				body: formDataObj,
+			});
+			if (!response.ok) {
+				throw new Error('Network response was not ok');
+			}
+			const data = await response.json();
+			console.log(data);
+			return data;
+		} catch (error) {
+			throw error;
+		}
 	}
 );
 
 export const editNewsData = createAsyncThunk(
 	'newsForm/editNewsData',
 	async ({ id, formData }) => {
-		const response = await fetch(`https://hello231.onrender.com/news/${id}`, {
+		const response = await fetch(`http://localhost:3000/news/${id}`, {
 			method: 'PUT',
 			headers: {
 				'Content-Type': 'application/json',
@@ -57,7 +66,7 @@ export const editNewsData = createAsyncThunk(
 export const deleteNewsData = createAsyncThunk(
 	'newsForm/deleteNewsData',
 	async (id) => {
-		const response = await fetch(`https://hello231.onrender.com/news/${id}`, {
+		const response = await fetch(`http://localhost:3000/news/${id}`, {
 			method: 'DELETE',
 		});
 		const data = await response.json();
@@ -69,7 +78,7 @@ export const deleteNewsData = createAsyncThunk(
 export const getNewsDataById = createAsyncThunk(
 	'newsForm/getNewsDataById',
 	async (id) => {
-		const response = await fetch(`https://hello231.onrender.com/news/${id}`);
+		const response = await fetch(`http://localhost:3000/news/${id}`);
 		const data = await response.json();
 		return data;
 	}

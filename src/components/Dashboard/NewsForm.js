@@ -1,7 +1,14 @@
 import React, { useState } from 'react';
 import NavSidebar from './NavSidebar';
-import { postNewsData } from '../redux/dashboardslicers/newsFormSlice';
 import { useDispatch } from 'react-redux';
+import { UseSelector } from 'react-redux/es/hooks/useSelector';
+
+import {
+	postNewsData,
+	getNewsDataById,
+	fetchNewsData,
+	deleteNewsData,
+} from '../redux/dashboardslicers/newsFormSlice';
 
 export default function NewsForm() {
 	return (
@@ -60,11 +67,44 @@ function Form({ addNewsItem }) {
 
 	const handleSubmit = (e) => {
 		e.preventDefault();
-		const formData = { category, author, title, content, paymentStatus, image };
-		dispatch(postNewsData(formData));
+		const Data = {
+			title: 'Sample Title',
+			description: 'Sample description for the news item.',
+			ispaid: true,
+			author: 'John Doe',
+			image: formData.image,
+			category: 'Sample Category',
+		};
+		const url = 'http://localhost:3000/news';
+
+		const requestOptions = {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify(Data),
+		};
+
+		fetch(url, requestOptions)
+			.then((response) => {
+				if (!response.ok) {
+					throw new Error('Network response was not ok');
+				}
+				return response.json();
+			})
+			.then((data) => {
+				console.log('Success:', data);
+			})
+			.catch((error) => {
+				console.error('Error:', error);
+			});
+
 		console.log(formData);
+		// dispatch(postNewsData(formData));
+
 		// Handle form submission here
 	};
+	console.log(title, category, author, content, paymentStatus, image);
 
 	return (
 		<form onSubmit={handleSubmit}>

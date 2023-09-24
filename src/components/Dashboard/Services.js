@@ -1,5 +1,12 @@
 import React, { useState } from 'react';
 import NavSidebar from './NavSidebar';
+import { useDispatch } from 'react-redux';
+import { UseSelector } from 'react-redux/es/hooks/useSelector';
+
+import {
+	fetchServiceFormData,
+	submitServiceForm,
+} from '../redux/dashboardslicers/servicesSlice';
 
 const initialFormData = {
 	id: 2, // You can set the ID if it's fixed or generate dynamically
@@ -27,6 +34,7 @@ export default function Services() {
 }
 
 const ServiceDataForm = () => {
+	const dispatch = useDispatch();
 	const [formData, setFormData] = useState(initialFormData);
 
 	const handleChange = (event) => {
@@ -53,6 +61,15 @@ const ServiceDataForm = () => {
 
 	const handleSubmit = (event) => {
 		event.preventDefault();
+
+		const data = {
+			title: formData.title,
+			description: formData.description,
+			additionalDescription: formData.additionalDescription,
+			image: formData.imageSrc,
+		};
+
+		dispatch(submitServiceForm(data));
 		// Handle form submission here, e.g., send data to a server
 		console.log(formData);
 	};

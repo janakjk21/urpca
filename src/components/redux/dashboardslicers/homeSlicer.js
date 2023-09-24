@@ -1,112 +1,117 @@
-// homeSlicer.js
-
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 
-// Define the initial state
 const initialState = {
-	formData: null,
+	name: 'homeSlider',
+	data: null,
 	status: 'idle',
 	error: null,
 };
 
-// Define a thunk for submitting the product form
-export const submitProductForm = createAsyncThunk(
-	'homeSlicer/submitProductForm',
+const fetchHomeSliderData = createAsyncThunk(
+	'homeSlider/fetchHomeSliderData',
+	async () => {
+		try {
+			const response = await fetch('http://localhost:3000/slider');
+			if (!response.ok) {
+				throw new Error('Network response was not ok');
+			}
+			const data = await response.json();
+			return data;
+		} catch (error) {
+			throw error;
+		}
+	}
+);
+
+const postHomeSliderData = createAsyncThunk(
+	'homeSlider/postHomeSliderData',
 	async (formData) => {
 		try {
-			// Simulate a submission to a server
-			const response = await new Promise((resolve) => {
-				setTimeout(() => {
-					resolve({ success: true });
-				}, 1000); // Simulate a delay of 1 second
-			});
+			const formDataObj = new FormData();
 
-			return response;
+			const response = await fetch('http://localhost:3000/slider', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+
+				body: JSON.stringify(formData),
+			});
+			if (!response.ok) {
+				throw new Error('Network response was not ok');
+			}
+			const data = await response.json();
+			console.log(data, 'data created');
+			return data;
 		} catch (error) {
-			throw new Error('Submission failed');
+			throw error;
 		}
 	}
 );
 
-// Define a thunk for editing the product form
-export const editProductForm = createAsyncThunk(
-	'homeSlicer/editProductForm',
-	async ({ id, formData }) => {
-		try {
-			// Simulate an edit request to a server
-			const response = await new Promise((resolve) => {
-				setTimeout(() => {
-					resolve({ success: true });
-				}, 1000); // Simulate a delay of 1 second
-			});
-
-			return response;
-		} catch (error) {
-			throw new Error('Edit failed');
-		}
-	}
-);
-
-// Define a thunk for deleting the product form
-export const deleteProductForm = createAsyncThunk(
-	'homeSlicer/deleteProductForm',
+// ... Add other async thunks (edit, delete, get by ID) similarly
+const deleteHomeSliderData = createAsyncThunk(
+	'homeSlider/deleteHomeSliderData',
 	async (id) => {
 		try {
-			// Simulate a deletion request to a server
-			const response = await new Promise((resolve) => {
-				setTimeout(() => {
-					resolve({ success: true });
-				}, 1000); // Simulate a delay of 1 second
+			const response = await fetch(`http://localhost:3000/slider/${id}`, {
+				method: 'DELETE',
 			});
-
-			return response;
+			if (!response.ok) {
+				throw new Error('Network response was not ok');
+			}
+			const data = await response.json();
+			return data;
 		} catch (error) {
-			throw new Error('Deletion failed');
+			throw error;
 		}
 	}
 );
 
-const homeSlicer = createSlice({
-	name: 'homeSlicer',
+const getHomeSliderDataById = createAsyncThunk(
+	'homeSlider/getHomeSliderDataById',
+	async (id) => {
+		try {
+			const response = await fetch(`http://localhost:3000/slider/${id}`);
+			if (!response.ok) {
+				throw new Error('Network response was not ok');
+			}
+			const data = await response.json();
+			return data;
+		} catch (error) {
+			throw error;
+		}
+	}
+);
+
+const homeSliderSlice = createSlice({
+	name: initialState.name,
 	initialState,
-	reducers: {},
 	extraReducers: (builder) => {
 		builder
-			.addCase(submitProductForm.pending, (state) => {
+			.addCase(fetchHomeSliderData.pending, (state) => {
 				state.status = 'loading';
 			})
-			.addCase(submitProductForm.fulfilled, (state) => {
+			.addCase(fetchHomeSliderData.fulfilled, (state, action) => {
 				state.status = 'succeeded';
-				state.formData = null; // Reset the form data after successful submission
+				state.data = action.payload;
 			})
-			.addCase(submitProductForm.rejected, (state, action) => {
-				state.status = 'failed';
-				state.error = action.error.message;
-			})
-			.addCase(editProductForm.pending, (state) => {
-				state.status = 'loading';
-			})
-			.addCase(editProductForm.fulfilled, (state) => {
+			.addCase(deleteHomeSliderData.fulfilled, (state, action) => {
 				state.status = 'succeeded';
+				state.data = action.payload;
 			})
-			.addCase(editProductForm.rejected, (state, action) => {
-				state.status = 'failed';
-				state.error = action.error.message;
-			})
-			.addCase(deleteProductForm.pending, (state) => {
-				state.status = 'loading';
-			})
-			.addCase(deleteProductForm.fulfilled, (state) => {
+			.addCase(getHomeSliderDataById.fulfilled, (state, action) => {
 				state.status = 'succeeded';
-			})
-			.addCase(deleteProductForm.rejected, (state, action) => {
-				state.status = 'failed';
-				state.error = action.error.message;
+				state.data = action.payload;
 			});
 	},
 });
 
-export const selectProductFormStatus = (state) => state.homeSlicer.status;
-export const selectProductFormError = (state) => state.homeSlicer.error;
+export {
+	fetchHomeSliderData,
+	postHomeSliderData,
+	deleteHomeSliderData,
+	getHomeSliderDataById,
+};
 
-export default homeSlicer.reducer;
+export default homeSliderSlice.reducer;

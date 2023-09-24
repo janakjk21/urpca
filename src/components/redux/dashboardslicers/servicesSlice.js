@@ -2,7 +2,7 @@
 
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 
-const API_URL = 'https://hello231.onrender.com/services';
+const API_URL = 'http://localhost:3000/service';
 
 // Define the initial state
 const initialState = {
@@ -33,23 +33,25 @@ export const fetchServiceFormData = createAsyncThunk(
 export const submitServiceForm = createAsyncThunk(
 	'services/submitServiceForm',
 	async (formData) => {
+		console.log(formData, 'inside the data');
 		try {
-			const response = await fetch(API_URL, {
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json',
-				},
-				body: JSON.stringify(formData),
-			});
-
-			if (!response.ok) {
-				throw new Error('Submission failed');
+			const formDataObj = new FormData();
+			for (const key in formData) {
+				formDataObj.append(key, formData[key]);
 			}
 
+			const response = await fetch('http://localhost:3000/tax', {
+				method: 'POST',
+				body: formDataObj,
+			});
+			if (!response.ok) {
+				throw new Error('Network response was not ok');
+			}
 			const data = await response.json();
+			console.log(data);
 			return data;
 		} catch (error) {
-			throw new Error('Submission failed');
+			throw error;
 		}
 	}
 );
