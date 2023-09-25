@@ -86,6 +86,7 @@ module.exports = {
 		new CopyWebpackPlugin({
 			patterns: [{ from: 'src/Assets', to: 'Assets' }],
 		}),
+
 		new CleanWebpackPlugin(),
 		new webpack.HotModuleReplacementPlugin(),
 		new webpack.ProvidePlugin({

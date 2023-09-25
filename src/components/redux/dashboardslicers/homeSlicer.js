@@ -11,7 +11,7 @@ const fetchHomeSliderData = createAsyncThunk(
 	'homeSlider/fetchHomeSliderData',
 	async () => {
 		try {
-			const response = await fetch('http://localhost:3000/slider');
+			const response = await fetch('https://hello231.onrender.com/slider');
 			if (!response.ok) {
 				throw new Error('Network response was not ok');
 			}
@@ -29,7 +29,7 @@ const postHomeSliderData = createAsyncThunk(
 		try {
 			const formDataObj = new FormData();
 
-			const response = await fetch('http://localhost:3000/slider', {
+			const response = await fetch('https://hello231.onrender.com/slider', {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',
@@ -54,7 +54,7 @@ const deleteHomeSliderData = createAsyncThunk(
 	'homeSlider/deleteHomeSliderData',
 	async (id) => {
 		try {
-			const response = await fetch(`http://localhost:3000/slider/${id}`, {
+			const response = await fetch(`https://hello231.onrender.com/slider/${id}`, {
 				method: 'DELETE',
 			});
 			if (!response.ok) {
@@ -72,7 +72,7 @@ const getHomeSliderDataById = createAsyncThunk(
 	'homeSlider/getHomeSliderDataById',
 	async (id) => {
 		try {
-			const response = await fetch(`http://localhost:3000/slider/${id}`);
+			const response = await fetch(`https://hello231.onrender.com/slider/${id}`);
 			if (!response.ok) {
 				throw new Error('Network response was not ok');
 			}

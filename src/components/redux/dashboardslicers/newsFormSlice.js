@@ -5,7 +5,7 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 // Define the initial state
 const initialState = {
 	name: 'newsForm', // Name is required
-	newsData: [],
+	data: [],
 	status: 'idle',
 	error: null,
 };
@@ -14,9 +14,16 @@ const initialState = {
 export const fetchNewsData = createAsyncThunk(
 	'newsForm/fetchNewsData',
 	async () => {
-		const response = await fetch('http://localhost:3000/news'); // Replace with your API endpoint
-		const data = await response.json();
-		return data;
+		try {
+			const response = await fetch('http://localhost:3000/news');
+			if (!response.ok) {
+				throw new Error('Network response was not ok');
+			}
+			const data = await response.json();
+			return data;
+		} catch (error) {
+			throw error;
+		}
 	}
 );
 
@@ -95,6 +102,13 @@ const newsFormSlice = createSlice({
 		builder
 			// ... previous code ...
 
+			.addCase(fetchNewsData.pending, (state) => {
+				state.status = 'loading';
+			})
+			.addCase(fetchNewsData.fulfilled, (state, action) => {
+				state.status = 'succeeded';
+				state.data = action.payload;
+			})
 			.addCase(editNewsData.fulfilled, (state, action) => {
 				state.status = 'succeeded';
 				// Update the state based on the EDIT response data

@@ -2,7 +2,7 @@
 
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 
-const API_URL = 'http://localhost:3000/service';
+const API_URL = 'https://hello231.onrender.com/service';
 
 // Define the initial state
 const initialState = {
@@ -40,7 +40,7 @@ export const submitServiceForm = createAsyncThunk(
 				formDataObj.append(key, formData[key]);
 			}
 
-			const response = await fetch('http://localhost:3000/tax', {
+			const response = await fetch('https://hello231.onrender.com/service', {
 				method: 'POST',
 				body: formDataObj,
 			});

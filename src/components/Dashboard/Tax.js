@@ -55,8 +55,7 @@ const Tax = () => {
 	const taxData = useSelector((state) => state.tax.data);
 	const status = useSelector((state) => state.tax.status);
 	useEffect(() => {
-		const data = dispatch(fetchWorkData());
-		console.log(data, 'this is data ');
+		dispatch(fetchWorkData());
 	}, [dispatch]);
 
 	return (

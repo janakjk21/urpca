@@ -66,7 +66,7 @@ const ServiceDataForm = () => {
 			title: formData.title,
 			description: formData.description,
 			additionalDescription: formData.additionalDescription,
-			image: formData.imageSrc,
+			Image: formData.innerImage1Src,
 		};
 
 		dispatch(submitServiceForm(data));

@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import NavSidebar from './NavSidebar';
 import { useDispatch } from 'react-redux';
-import { UseSelector } from 'react-redux/es/hooks/useSelector';
+import { useSelector } from 'react-redux/es/hooks/useSelector';
 
 import {
 	postNewsData,
@@ -9,8 +9,18 @@ import {
 	fetchNewsData,
 	deleteNewsData,
 } from '../redux/dashboardslicers/newsFormSlice';
+import axios from 'axios';
+import { FaEdit, FaTrash } from 'react-icons/fa';
 
 export default function NewsForm() {
+	const dispatch = useDispatch();
+	const faqData = useSelector((state) => state.news.data);
+	const status = useSelector((state) => state.news.status);
+
+	console.log(faqData);
+	useEffect(() => {
+		dispatch(fetchNewsData());
+	}, [dispatch]);
 	return (
 		<div className='wrapper'>
 			<div className='wrapper'>
@@ -25,6 +35,11 @@ export default function NewsForm() {
 											<div>
 												<h1>News</h1>
 												<Form></Form>
+												{status === 'succeeded' ? (
+													<ProductCard data={faqData} />
+												) : (
+													<div>Loading...</div>
+												)}
 											</div>
 										</div>
 									</div>
@@ -38,7 +53,7 @@ export default function NewsForm() {
 	);
 }
 
-function Form({ addNewsItem }) {
+function Form() {
 	const dispatch = useDispatch();
 	const [formData, setFormData] = useState({
 		category: '',
@@ -51,59 +66,35 @@ function Form({ addNewsItem }) {
 
 	const { category, author, title, content, paymentStatus, image } = formData;
 
-	const handleChange = (e) => {
-		if (e.target.name === 'image') {
-			setFormData({
-				...formData,
-				image: e.target.files[0], // Update image file
-			});
-		} else {
-			setFormData({
-				...formData,
-				[e.target.name]: e.target.value,
-			});
-		}
+	const handleInputChange = (e) => {
+		const { name, value } = e.target;
+		setFormData({
+			...formData,
+			[name]: value,
+		});
 	};
 
-	const handleSubmit = (e) => {
+	const handleFileChange = (e) => {
+		setFormData({
+			...formData,
+			image: e.target.files[0],
+		});
+	};
+
+	const handleSubmit = async (e) => {
 		e.preventDefault();
-		const Data = {
-			title: 'Sample Title',
-			description: 'Sample description for the news item.',
-			ispaid: true,
-			author: 'John Doe',
+
+		const data = {
+			title: formData.title,
+			category: formData.category,
+			author: formData.author,
+			paymentStatus: formData.paymentStatus,
 			image: formData.image,
-			category: 'Sample Category',
-		};
-		const url = 'http://localhost:3000/news';
-
-		const requestOptions = {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json',
-			},
-			body: JSON.stringify(Data),
 		};
 
-		fetch(url, requestOptions)
-			.then((response) => {
-				if (!response.ok) {
-					throw new Error('Network response was not ok');
-				}
-				return response.json();
-			})
-			.then((data) => {
-				console.log('Success:', data);
-			})
-			.catch((error) => {
-				console.error('Error:', error);
-			});
-
-		console.log(formData);
-		// dispatch(postNewsData(formData));
-
-		// Handle form submission here
+		dispatch(postNewsData(data));
 	};
+
 	console.log(title, category, author, content, paymentStatus, image);
 
 	return (
@@ -118,7 +109,7 @@ function Form({ addNewsItem }) {
 					className='form-control'
 					name='category'
 					value={category}
-					onChange={handleChange}
+					onChange={handleInputChange}
 					required
 				/>
 			</div>
@@ -132,7 +123,7 @@ function Form({ addNewsItem }) {
 					className='form-control'
 					name='title'
 					value={title}
-					onChange={handleChange}
+					onChange={handleInputChange}
 					required
 				/>
 			</div>
@@ -147,7 +138,7 @@ function Form({ addNewsItem }) {
 					className='form-control'
 					name='author'
 					value={author}
-					onChange={handleChange}
+					onChange={handleInputChange}
 					required
 				/>
 			</div>
@@ -163,7 +154,7 @@ function Form({ addNewsItem }) {
 					className='form-control'
 					name='content'
 					value={content}
-					onChange={handleChange}
+					onChange={handleInputChange}
 					required
 				/>
 			</div>
@@ -175,7 +166,7 @@ function Form({ addNewsItem }) {
 					id='paymentStatus'
 					className='form-select'
 					value={formData.paymentStatus}
-					onChange={handleChange}>
+					onChange={handleInputChange}>
 					<option value=''>Select Payment Status</option>
 					<option value='true'>Paid</option>
 					<option value='false'>Unpaid</option>
@@ -190,7 +181,7 @@ function Form({ addNewsItem }) {
 					id='image'
 					className='form-control'
 					name='image'
-					onChange={handleChange}
+					onChange={handleFileChange}
 					accept='image/*' // Allow only image files
 				/>
 			</div>
@@ -201,3 +192,55 @@ function Form({ addNewsItem }) {
 		</form>
 	);
 }
+
+const ProductCard = ({ data }) => {
+	const dispatch = useDispatch();
+	const handledelete = (e, id) => {
+		console.log(id);
+		e.preventDefault();
+
+		const data = dispatch(deleteFAQData(id));
+		console.log(data);
+
+		console.log('delete');
+	};
+	return (
+		<>
+			{' '}
+			{data.map((item, index) => (
+				<div className='row justify-content-center ' key={index}>
+					<div className='col-md-12 col-xl-10'>
+						<div className='card shadow-0 border rounded-3'>
+							<div className='card-body'>
+								<div className='row'>
+									<div className='col-md-9 col-lg-9 col-xl-9'>
+										<h5>{item.title}</h5>
+
+										<p className='text-truncate mb-4 mb-md-0'>
+											{item.description}
+										</p>
+									</div>
+									<div className='col-md-4 col-lg-3 col-xl-3 border-sm-start-none border-start'>
+										<div className='d-flex flex mt-4'>
+											<button
+												className='btn btn-danger btn-sm m-2 '
+												type='button'
+												onClick={(e) => {
+													handledelete(e, item._id);
+												}}>
+												<FaTrash />
+											</button>
+											<button className='btn btn-primary btn-sm' type='button'>
+												<FaEdit />{' '}
+											</button>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			))}
+		</>
+	);
+};

@@ -11,7 +11,7 @@ const initialState = {
 // Define an async thunk to fetch data from the work endpoint
 const fetchWorkData = createAsyncThunk('work/fetchWorkData', async () => {
 	try {
-		const response = await fetch('http://localhost:3000/tax');
+		const response = await fetch('https://hello231.onrender.com/tax');
 		if (!response.ok) {
 			throw new Error('Network response was not ok');
 		}
@@ -31,7 +31,7 @@ const postWorkData = createAsyncThunk('work/postWorkData', async (formData) => {
 			formDataObj.append(key, formData[key]);
 		}
 
-		const response = await fetch('http://localhost:3000/tax', {
+		const response = await fetch('https://hello231.onrender.com/tax', {
 			method: 'POST',
 			body: formDataObj,
 		});
@@ -71,7 +71,7 @@ const editWorkData = createAsyncThunk(
 const deleteWorkData = createAsyncThunk('work/deleteWorkData', async (id) => {
 	console.log(id, 'inside the deleteWorkData');
 	try {
-		const response = await fetch(`http://localhost:3000/tax/?${id}`, {
+		const response = await fetch(`https://hello231.onrender.com/tax/?${id}`, {
 			method: 'DELETE',
 		});
 		if (!response.ok) {
