@@ -8,16 +8,32 @@ const initialState = {
 	error: null,
 };
 
-export const login = createAsyncThunk('login/login', async (credentials) => {
-	try {
-		// Perform the login request here (replace with your actual login logic)
-		// For simplicity, we'll simulate a successful login with a fake user
-		const response = await fakeLoginRequest(credentials);
-		return response;
-	} catch (error) {
-		throw error;
+export const loginUser = createAsyncThunk(
+	'login/loginUser',
+	async (credentials) => {
+		try {
+			const response = await fetch('http://localhost:3000/user/login', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify(credentials),
+			});
+
+			if (!response.ok) {
+				const errorData = await response.json();
+				throw new Error(errorData.message);
+			}
+
+			const data = await response.json();
+			localStorage.setItem('user', JSON.stringify(data));
+			console.log(data, 'data from');
+			return data;
+		} catch (error) {
+			throw error;
+		}
 	}
-});
+);
 
 const loginSlice = createSlice({
 	name: 'login',
@@ -25,24 +41,18 @@ const loginSlice = createSlice({
 	reducers: {},
 	extraReducers: (builder) => {
 		builder
-			.addCase(login.pending, (state) => {
+			.addCase(loginUser.pending, (state) => {
 				state.status = 'loading';
 			})
-			.addCase(login.fulfilled, (state, action) => {
+			.addCase(loginUser.fulfilled, (state, action) => {
 				state.status = 'succeeded';
 				state.user = action.payload;
 			})
-			.addCase(login.rejected, (state, action) => {
+			.addCase(loginUser.rejected, (state, action) => {
 				state.status = 'failed';
 				state.error = action.error.message;
 			});
 	},
 });
-
-const fakeLoginRequest = async (credentials) => {
-	// Simulating a successful login with a fake user for demonstration
-	return { username: credentials.username, token: 'fakeToken' };
-};
-
 
 export default loginSlice.reducer;

@@ -1,12 +1,13 @@
 // servicesSlice.js
 
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+const user = JSON.parse(localStorage.getItem('user'));
 
-const API_URL = 'https://hello231.onrender.com/service';
+const API_URL = 'http://localhost:3000/service';
 
 // Define the initial state
 const initialState = {
-	formData: null,
+	data: null,
 	status: 'idle',
 	error: null,
 };
@@ -33,25 +34,35 @@ export const fetchServiceFormData = createAsyncThunk(
 export const submitServiceForm = createAsyncThunk(
 	'services/submitServiceForm',
 	async (formData) => {
-		console.log(formData, 'inside the data');
 		try {
-			const formDataObj = new FormData();
-			for (const key in formData) {
-				formDataObj.append(key, formData[key]);
-			}
+			// const formDataObj = new FormData();
+			// for (const key in formData) {
+			// 	if (key === 'image') {
+			// 		formDataObj.append(key, formData[key][0]); // add the first file in the array
+			// 	} else {
+			// 		formDataObj.append(key, formData[key]);
+			// 	}
+			// }
 
-			const response = await fetch('https://hello231.onrender.com/service', {
+			console.log(formDataObj, 'formDataObj');
+
+			const response = await fetch('http://localhost:3000/service', {
 				method: 'POST',
-				body: formDataObj,
+				headers: {
+					'Content-Type': 'multipart/form-data',
+					Authorization: `Bearer ${user.token}`,
+				},
+				body: formData,
 			});
 			if (!response.ok) {
-				throw new Error('Network response was not ok');
+				throw new Error('Submitting data failed');
 			}
+
 			const data = await response.json();
 			console.log(data);
 			return data;
 		} catch (error) {
-			throw error;
+			throw new Error('Submitting data failed');
 		}
 	}
 );
@@ -67,7 +78,7 @@ const servicesSlice = createSlice({
 			})
 			.addCase(fetchServiceFormData.fulfilled, (state, action) => {
 				state.status = 'succeeded';
-				state.formData = action.payload;
+				state.data = action.payload;
 			})
 			.addCase(fetchServiceFormData.rejected, (state) => {
 				state.status = 'failed';

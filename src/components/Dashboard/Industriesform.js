@@ -1,5 +1,10 @@
 import React, { useState } from 'react';
 import NavSidebar from './NavSidebar';
+import { useDispatch } from 'react-redux';
+import {
+	submitIndustriesForm,
+	fetchIndustriesFormData,
+} from '../redux/dashboardslicers/industriesFormSlice';
 
 const initialFormData = {
 	id: 2, // You can set the ID if it's fixed or generate dynamically
@@ -27,6 +32,7 @@ export default function Industriesform() {
 }
 
 const ServiceDataForm = () => {
+	const dispatch = useDispatch();
 	const [formData, setFormData] = useState(initialFormData);
 
 	const handleChange = (event) => {
@@ -52,8 +58,14 @@ const ServiceDataForm = () => {
 	};
 
 	const handleSubmit = (event) => {
+		const data = {
+			name: formData.title,
+			description: formData.description,
+			AdditionalDescription: formData.additionalDescription,
+			image: formData.innerImage1Src,
+		};
 		event.preventDefault();
-		// Handle form submission here, e.g., send data to a server
+		dispatch(submitIndustriesForm(data)); // Handle form submission here, e.g., send data to a server
 		console.log(formData);
 	};
 

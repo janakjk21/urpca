@@ -3,8 +3,8 @@ import contactus_background from '../../Assets/images/bg/vid.jpg';
 import Nav from '../Nav';
 import './login.css';
 import { useDispatch } from 'react-redux';
-import { registerUser } from '../redux/registrationSlice';
-import { fetchUserData } from '../redux/userSlice';
+import { registerUser } from '../redux/dashboardslicers/signupSlice';
+import { loginUser } from '../redux/dashboardslicers/loginSlice';
 
 export default function Login() {
 	return (
@@ -21,7 +21,7 @@ const Formsection = () => {
 	const [name, setName] = useState(''); // State for name input
 	const [email, setEmail] = useState(''); // State for email input
 	const [password, setPassword] = useState(''); // State for password input
-
+	const [role, setRole] = useState('admin'); // State for password input
 	const slide = () => {
 		setSignIn(!signIn);
 	};
@@ -37,23 +37,19 @@ const Formsection = () => {
 	const handlePasswordChange = (event) => {
 		setPassword(event.target.value);
 	};
-	 const handleLogin = () => {
-			// Replace with actual credentials
-			const credentials = {
-				username: 'example_user',
-				password: 'example_password',
-			};
+	const handleLogin = (e) => {
+		// Replace with actual credentials
+		e.preventDefault();
+		if (signIn) {
+			dispatch(loginUser({ email, password }));
+			console.log('login');
+		} else {
+			console.log('sign in');
 
-			dispatch(login(credentials))
-				.then((response) => {
-					console.log('Login successful!', response);
-					// Handle success (e.g., redirect to a new page)
-				})
-				.catch((error) => {
-					console.error('Login failed:', error);
-					// Handle error (e.g., show an error message)
-				});
-		};
+			dispatch(registerUser({ name, email, password, role }));
+		}
+		// Prevent page from refreshing
+	};
 	console.log(email, password);
 	return (
 		<div
@@ -95,7 +91,7 @@ const Formsection = () => {
 					<a href='#'>Forgot your password?</a>
 					<button
 						onClick={(e) => {
-							handleSubmit(e);
+							handleLogin(e);
 						}}>
 						{signIn ? 'Sign in' : 'Sign up'}
 					</button>

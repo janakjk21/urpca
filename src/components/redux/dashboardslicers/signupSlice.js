@@ -1,51 +1,52 @@
-// signupSlice.js
-
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { createSlice } from '@reduxjs/toolkit';
+import { createAsyncThunk } from '@reduxjs/toolkit';
 
 const initialState = {
-	user: null,
-	status: 'idle',
+	loading: false,
 	error: null,
+	registrationSuccess: false,
 };
-
-export const signup = createAsyncThunk('signup/signup', async (formData) => {
-	try {
-		// Perform the signup request here (replace with your actual signup logic)
-		// For simplicity, we'll simulate a successful signup with a fake user
-		const response = await fakeSignupRequest(formData);
-		return response;
-	} catch (error) {
-		throw error;
-	}
-});
-
-const signupSlice = createSlice({
-	name: 'signup',
+const authSlice = createSlice({
+	name: 'auth',
 	initialState,
-	reducers: {},
-	extraReducers: (builder) => {
-		builder
-			.addCase(signup.pending, (state) => {
-				state.status = 'loading';
-			})
-			.addCase(signup.fulfilled, (state, action) => {
-				state.status = 'succeeded';
-				state.user = action.payload;
-			})
-			.addCase(signup.rejected, (state, action) => {
-				state.status = 'failed';
-				state.error = action.error.message;
-			});
+	reducers: {
+		registrationStart: (state) => {
+			state.loading = true;
+			state.error = null;
+			state.registrationSuccess = false;
+		},
+		registrationSuccess: (state) => {
+			state.loading = false;
+			state.registrationSuccess = true;
+		},
+		registrationFailure: (state, action) => {
+			state.loading = false;
+			state.error = action.payload;
+			state.registrationSuccess = false;
+		},
 	},
 });
 
-const fakeSignupRequest = async (formData) => {
-	// Simulating a successful signup with a fake user for demonstration
-	return {
-		username: formData.username,
-		email: formData.email,
-		token: 'fakeToken',
-	};
-};
+export const registerUser = createAsyncThunk(
+	'auth/registerUser',
+	async (userData) => {
+		const response = await fetch('http://localhost:3000/user/register', {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify(userData),
+		});
+		if (!response.ok) {
+			throw new Error('Registration failed.');
+		} else {
+			const data = await response.json();
+			console.log(data);
+		}
+	}
+);
 
-export default signupSlice.reducer;
+export const { registrationStart, registrationSuccess, registrationFailure } =
+	authSlice.actions;
+
+export default authSlice.reducer;

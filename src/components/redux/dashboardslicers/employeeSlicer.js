@@ -13,7 +13,7 @@ const fetchEmployeeData = createAsyncThunk(
 	'employee/fetchEmployeeData',
 	async () => {
 		try {
-			const response = await fetch('https://hello231.onrender.com/employee');
+			const response = await fetch('http://localhost:3000/employe');
 			if (!response.ok) {
 				throw new Error('Network response was not ok');
 			}
@@ -24,22 +24,29 @@ const fetchEmployeeData = createAsyncThunk(
 		}
 	}
 );
-
 const postEmployeeData = createAsyncThunk(
 	'employee/postEmployeeData',
 	async (formData) => {
+		console.log(formData, 'inside the data');
 		try {
-			const response = await fetch('https://hello231.onrender.com/employee', {
+			const formDataObj = new FormData();
+			for (const key in formData) {
+				if (key === 'image') {
+					formDataObj.append(key, formData[key][0]); // add the first file in the array
+				} else {
+					formDataObj.append(key, formData[key]);
+				}
+			}
+
+			const response = await fetch('http://localhost:3000/employee', {
 				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json',
-				},
-				body: JSON.stringify(formData),
+				body: formDataObj,
 			});
 			if (!response.ok) {
 				throw new Error('Network response was not ok');
 			}
 			const data = await response.json();
+			console.log(data);
 			return data;
 		} catch (error) {
 			throw error;

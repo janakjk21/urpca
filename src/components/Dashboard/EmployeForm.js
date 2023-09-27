@@ -1,9 +1,19 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import NavSidebar from './NavSidebar';
-import { useSelector, useDispatch } from 'react-redux'
-// import { addEmployee } from '../../redux/actions/employeeActions
-
+import { useSelector, useDispatch } from 'react-redux';
+import {
+	postEmployeeData,
+	fetchEmployeeData,
+	deleteEmployeeData,
+} from '../redux/dashboardslicers/employeeSlicer';
 export default function EmployeForm() {
+	const dispatch = useDispatch();
+	const employedata = useSelector((state) => state.employee.data);
+
+	console.log(employedata, 'this is sdata ');
+	useEffect(() => {
+		fetchEmployeeData();
+	}, [dispatch]);
 	return (
 		<div className='wrapper'>
 			<NavSidebar></NavSidebar>
@@ -31,6 +41,7 @@ export default function EmployeForm() {
 }
 
 function EmployeeForm() {
+	const dispatch = useDispatch();
 	const [formData, setFormData] = useState({
 		imgFile: null, // Updated to store the selected image file
 		name: '',
@@ -47,7 +58,6 @@ function EmployeeForm() {
 				[e.target.name]: e.target.files[0],
 			});
 		} else {
-			
 			// For other input fields (name and designation)
 			setFormData({
 				...formData,
@@ -58,8 +68,9 @@ function EmployeeForm() {
 
 	const handleSubmit = (e) => {
 		e.preventDefault();
+		const data = { name: name, designation: designation, Image: imgFile };
+		dispatch(postEmployeeData(data));
 		// You would normally send formData and imageFile to your backend here
-
 	};
 
 	return (

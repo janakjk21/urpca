@@ -1,32 +1,33 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import NavSidebar from './NavSidebar';
 import { useDispatch } from 'react-redux';
-import { UseSelector } from 'react-redux/es/hooks/useSelector';
+import { UseSelector, useSelector } from 'react-redux/es/hooks/useSelector';
+import { FaTrash, FaEdit } from 'react-icons/fa';
 
 import {
 	fetchServiceFormData,
 	submitServiceForm,
 } from '../redux/dashboardslicers/servicesSlice';
 
-const initialFormData = {
-	id: 2, // You can set the ID if it's fixed or generate dynamically
-	title: 'finance',
-	description: '',
-	imageSrc: '',
-	imageAlt: 'Service Image',
-	additionalDescription: '',
-	innerImage1Src: '',
-
-	subtitle: 'we do the bestt',
-};
-
 export default function Services() {
+	const dispatch = useDispatch();
+	const faqData = useSelector((state) => state.service.data);
+	const status = useSelector((state) => state.service.status);
+	useEffect(() => {
+		dispatch(fetchServiceFormData());
+	}, [dispatch]);
+	console.log(faqData, 'this is data ');
 	return (
 		<div>
 			<div className='wrapper'>
 				<div className='wrapper'>
 					<NavSidebar></NavSidebar>
 					<ServiceDataForm></ServiceDataForm>
+					{status === 'succeeded' ? (
+						<ProductCard data={faqData} />
+					) : (
+						<div>Loading...</div>
+					)}
 				</div>
 			</div>
 		</div>
@@ -35,7 +36,14 @@ export default function Services() {
 
 const ServiceDataForm = () => {
 	const dispatch = useDispatch();
-	const [formData, setFormData] = useState(initialFormData);
+	const [formData, setFormData] = useState({
+		title: '',
+		description: '',
+		image: '', // Changed from innerImage1Src
+		additionalDescription: '',
+		category: '',
+		payment: 'true',
+	});
 
 	const handleChange = (event) => {
 		const { name, value } = event.target;
@@ -45,35 +53,33 @@ const ServiceDataForm = () => {
 		});
 	};
 
-	const handleImageUpload = (event, propertyName) => {
+	const handleImageUpload = (event) => {
 		const file = event.target.files[0];
 		if (file) {
 			const reader = new FileReader();
 			reader.onload = (e) => {
 				setFormData({
 					...formData,
-					[propertyName]: e.target.result,
+					image: e.target.result, // Changed from inperImage1Src
 				});
 			};
 			reader.readAsDataURL(file);
 		}
 	};
 
-	const handleSubmit = (event) => {
+	const handleSubmit = async (event) => {
 		event.preventDefault();
 
-		const data = {
-			title: formData.title,
-			description: formData.description,
-			additionalDescription: formData.additionalDescription,
-			Image: formData.innerImage1Src,
-		};
-
-		dispatch(submitServiceForm(data));
-		// Handle form submission here, e.g., send data to a server
+		// const formData = new FormData();
+		// formData.append('title', title);
+		// formData.append('description', description);
+		// formData.append('category', category);
+		// formData.append('payment', payment);
+		// formData.append('aditionalDes', additionalDescription);
+		// formData.append('image', image);
+		dispatch(submitServiceForm(formData));
 		console.log(formData);
 	};
-
 	return (
 		<div className='content-page'>
 			<div className='content'>
@@ -130,24 +136,49 @@ const ServiceDataForm = () => {
 													rows='4'
 												/>
 											</div>
-
 											<div className='mb-3'>
-												<label htmlFor='innerImage1Src' className='form-label'>
-													Inner Image 1 Source
+												<label htmlFor='category' className='form-label'>
+													category
+												</label>
+												<textarea
+													id='category'
+													name='category'
+													className='form-control'
+													value={formData.additionalDescription}
+													onChange={handleChange}
+													rows='4'
+												/>
+											</div>
+											<div className='mb-3'>
+												<label htmlFor='payment' className='form-label'>
+													Payment Status
+												</label>
+												<select
+													id='payment'
+													className='form-select'
+													name='payment'
+													value={formData.payment}
+													onChange={handleChange} // Updated
+												>
+													<option value={true}> paid</option> {/* Updated */}
+													<option value={false}>Unpaid</option> {/* Updated */}
+												</select>
+											</div>
+											<div className='mb-3'>
+												<label htmlFor='image' className='form-label'>
+													Image Source
 												</label>
 												<input
 													type='file'
-													id='innerImage1Src'
-													name='innerImage1Src'
+													id='image'
+													name='image'
 													className='form-control'
 													accept='image/*'
-													onChange={(e) =>
-														handleImageUpload(e, 'innerImage1Src')
-													}
+													onChange={handleImageUpload} // Updated the onChange handler
 												/>
-												{formData.innerImage1Src && (
+												{formData.image && (
 													<img
-														src={formData.innerImage1Src}
+														src={formData.image}
 														alt='Uploaded Image'
 														style={{ marginTop: '10px', maxWidth: '100%' }}
 													/>
@@ -166,5 +197,55 @@ const ServiceDataForm = () => {
 				</div>
 			</div>
 		</div>
+	);
+};
+
+const ProductCard = ({ data }) => {
+	const dispatch = useDispatch();
+	const handledelete = (e, id) => {
+		console.log(id);
+		e.preventDefault();
+
+		const data = dispatch(deleteFAQData(id));
+		console.log(data);
+
+		console.log('delete');
+	};
+	return (
+		<>
+			{' '}
+			{data.map((item, index) => (
+				<div className='row justify-content-center ' key={index}>
+					<div className='col-md-12 col-xl-10'>
+						<div className='card shadow-0 border rounded-3'>
+							<div className='card-body'>
+								<div className='row'>
+									<div className='col-md-9 col-lg-9 col-xl-9'>
+										<h5>{item.question}</h5>
+
+										<p className='text-truncate mb-4 mb-md-0'>{item.answer}</p>
+									</div>
+									<div className='col-md-4 col-lg-3 col-xl-3 border-sm-start-none border-start'>
+										<div className='d-flex flex mt-4'>
+											<button
+												className='btn btn-danger btn-sm m-2 '
+												type='button'
+												onClick={(e) => {
+													handledelete(e, item._id);
+												}}>
+												<FaTrash />
+											</button>
+											<button className='btn btn-primary btn-sm' type='button'>
+												<FaEdit />{' '}
+											</button>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			))}
+		</>
 	);
 };

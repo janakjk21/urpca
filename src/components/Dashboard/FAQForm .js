@@ -29,22 +29,14 @@ const FAQForm = ({ data }) => {
 		const data = dispatch(postFAQData(formData));
 		console.log(data);
 	};
-	const book = {
-		name: 'The Great Book',
-		author: 'John Doe',
-		price: 25,
-		discountPrice: 20,
-		discountPercent: 20,
-		description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit...',
-		imageUrl: 'JANAK',
-	};
 
 	const faqData = useSelector((state) => state.faqForm.data);
 	const status = useSelector((state) => state.faqForm.status);
+	const requestMade = useSelector((state) => state.faqForm.requestMade);
 
 	useEffect(() => {
 		dispatch(fetchFAQData());
-	}, [dispatch]);
+	}, [requestMade]);
 	return (
 		<div className='wrapper'>
 			<NavSidebar></NavSidebar>
@@ -130,12 +122,14 @@ const ProductCard = ({ data }) => {
 	const handledelete = (e, id) => {
 		console.log(id);
 		e.preventDefault();
-
+		console.log(id);
 		const data = dispatch(deleteFAQData(id));
 		console.log(data);
 
 		console.log('delete');
 	};
+	// render this component when any request on faq data is made
+
 	return (
 		<>
 			{' '}

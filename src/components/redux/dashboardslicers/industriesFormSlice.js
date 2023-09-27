@@ -5,7 +5,7 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 const API_URL = 'https://hello231.onrender.com/industries';
 
 const initialState = {
-	formData: null,
+	data: null,
 	status: 'idle',
 	error: null,
 };
@@ -30,23 +30,25 @@ export const fetchIndustriesFormData = createAsyncThunk(
 export const submitIndustriesForm = createAsyncThunk(
 	'industries/submitIndustriesForm',
 	async (formData) => {
+		console.log(formData, 'inside the data');
 		try {
-			const response = await fetch(API_URL, {
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json',
-				},
-				body: JSON.stringify(formData),
-			});
-
-			if (!response.ok) {
-				throw new Error('Submission failed');
+			const formDataObj = new FormData();
+			for (const key in formData) {
+				formDataObj.append(key, formData[key]);
 			}
 
+			const response = await fetch('http://localhost:3000/industry', {
+				method: 'POST',
+				body: formDataObj,
+			});
+			if (!response.ok) {
+				throw new Error('Network response was not ok');
+			}
 			const data = await response.json();
+			console.log(data);
 			return data;
 		} catch (error) {
-			throw new Error('Submission failed');
+			throw error;
 		}
 	}
 );
@@ -62,7 +64,7 @@ const industriesFormSlice = createSlice({
 			})
 			.addCase(fetchIndustriesFormData.fulfilled, (state, action) => {
 				state.status = 'succeeded';
-				state.formData = action.payload;
+				state.data = action.payload;
 			})
 			.addCase(fetchIndustriesFormData.rejected, (state) => {
 				state.status = 'failed';
