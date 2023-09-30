@@ -4,7 +4,7 @@ import Nav from '../Nav';
 import CustomAccordion from './CustomAccordion';
 import 'react-accessible-accordion/dist/fancy-example.css';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchFAQData } from '../redux/dashboardslicers/faqFormSlice';
+import { fetchFAQFormData } from '../redux/dashboardslicers/faqFormSlice';
 
 export default function FAQ() {
 	const pageTitle = 'Frequently Asked Questions';
@@ -15,7 +15,7 @@ export default function FAQ() {
 	const status = useSelector((state) => state.faqForm.status);
 
 	useEffect(() => {
-		dispatch(fetchFAQData());
+		dispatch(fetchFAQFormData());
 	}, [dispatch]);
 	const data = [
 		{

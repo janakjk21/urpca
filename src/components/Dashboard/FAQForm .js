@@ -1,170 +1,205 @@
 import React, { useEffect, useState } from 'react';
-import NavSidebar from './NavSidebar';
-import { useDispatch } from 'react-redux';
-import { postFAQData } from '../redux/dashboardslicers/faqFormSlice';
-import { useSelector } from 'react-redux';
+import axios from 'axios';
 import {
-	fetchFAQData,
-	deleteFAQData,
+	fetchFAQFormData,
+	updateFAQ,
+	deleteFAQ,
+	submitFAQForm,
 } from '../redux/dashboardslicers/faqFormSlice';
-import {
-	FaEdit,
-	FaHeart,
-	FaLongArrowAltRight,
-	FaShoppingCart,
-	FaStar,
-	FaTrash,
-} from 'react-icons/fa';
+import { useDispatch, useSelector } from 'react-redux';
+import { FaEdit, FaTrash } from 'react-icons/fa';
+import NavSidebar from './NavSidebar';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 
-const FAQForm = ({ data }) => {
+const initialState = {
+	question: '',
+	answer: '',
+	ispaid: '',
+};
+export default function FaqForm() {
 	const dispatch = useDispatch();
-	const [question, setQuestion] = useState('');
-	const [answer, setAnswer] = useState('');
-	const [ispaid, setIspaid] = useState(false); // Updated to boolean
-
-	const handleSubmit = (e) => {
-		e.preventDefault();
-		const formData = { question, answer, ispaid }; // Updated
-
-		const data = dispatch(postFAQData(formData));
-		console.log(data);
-	};
-
-	const faqData = useSelector((state) => state.faqForm.data);
 	const status = useSelector((state) => state.faqForm.status);
-	const requestMade = useSelector((state) => state.faqForm.requestMade);
+	const faqData = useSelector((state) => state.faqForm.data);
+	const trackerStatus = useSelector((state) => state.faqForm.tracker);
 
 	useEffect(() => {
-		dispatch(fetchFAQData());
-	}, [requestMade]);
+		dispatch(fetchFAQFormData());
+	}, [trackerStatus]);
+
+	if (status === 'loading') {
+		return (
+			<div className='spinner-border text-primary' role='status'>
+				<span className='sr-only'>Loading...</span>
+			</div>
+		);
+	}
+
+	if (status === 'error') {
+		return <div>Error loading FAQs.</div>;
+	}
+
 	return (
-		<div className='wrapper'>
-			<NavSidebar></NavSidebar>
-			<div className='content-page'>
-				<div className='content'>
-					<div className='container-fluid'>
-						<div className='row'>
-							<div className='col-10' style={{ padding: '10px' }}>
-								<div className='card'>
-									<div className='card-body'>
-										<div>
-											<h1>FAQ Form</h1>
-											<form onSubmit={handleSubmit}>
-												<div className='mb-3'>
-													<label htmlFor='question' className='form-label'>
-														Question
-													</label>
-													<input
-														type='text'
-														id='question'
-														className='form-control'
-														value={question}
-														onChange={(e) => setQuestion(e.target.value)}
-													/>
-												</div>
-
-												<div className='mb-3'>
-													<label htmlFor='answer' className='form-label'>
-														Answer
-													</label>
-													<textarea
-														id='answer'
-														className='form-control'
-														value={answer}
-														onChange={(e) => setAnswer(e.target.value)}
-													/>
-												</div>
-
-												{/* Dropdown menu for ispaid */}
-												<div className='mb-3'>
-													<label htmlFor='ispaid' className='form-label'>
-														Payment Status
-													</label>
-													<select
-														id='ispaid'
-														className='form-select'
-														value={ispaid}
-														onChange={(e) =>
-															setIspaid(e.target.value === 'true')
-														} // Updated
-													>
-														<option value={true}> paid</option> {/* Updated */}
-														<option value={false}>Unpaid</option>{' '}
-														{/* Updated */}
-													</select>
-												</div>
-
-												<button type='submit' className='btn btn-primary'>
-													Submit
-												</button>
-											</form>
-										</div>
-									</div>
-								</div>
+		<div>
+			<div className='wrapper'>
+				<NavSidebar />
+				<div className='content-page'>
+					<div className='content'>
+						<div className='container-fluid'>
+							<FAQForm />
+							<div className='d-flex mt-2 flex-wrap'>
+								{status === 'succeeded' &&
+									faqData.map((faq) => <FaqCard key={faq._id} faq={faq} />)}
 							</div>
 						</div>
 					</div>
 				</div>
-				{status === 'succeeded' ? (
-					<ProductCard data={faqData} />
-				) : (
-					<div>Loading...</div>
-				)}
 			</div>
+		</div>
+	);
+}
+
+const FAQForm = () => {
+	const dispatch = useDispatch();
+	const { id } = useParams();
+	const navigate = useNavigate();
+	const faqData = useSelector((state) => state.faqForm.data);
+
+	const [formData, setFormData] = useState({
+		question: '',
+		answer: '',
+		ispaid: '',
+	});
+
+	useEffect(() => {
+		if (id) {
+			const faq = faqData.find((faq) => faq._id === id);
+			setFormData({
+				question: faq.question,
+				answer: faq.answer,
+				ispaid: faq.ispaid,
+			});
+		}
+	}, [id, faqData]);
+
+	const { question, answer, ispaid } = formData;
+
+	const handleChange = (e) => {
+		const { name, value } = e.target;
+		setFormData({
+			...formData,
+			[name]: value,
+		});
+	};
+
+	const handleSubmit = async (e) => {
+		e.preventDefault();
+
+		const formDataToSend = {
+			question,
+			answer,
+			ispaid,
+		};
+
+		if (id) {
+			try {
+				dispatch(updateFAQ({ id, data: formDataToSend }));
+				navigate('/faqform'); // Assuming you want to navigate to /faq after updating
+				console.log('Data saved successfully');
+			} catch (error) {
+				console.error('Error saving data:', error);
+			}
+		} else {
+			try {
+				dispatch(submitFAQForm(formDataToSend));
+				console.log('Data saved successfully');
+			} catch (error) {
+				console.error('Error saving data:', error);
+			}
+		}
+	};
+
+	return (
+		<div className='container mt-2'>
+			<form onSubmit={handleSubmit}>
+				<div className='mb-3'>
+					<label htmlFor='question' className='form-label'>
+						Question
+					</label>
+					<input
+						type='text'
+						className='form-control'
+						id='question'
+						name='question'
+						value={question}
+						onChange={handleChange}
+						placeholder='Question'
+					/>
+				</div>
+				<div className='mb-3'>
+					<label htmlFor='answer' className='form-label'>
+						Answer
+					</label>
+					<input
+						type='text'
+						className='form-control'
+						id='answer'
+						name='answer'
+						value={answer}
+						onChange={handleChange}
+						placeholder='Answer'
+					/>
+				</div>
+				<div className='mb-3'>
+					<label htmlFor='ispaid' className='form-label'>
+						ispaid
+					</label>
+					<select
+						className='form-select'
+						id='ispaid'
+						name='ispaid'
+						value={ispaid}
+						onChange={handleChange}>
+						<option value='free'>Free</option>
+						<option value='paid'>Paid</option>
+					</select>
+				</div>
+				<button type='submit' className='btn btn-primary'>
+					Submit
+				</button>
+			</form>
 		</div>
 	);
 };
 
-export default FAQForm;
-
-const ProductCard = ({ data }) => {
+const FaqCard = ({ faq }) => {
 	const dispatch = useDispatch();
-	const handledelete = (e, id) => {
-		console.log(id);
-		e.preventDefault();
-		console.log(id);
-		const data = dispatch(deleteFAQData(id));
-		console.log(data);
 
-		console.log('delete');
+	const handleDelete = (e) => {
+		console.log(faq._id);
+		e.preventDefault();
+		dispatch(deleteFAQ(faq._id));
 	};
-	// render this component when any request on faq data is made
 
 	return (
-		<>
-			{' '}
-			{data.map((item, index) => (
-				<div className='row justify-content-center ' key={index}>
-					<div className='col-md-12 col-xl-10'>
-						<div className='card shadow-0 border rounded-3'>
-							<div className='card-body'>
-								<div className='row'>
-									<div className='col-md-9 col-lg-9 col-xl-9'>
-										<h5>{item.question}</h5>
-
-										<p className='text-truncate mb-4 mb-md-0'>{item.answer}</p>
-									</div>
-									<div className='col-md-4 col-lg-3 col-xl-3 border-sm-start-none border-start'>
-										<div className='d-flex flex mt-4'>
-											<button
-												className='btn btn-danger btn-sm m-2 '
-												type='button'
-												onClick={(e) => {
-													handledelete(e, item._id);
-												}}>
-												<FaTrash />
-											</button>
-											<button className='btn btn-primary btn-sm' type='button'>
-												<FaEdit />{' '}
-											</button>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
+		<div className='col-md-4 mb-3'>
+			<div className='card'>
+				<div className='card-body'>
+					<h5 className='card-title'>{faq.question}</h5>
+					<p className='card-text'>{faq.answer}</p>
+					<button className='btn btn-secondary'>
+						<Link to={`/faqform/${faq._id}`} style={{ textDecoration: 'none' }}>
+							<FaEdit /> Edit
+						</Link>
+					</button>
+					<button
+						className='btn btn-danger ml-2'
+						onClick={(e) => {
+							handleDelete(e);
+						}}>
+						<FaTrash /> Delete
+					</button>
 				</div>
-			))}
-		</>
+			</div>
+		</div>
 	);
 };

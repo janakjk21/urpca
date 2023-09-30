@@ -1,251 +1,302 @@
 import React, { useEffect, useState } from 'react';
-import NavSidebar from './NavSidebar';
-import { useDispatch } from 'react-redux';
-import { UseSelector, useSelector } from 'react-redux/es/hooks/useSelector';
-import { FaTrash, FaEdit } from 'react-icons/fa';
-
+import axios from 'axios';
 import {
-	fetchServiceFormData,
 	submitServiceForm,
+	fetchServiceFormData,
+	deleteService,
+	updateService,
 } from '../redux/dashboardslicers/servicesSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import { FaEdit, FaTrash } from 'react-icons/fa';
+import NavSidebar from './NavSidebar';
+import { Link, useNavigate, useParams } from 'react-router-dom';
+import { redirect } from 'react-router-dom';
 
+const initialState = {
+	title: '',
+	description: '',
+	category: '',
+	payment: '',
+	additionalDes: '',
+	email: '',
+	image: null,
+};
 export default function Services() {
 	const dispatch = useDispatch();
-	const faqData = useSelector((state) => state.service.data);
 	const status = useSelector((state) => state.service.status);
+	const serviceData = useSelector((state) => state.service.data);
+	const trackerStatus = useSelector((state) => state.service.tracker);
+
+	const [serviceid, setServiceid] = useState('');
+	console.log(trackerStatus, 'trackerStatus');
+
 	useEffect(() => {
 		dispatch(fetchServiceFormData());
-	}, [dispatch]);
-	console.log(faqData, 'this is data ');
+	}, [trackerStatus]);
+
+	if (status === 'loading') {
+		return (
+			<div class='spinner-border text-primary' role='status'>
+				<span class='sr-only'>Loading...</span>
+			</div>
+		);
+	}
+
+	if (status === 'error') {
+		return <div>Error loading services.</div>;
+	}
+
+	// const titles = serviceData.map((service) => service.title);
 	return (
 		<div>
 			<div className='wrapper'>
-				<div className='wrapper'>
-					<NavSidebar></NavSidebar>
-					<ServiceDataForm></ServiceDataForm>
-					{status === 'succeeded' ? (
-						<ProductCard data={faqData} />
-					) : (
-						<div>Loading...</div>
-					)}
+				<NavSidebar></NavSidebar>
+				<div className='content-page'>
+					<div className='content'>
+						<div className='container-fluid'>
+							<YourComponent />
+							<div className='d-flex mt-2 flex-wrap'>
+								{' '}
+								{status === 'succeeded' &&
+									serviceData.map((service) => (
+										<ServiceCard key={service._id} service={service} />
+									))}
+							</div>
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>
 	);
 }
 
-const ServiceDataForm = () => {
-	const dispatch = useDispatch();
+const YourComponent = () => {
+	const serviceData = useSelector((state) => state.service.data);
 	const [formData, setFormData] = useState({
 		title: '',
 		description: '',
-		image: '', // Changed from innerImage1Src
-		additionalDescription: '',
 		category: '',
-		payment: 'true',
+		payment: '',
+		additionalDes: '',
+		email: '',
+		image: null,
 	});
+	const navigate = useNavigate();
 
-	const handleChange = (event) => {
-		const { name, value } = event.target;
-		setFormData({
-			...formData,
-			[name]: value,
-		});
+	const dispatch = useDispatch();
+	const { id } = useParams();
+
+	useEffect(() => {
+		if (id) {
+			const service = serviceData.find((service) => service._id === id);
+			setFormData({
+				title: service.title,
+				description: service.description,
+				category: service.category,
+				payment: service.payment,
+				additionalDes: service.additionalDes,
+				email: service.email,
+			});
+		}
+	}, [id]);
+
+	const { title, description, category, payment, additionalDes, email, image } =
+		formData;
+
+	const handleChange = (e) => {
+		if (e.target.name === 'image') {
+			// Handle image separately
+			setFormData({
+				...formData,
+				[e.target.name]: e.target.files[0],
+			});
+		} else {
+			const { name, value } = e.target;
+			setFormData({
+				...formData,
+				[name]: value,
+			});
+		}
 	};
+	console.log(formData, 'formData');
+	const handleSubmit = async (e) => {
+		e.preventDefault();
 
-	const handleImageUpload = (event) => {
-		const file = event.target.files[0];
-		if (file) {
-			const reader = new FileReader();
-			reader.onload = (e) => {
-				setFormData({
-					...formData,
-					image: e.target.result, // Changed from inperImage1Src
-				});
-			};
-			reader.readAsDataURL(file);
+		const formDataToSend = new FormData();
+		formDataToSend.append('title', title);
+		formDataToSend.append('description', description);
+		formDataToSend.append('category', category);
+		formDataToSend.append('payment', payment);
+		formDataToSend.append('additionalDes', additionalDes);
+		formDataToSend.append('email', email);
+		formDataToSend.append('image', image);
+		console.log(formDataToSend, FormData, 'formDataToSend');
+
+		if (id) {
+			try {
+				dispatch(updateService({ id, data: formDataToSend }));
+				redirect('/serviceform');
+				console.log('Data saved successfully');
+			} catch (error) {
+				console.error('Error saving data:', error);
+			}
+		} else {
+			try {
+				dispatch(submitServiceForm(formData));
+				console.log('Data saved successfully');
+			} catch (error) {
+				console.error('Error saving data:', error);
+			}
 		}
 	};
 
-	const handleSubmit = async (event) => {
-		event.preventDefault();
-
-		// const formData = new FormData();
-		// formData.append('title', title);
-		// formData.append('description', description);
-		// formData.append('category', category);
-		// formData.append('payment', payment);
-		// formData.append('aditionalDes', additionalDescription);
-		// formData.append('image', image);
-		dispatch(submitServiceForm(formData));
-		console.log(formData);
-	};
 	return (
-		<div className='content-page'>
-			<div className='content'>
-				<div className='container-fluid'>
-					<div className='row'>
-						<div className='col-10' style={{ padding: '10px' }}>
-							<div className='card'>
-								<div className='card-body'>
-									<div>
-										<h1>Service Form</h1>
-										<form onSubmit={handleSubmit}>
-											<div className='mb-3'>
-												<label htmlFor='title' className='form-label'>
-													Title
-												</label>
-												<input
-													type='text'
-													id='title'
-													name='title'
-													className='form-control'
-													value={formData.title}
-													onChange={handleChange}
-													required
-												/>
-											</div>
-
-											<div className='mb-3'>
-												<label htmlFor='description' className='form-label'>
-													Description
-												</label>
-												<textarea
-													id='description'
-													name='description'
-													className='form-control'
-													value={formData.description}
-													onChange={handleChange}
-													rows='4'
-													required
-												/>
-											</div>
-
-											<div className='mb-3'>
-												<label
-													htmlFor='additionalDescription'
-													className='form-label'>
-													Additional Description
-												</label>
-												<textarea
-													id='additionalDescription'
-													name='additionalDescription'
-													className='form-control'
-													value={formData.additionalDescription}
-													onChange={handleChange}
-													rows='4'
-												/>
-											</div>
-											<div className='mb-3'>
-												<label htmlFor='category' className='form-label'>
-													category
-												</label>
-												<textarea
-													id='category'
-													name='category'
-													className='form-control'
-													value={formData.additionalDescription}
-													onChange={handleChange}
-													rows='4'
-												/>
-											</div>
-											<div className='mb-3'>
-												<label htmlFor='payment' className='form-label'>
-													Payment Status
-												</label>
-												<select
-													id='payment'
-													className='form-select'
-													name='payment'
-													value={formData.payment}
-													onChange={handleChange} // Updated
-												>
-													<option value={true}> paid</option> {/* Updated */}
-													<option value={false}>Unpaid</option> {/* Updated */}
-												</select>
-											</div>
-											<div className='mb-3'>
-												<label htmlFor='image' className='form-label'>
-													Image Source
-												</label>
-												<input
-													type='file'
-													id='image'
-													name='image'
-													className='form-control'
-													accept='image/*'
-													onChange={handleImageUpload} // Updated the onChange handler
-												/>
-												{formData.image && (
-													<img
-														src={formData.image}
-														alt='Uploaded Image'
-														style={{ marginTop: '10px', maxWidth: '100%' }}
-													/>
-												)}
-											</div>
-
-											<button type='submit' className='btn btn-primary'>
-												Submit
-											</button>
-										</form>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
+		<div className='container mt-2'>
+			<form onSubmit={handleSubmit}>
+				<div className='mb-3'>
+					<label htmlFor='title' className='form-label'>
+						Title
+					</label>
+					<input
+						type='text'
+						className='form-control'
+						id='title'
+						name='title'
+						value={title}
+						onChange={handleChange}
+						placeholder='Title'
+					/>
 				</div>
-			</div>
+				<div className='mb-3'>
+					<label htmlFor='description' className='form-label'>
+						Description
+					</label>
+					<input
+						type='text'
+						className='form-control'
+						id='description'
+						name='description'
+						value={description}
+						onChange={handleChange}
+						placeholder='Description'
+					/>
+				</div>
+				<div className='mb-3'>
+					<label htmlFor='category' className='form-label'>
+						Category
+					</label>
+					<input
+						type='text'
+						className='form-control'
+						id='category'
+						name='category'
+						value={category}
+						onChange={handleChange}
+						placeholder='Category'
+					/>
+				</div>
+				<div className='mb-3'>
+					<label htmlFor='payment' className='form-label'>
+						Payment
+					</label>
+					<select
+						className='form-select'
+						id='payment'
+						name='payment'
+						value={payment}
+						onChange={handleChange}>
+						<option value='paid'>Content type</option>
+						<option value='paid'>Paid</option>
+						<option value='unpaid'>Unpaid</option>
+					</select>
+				</div>
+				<div className='mb-3'>
+					<label htmlFor='additionalDes' className='form-label'>
+						Additional Description
+					</label>
+					<input
+						type='text'
+						className='form-control'
+						id='additionalDes'
+						name='additionalDes'
+						value={additionalDes}
+						onChange={handleChange}
+						placeholder='Additional Description'
+					/>
+				</div>
+				<div className='mb-3'>
+					<label htmlFor='email' className='form-label'>
+						Email
+					</label>
+					<input
+						type='email'
+						className='form-control'
+						id='email'
+						name='email'
+						value={email}
+						onChange={handleChange}
+						placeholder='Email'
+					/>
+				</div>
+				<div className='mb-3'>
+					<label htmlFor='image' className='form-label'>
+						Image
+					</label>
+					<input
+						type='file'
+						className='form-control'
+						id='image'
+						name='image'
+						onChange={handleChange}
+					/>
+					{image && (
+						<img
+							src={URL.createObjectURL(image)}
+							alt='Selected'
+							className='mt-2'
+							style={{ width: '100px' }}
+						/>
+					)}
+				</div>
+				<button type='submit' className='btn btn-primary'>
+					Submit
+				</button>
+			</form>
 		</div>
 	);
 };
 
-const ProductCard = ({ data }) => {
+const ServiceCard = ({ service }) => {
 	const dispatch = useDispatch();
-	const handledelete = (e, id) => {
-		console.log(id);
+	const navigate = useNavigate();
+
+	const handleDelete = (e) => {
 		e.preventDefault();
-
-		const data = dispatch(deleteFAQData(id));
-		console.log(data);
-
-		console.log('delete');
+		dispatch(deleteService(service._id));
 	};
-	return (
-		<>
-			{' '}
-			{data.map((item, index) => (
-				<div className='row justify-content-center ' key={index}>
-					<div className='col-md-12 col-xl-10'>
-						<div className='card shadow-0 border rounded-3'>
-							<div className='card-body'>
-								<div className='row'>
-									<div className='col-md-9 col-lg-9 col-xl-9'>
-										<h5>{item.question}</h5>
 
-										<p className='text-truncate mb-4 mb-md-0'>{item.answer}</p>
-									</div>
-									<div className='col-md-4 col-lg-3 col-xl-3 border-sm-start-none border-start'>
-										<div className='d-flex flex mt-4'>
-											<button
-												className='btn btn-danger btn-sm m-2 '
-												type='button'
-												onClick={(e) => {
-													handledelete(e, item._id);
-												}}>
-												<FaTrash />
-											</button>
-											<button className='btn btn-primary btn-sm' type='button'>
-												<FaEdit />{' '}
-											</button>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
+	return (
+		<div className='col-md-4 mb-3'>
+			<div className='card'>
+				<div className='card-body'>
+					<h5 className='card-title'>{service.title}</h5>
+					<p className='card-text'>{service.description}</p>
+					<button className='btn btn-secondary'>
+						<Link
+							to={`/serviceform/${service._id}`}
+							style={{ textDecoration: 'none' }}>
+							<FaEdit /> Edit
+						</Link>
+					</button>
+					<button
+						className='btn btn-danger ml-2'
+						onClick={(e) => {
+							handleDelete(e);
+						}}>
+						<FaTrash /> Delete
+					</button>
 				</div>
-			))}
-		</>
+			</div>
+		</div>
 	);
 };

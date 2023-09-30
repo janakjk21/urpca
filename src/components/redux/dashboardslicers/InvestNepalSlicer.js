@@ -1,132 +1,139 @@
 // investNepalSlicer.js
 
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import axios from 'axios';
 
-// Define the initial state
+const API_URL = 'http://localhost:3000/investNepal';
+const token = 'YOUR_INVESTNEPAL_TOKEN_HERE'; // Replace with your actual token
+
 const initialState = {
-	name: 'investNepal', // Updated name
-	investNepalData: [],
+	data: null,
 	status: 'idle',
 	error: null,
+	tracker: '',
+	fetchbyid: null,
 };
 
-// Define a thunk for fetching Invest Nepal data
-export const fetchInvestNepalData = createAsyncThunk(
-	'investNepal/fetchInvestNepalData',
+export const fetchInvestNepalFormData = createAsyncThunk(
+	'investNepal/fetchInvestNepalFormData',
 	async () => {
-		const response = await fetch('https://hello231.onrender.com/investNepal'); // Replace with your API endpoint
-		const data = await response.json();
-		return data;
+		try {
+			const response = await axios.get(API_URL);
+			return response.data;
+		} catch (error) {
+			throw new Error('Fetching data failed');
+		}
 	}
 );
 
-// Define a thunk for posting Invest Nepal data
-export const postInvestNepalData = createAsyncThunk(
-	'investNepal/postInvestNepalData',
-	async (formData) => {
-		console.log(formData);
-		const response = await fetch('https://hello231.onrender.com/investNepal', {
-			method: 'POST',
+export const submitInvestNepalForm = createAsyncThunk(
+	'investNepal/submitInvestNepalForm',
+	async (formData, { getState }) => {
+		const config = {
 			headers: {
-				'Content-Type': 'application/json',
+				Authorization: `Bearer ${token}`,
 			},
-			body: JSON.stringify(formData),
-		});
-		const data = await response.json();
-		return data;
+		};
+		try {
+			const response = await axios.post(API_URL, formData, config);
+
+			if (!(response.status === 200 || response.status === 201)) {
+				throw new Error('Submitting data failed');
+			}
+
+			return response.data;
+		} catch (error) {
+			throw new Error('Submitting data failed');
+		}
 	}
 );
 
-export const editInvestNepalData = createAsyncThunk(
-	'investNepal/editInvestNepalData',
-	async ({ id, formData }) => {
-		const response = await fetch(
-			`https://hello231.onrender.com/investNepal/${id}`,
-			{
-				method: 'PUT',
+export const updateInvestNepal = createAsyncThunk(
+	'investNepal/updateInvestNepal',
+	async ({ id, data }) => {
+		const config = {
+			headers: {
+				Authorization: `Bearer ${token}`,
+			},
+		};
+		const response = await axios.put(`${API_URL}/${id}`, data, config);
+		return response.data;
+	}
+);
+
+export const deleteInvestNepal = createAsyncThunk(
+	'investNepal/deleteInvestNepal',
+	async (investNepalId, { rejectWithValue }) => {
+		try {
+			const response = await axios.delete(`${API_URL}/${investNepalId}`, {
 				headers: {
-					'Content-Type': 'application/json',
+					Authorization: `Bearer ${token}`,
 				},
-				body: JSON.stringify(formData),
-			}
-		);
-		const data = await response.json();
-		return data;
+			});
+			return response.data;
+		} catch (error) {
+			console.log(error);
+			return rejectWithValue('Deleting data failed');
+		}
 	}
 );
-
-// Define a thunk for deleting Invest Nepal data
-export const deleteInvestNepalData = createAsyncThunk(
-	'investNepal/deleteInvestNepalData',
-	async (id) => {
-		const response = await fetch(
-			`https://hello231.onrender.com/investNepal/${id}`,
-			{
-				method: 'DELETE',
-			}
-		);
-		const data = await response.json();
-		return data;
-	}
-);
-
-// Define a thunk for getting Invest Nepal data by ID
-export const getInvestNepalDataById = createAsyncThunk(
-	'investNepal/getInvestNepalDataById',
-	async (id) => {
-		const response = await fetch(
-			`https://hello231.onrender.com/investNepal/${id}`
-		);
-		const data = await response.json();
-		return data;
-	}
-);
-
-// ... rest of the code ...
 
 const investNepalSlicer = createSlice({
-	name: initialState.name,
+	name: 'investNepal',
 	initialState,
-	// ... previous code ...
-
+	reducers: {},
 	extraReducers: (builder) => {
 		builder
-			// ... previous code ...
-
-			.addCase(editInvestNepalData.fulfilled, (state, action) => {
-				state.status = 'succeeded';
-				// Update the state based on the EDIT response data
-				// For example, find the edited Invest Nepal item and update it in the investNepalData array
-				const editedInvestNepalIndex = state.investNepalData.findIndex(
-					(item) => item.id === action.payload.id
-				);
-				if (editedInvestNepalIndex !== -1) {
-					state.investNepalData[editedInvestNepalIndex] = action.payload;
-				}
+			.addCase(fetchInvestNepalFormData.pending, (state) => {
+				state.status = 'loading';
 			})
-
-			.addCase(deleteInvestNepalData.fulfilled, (state, action) => {
+			.addCase(fetchInvestNepalFormData.fulfilled, (state, action) => {
 				state.status = 'succeeded';
-				// Update the state based on the DELETE response data
-				// For example, remove the deleted Invest Nepal item from the investNepalData array
-				state.investNepalData = state.investNepalData.filter(
-					(item) => item.id !== action.payload.id
-				);
+				state.data = action.payload;
 			})
-
-			.addCase(getInvestNepalDataById.fulfilled, (state, action) => {
+			.addCase(fetchInvestNepalFormData.rejected, (state) => {
+				state.status = 'failed';
+				state.error = 'Fetching data failed';
+			})
+			.addCase(submitInvestNepalForm.pending, (state) => {
+				state.status = 'loading';
+			})
+			.addCase(submitInvestNepalForm.fulfilled, (state) => {
 				state.status = 'succeeded';
-				// Update the state based on the GET by ID response data
-				// For example, store the retrieved Invest Nepal item in the investNepalData array
-				state.investNepalData = [action.payload];
+				state.tracker = 'successfully submitted';
+			})
+			.addCase(submitInvestNepalForm.rejected, (state) => {
+				state.status = 'failed';
+				state.error = 'Submission failed';
+			})
+			.addCase(deleteInvestNepal.pending, (state) => {
+				state.status = 'loading';
+			})
+			.addCase(deleteInvestNepal.fulfilled, (state) => {
+				state.status = 'succeeded';
+				state.tracker = 'success';
+			})
+			.addCase(deleteInvestNepal.rejected, (state, action) => {
+				state.status = 'failed';
+				state.error = action.error.message;
+			})
+			.addCase(updateInvestNepal.pending, (state) => {
+				state.status = 'loading';
+			})
+			.addCase(updateInvestNepal.fulfilled, (state) => {
+				state.status = 'succeeded';
+				state.tracker = 'success';
+			})
+			.addCase(updateInvestNepal.rejected, (state, action) => {
+				state.status = 'failed';
+				state.error = action.error.message;
+				state.tracker = 'success';
 			});
-
-		// ... rest of the code ...
 	},
-
-	// ... rest of the code ...
 });
 
-// ... rest of the code ...
+export const selectInvestNepalForm = (state) => state.investNepal.formData;
+export const selectInvestNepalFormStatus = (state) => state.investNepal.status;
+export const selectInvestNepalFormError = (state) => state.investNepal.error;
 
 export default investNepalSlicer.reducer;

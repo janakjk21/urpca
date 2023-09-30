@@ -1,117 +1,139 @@
+// homeSlice.js
+
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import axios from 'axios';
+
+const API_URL = 'http://localhost:3000/home';
+const token = 'YOUR_HOME_TOKEN_HERE'; // Replace with your actual token
 
 const initialState = {
-	name: 'homeSlider',
 	data: null,
 	status: 'idle',
 	error: null,
+	tracker: '',
+	fetchbyid: null,
 };
 
-const fetchHomeSliderData = createAsyncThunk(
-	'homeSlider/fetchHomeSliderData',
+export const fetchHomeFormData = createAsyncThunk(
+	'home/fetchHomeFormData',
 	async () => {
 		try {
-			const response = await fetch('https://hello231.onrender.com/slider');
-			if (!response.ok) {
-				throw new Error('Network response was not ok');
-			}
-			const data = await response.json();
-			return data;
+			const response = await axios.get(API_URL);
+			return response.data;
 		} catch (error) {
-			throw error;
+			throw new Error('Fetching data failed');
 		}
 	}
 );
 
-const postHomeSliderData = createAsyncThunk(
-	'homeSlider/postHomeSliderData',
-	async (formData) => {
+export const submitHomeForm = createAsyncThunk(
+	'home/submitHomeForm',
+	async (formData, { getState }) => {
+		const config = {
+			headers: {
+				Authorization: `Bearer ${token}`,
+			},
+		};
 		try {
-			const formDataObj = new FormData();
+			const response = await axios.post(API_URL, formData, config);
 
-			const response = await fetch('https://hello231.onrender.com/slider', {
-				method: 'POST',
+			if (!(response.status === 200 || response.status === 201)) {
+				throw new Error('Submitting data failed');
+			}
+
+			return response.data;
+		} catch (error) {
+			throw new Error('Submitting data failed');
+		}
+	}
+);
+
+export const updateHome = createAsyncThunk(
+	'home/updateHome',
+	async ({ id, data }) => {
+		const config = {
+			headers: {
+				Authorization: `Bearer ${token}`,
+			},
+		};
+		const response = await axios.put(`${API_URL}/${id}`, data, config);
+		return response.data;
+	}
+);
+
+export const deleteHome = createAsyncThunk(
+	'home/deleteHome',
+	async (homeId, { rejectWithValue }) => {
+		try {
+			const response = await axios.delete(`${API_URL}/${homeId}`, {
 				headers: {
-					'Content-Type': 'application/json',
+					Authorization: `Bearer ${token}`,
 				},
-
-				body: JSON.stringify(formData),
 			});
-			if (!response.ok) {
-				throw new Error('Network response was not ok');
-			}
-			const data = await response.json();
-			console.log(data, 'data created');
-			return data;
+			return response.data;
 		} catch (error) {
-			throw error;
+			console.log(error);
+			return rejectWithValue('Deleting data failed');
 		}
 	}
 );
 
-// ... Add other async thunks (edit, delete, get by ID) similarly
-const deleteHomeSliderData = createAsyncThunk(
-	'homeSlider/deleteHomeSliderData',
-	async (id) => {
-		try {
-			const response = await fetch(`https://hello231.onrender.com/slider/${id}`, {
-				method: 'DELETE',
-			});
-			if (!response.ok) {
-				throw new Error('Network response was not ok');
-			}
-			const data = await response.json();
-			return data;
-		} catch (error) {
-			throw error;
-		}
-	}
-);
-
-const getHomeSliderDataById = createAsyncThunk(
-	'homeSlider/getHomeSliderDataById',
-	async (id) => {
-		try {
-			const response = await fetch(`https://hello231.onrender.com/slider/${id}`);
-			if (!response.ok) {
-				throw new Error('Network response was not ok');
-			}
-			const data = await response.json();
-			return data;
-		} catch (error) {
-			throw error;
-		}
-	}
-);
-
-const homeSliderSlice = createSlice({
-	name: initialState.name,
+const homeSlice = createSlice({
+	name: 'home',
 	initialState,
+	reducers: {},
 	extraReducers: (builder) => {
 		builder
-			.addCase(fetchHomeSliderData.pending, (state) => {
+			.addCase(fetchHomeFormData.pending, (state) => {
 				state.status = 'loading';
 			})
-			.addCase(fetchHomeSliderData.fulfilled, (state, action) => {
+			.addCase(fetchHomeFormData.fulfilled, (state, action) => {
 				state.status = 'succeeded';
 				state.data = action.payload;
 			})
-			.addCase(deleteHomeSliderData.fulfilled, (state, action) => {
-				state.status = 'succeeded';
-				state.data = action.payload;
+			.addCase(fetchHomeFormData.rejected, (state) => {
+				state.status = 'failed';
+				state.error = 'Fetching data failed';
 			})
-			.addCase(getHomeSliderDataById.fulfilled, (state, action) => {
+			.addCase(submitHomeForm.pending, (state) => {
+				state.status = 'loading';
+			})
+			.addCase(submitHomeForm.fulfilled, (state) => {
 				state.status = 'succeeded';
-				state.data = action.payload;
+				state.tracker = 'successfully submitted';
+			})
+			.addCase(submitHomeForm.rejected, (state) => {
+				state.status = 'failed';
+				state.error = 'Submission failed';
+			})
+			.addCase(deleteHome.pending, (state) => {
+				state.status = 'loading';
+			})
+			.addCase(deleteHome.fulfilled, (state) => {
+				state.status = 'succeeded';
+				state.tracker = 'success';
+			})
+			.addCase(deleteHome.rejected, (state, action) => {
+				state.status = 'failed';
+				state.error = action.error.message;
+			})
+			.addCase(updateHome.pending, (state) => {
+				state.status = 'loading';
+			})
+			.addCase(updateHome.fulfilled, (state) => {
+				state.status = 'succeeded';
+				state.tracker = 'success';
+			})
+			.addCase(updateHome.rejected, (state, action) => {
+				state.status = 'failed';
+				state.error = action.error.message;
+				state.tracker = 'success';
 			});
 	},
 });
 
-export {
-	fetchHomeSliderData,
-	postHomeSliderData,
-	deleteHomeSliderData,
-	getHomeSliderDataById,
-};
+export const selectHomeForm = (state) => state.home.formData;
+export const selectHomeFormStatus = (state) => state.home.status;
+export const selectHomeFormError = (state) => state.home.error;
 
-export default homeSliderSlice.reducer;
+export default homeSlice.reducer;

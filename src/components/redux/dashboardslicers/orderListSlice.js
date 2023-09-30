@@ -1,55 +1,80 @@
 // orderListSlice.js
 
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import axios from 'axios';
 
-// Define the initial state
+const API_URL = 'http://localhost:3000/orderList';
+const token = 'YOUR_ORDERLIST_TOKEN_HERE'; // Replace with your actual token
+
 const initialState = {
-	orders: [],
+	data: null,
 	status: 'idle',
 	error: null,
+	tracker: '',
+	fetchbyid: null,
 };
 
-// Define a thunk for fetching orders
-export const fetchOrders = createAsyncThunk(
-	'orderList/fetchOrders',
+export const fetchOrderListFormData = createAsyncThunk(
+	'orderList/fetchOrderListFormData',
 	async () => {
-		const response = await fetch('https://hello231.onrender.com/orderlist');
-		const data = await response.json();
-		return data;
+		try {
+			const response = await axios.get(API_URL);
+			return response.data;
+		} catch (error) {
+			throw new Error('Fetching data failed');
+		}
 	}
 );
 
-// Define a thunk for deleting an order
-export const deleteOrder = createAsyncThunk(
-	'orderList/deleteOrder',
-	async (orderId) => {
-		const response = await fetch(
-			`https://hello231.onrender.com/orderlist/${orderId}`,
-			{
-				method: 'DELETE',
+export const submitOrderListForm = createAsyncThunk(
+	'orderList/submitOrderListForm',
+	async (formData, { getState }) => {
+		const config = {
+			headers: {
+				Authorization: `Bearer ${token}`,
+			},
+		};
+		try {
+			const response = await axios.post(API_URL, formData, config);
+
+			if (!(response.status === 200 || response.status === 201)) {
+				throw new Error('Submitting data failed');
 			}
-		);
-		const data = await response.json();
-		return data;
+
+			return response.data;
+		} catch (error) {
+			throw new Error('Submitting data failed');
+		}
 	}
 );
 
-// Define a thunk for editing an order
-export const editOrder = createAsyncThunk(
-	'orderList/editOrder',
-	async ({ orderId, updatedOrder }) => {
-		const response = await fetch(
-			`https://hello231.onrender.com/orderlist/${orderId}`,
-			{
-				method: 'PUT',
+export const updateOrderList = createAsyncThunk(
+	'orderList/updateOrderList',
+	async ({ id, data }) => {
+		const config = {
+			headers: {
+				Authorization: `Bearer ${token}`,
+			},
+		};
+		const response = await axios.put(`${API_URL}/${id}`, data, config);
+		return response.data;
+	}
+);
+
+export const deleteOrderList = createAsyncThunk(
+	'orderList/deleteOrderList',
+	async (orderListId, { rejectWithValue }) => {
+		try {
+			const response = await axios.delete(`${API_URL}/${orderListId}`, {
 				headers: {
-					'Content-Type': 'application/json',
+					Authorization: `Bearer ${token}`,
 				},
-				body: JSON.stringify(updatedOrder),
-			}
-		);
-		const data = await response.json();
-		return data;
+			});
+			return response.data;
+		} catch (error) {
+			console.log(error);
+			return rejectWithValue('Deleting data failed');
+		}
 	}
 );
 
@@ -59,37 +84,56 @@ const orderListSlice = createSlice({
 	reducers: {},
 	extraReducers: (builder) => {
 		builder
-			.addCase(fetchOrders.pending, (state) => {
+			.addCase(fetchOrderListFormData.pending, (state) => {
 				state.status = 'loading';
 			})
-			.addCase(fetchOrders.fulfilled, (state, action) => {
+			.addCase(fetchOrderListFormData.fulfilled, (state, action) => {
 				state.status = 'succeeded';
-				state.orders = action.payload;
+				state.data = action.payload;
 			})
-			.addCase(fetchOrders.rejected, (state, action) => {
+			.addCase(fetchOrderListFormData.rejected, (state) => {
+				state.status = 'failed';
+				state.error = 'Fetching data failed';
+			})
+			.addCase(submitOrderListForm.pending, (state) => {
+				state.status = 'loading';
+			})
+			.addCase(submitOrderListForm.fulfilled, (state) => {
+				state.status = 'succeeded';
+				state.tracker = 'successfully submitted';
+			})
+			.addCase(submitOrderListForm.rejected, (state) => {
+				state.status = 'failed';
+				state.error = 'Submission failed';
+			})
+			.addCase(deleteOrderList.pending, (state) => {
+				state.status = 'loading';
+			})
+			.addCase(deleteOrderList.fulfilled, (state) => {
+				state.status = 'succeeded';
+				state.tracker = 'success';
+			})
+			.addCase(deleteOrderList.rejected, (state, action) => {
 				state.status = 'failed';
 				state.error = action.error.message;
 			})
-			.addCase(deleteOrder.fulfilled, (state) => {
-				// Handle delete success if needed
+			.addCase(updateOrderList.pending, (state) => {
+				state.status = 'loading';
 			})
-			.addCase(deleteOrder.rejected, (state, action) => {
+			.addCase(updateOrderList.fulfilled, (state) => {
+				state.status = 'succeeded';
+				state.tracker = 'success';
+			})
+			.addCase(updateOrderList.rejected, (state, action) => {
 				state.status = 'failed';
 				state.error = action.error.message;
-			})
-			.addCase(editOrder.fulfilled, (state) => {
-				// Handle edit success if needed
-			})
-			.addCase(editOrder.rejected, (state, action) => {
-				state.status = 'failed';
-				state.error = action.error.message;
+				state.tracker = 'success';
 			});
 	},
 });
 
-export { fetchOrders, deleteOrder, editOrder };
-export const selectOrders = (state) => state.orderList.orders;
-export const selectStatus = (state) => state.orderList.status;
-export const selectError = (state) => state.orderList.error;
+export const selectOrderListForm = (state) => state.orderList.formData;
+export const selectOrderListFormStatus = (state) => state.orderList.status;
+export const selectOrderListFormError = (state) => state.orderList.error;
 
 export default orderListSlice.reducer;

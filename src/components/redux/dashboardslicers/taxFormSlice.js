@@ -1,137 +1,139 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+// taxFormSlice.js
 
-// Define your initial state here
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import axios from 'axios';
+
+const API_URL = 'http://localhost:3000/taxForm';
+const token = 'YOUR_TAXFORM_TOKEN_HERE'; // Replace with your actual token
+
 const initialState = {
-	name: 'work', // Name is required
 	data: null,
 	status: 'idle',
 	error: null,
+	tracker: '',
+	fetchbyid: null,
 };
 
-// Define an async thunk to fetch data from the work endpoint
-const fetchWorkData = createAsyncThunk('work/fetchWorkData', async () => {
-	try {
-		const response = await fetch('https://hello231.onrender.com/tax');
-		if (!response.ok) {
-			throw new Error('Network response was not ok');
-		}
-		const data = await response.json();
-		return data;
-	} catch (error) {
-		throw error;
-	}
-});
-
-// Define an async thunk to post data to the work endpoint
-const postWorkData = createAsyncThunk('work/postWorkData', async (formData) => {
-	console.log(formData, 'inside the data');
-	try {
-		const formDataObj = new FormData();
-		for (const key in formData) {
-			formDataObj.append(key, formData[key]);
-		}
-
-		const response = await fetch('https://hello231.onrender.com/tax', {
-			method: 'POST',
-			body: formDataObj,
-		});
-		if (!response.ok) {
-			throw new Error('Network response was not ok');
-		}
-		const data = await response.json();
-		console.log(data);
-		return data;
-	} catch (error) {
-		throw error;
-	}
-});
-
-const editWorkData = createAsyncThunk(
-	'work/editWorkData',
-	async ({ id, formData }) => {
+export const fetchTaxFormFormData = createAsyncThunk(
+	'taxForm/fetchTaxFormFormData',
+	async () => {
 		try {
-			const response = await fetch(`https://hello231.onrender.com/tax/${id}`, {
-				method: 'PUT',
-				headers: {
-					'Content-Type': 'application/json',
-				},
-				body: JSON.stringify(formData),
-			});
-			if (!response.ok) {
-				throw new Error('Network response was not ok');
-			}
-			const data = await response.json();
-			return data;
+			const response = await axios.get(API_URL);
+			return response.data;
 		} catch (error) {
-			throw error;
+			throw new Error('Fetching data failed');
 		}
 	}
 );
 
-const deleteWorkData = createAsyncThunk('work/deleteWorkData', async (id) => {
-	console.log(id, 'inside the deleteWorkData');
-	try {
-		const response = await fetch(`https://hello231.onrender.com/tax/?${id}`, {
-			method: 'DELETE',
-		});
-		if (!response.ok) {
-			throw new Error('Network response was not ok');
+export const submitTaxForm = createAsyncThunk(
+	'taxForm/submitTaxForm',
+	async (formData, { getState }) => {
+		const config = {
+			headers: {
+				Authorization: `Bearer ${token}`,
+			},
+		};
+		try {
+			const response = await axios.post(API_URL, formData, config);
+
+			if (!(response.status === 200 || response.status === 201)) {
+				throw new Error('Submitting data failed');
+			}
+
+			return response.data;
+		} catch (error) {
+			throw new Error('Submitting data failed');
 		}
-		const data = await response.json();
-		return data;
-	} catch (error) {
-		throw error;
 	}
-});
+);
 
-const getWorkDataById = createAsyncThunk('work/getWorkDataById', async (id) => {
-	try {
-		const response = await fetch(`https://hello231.onrender.com/work/${id}`);
-		if (!response.ok) {
-			throw new Error('Network response was not ok');
+export const updateTaxForm = createAsyncThunk(
+	'taxForm/updateTaxForm',
+	async ({ id, data }) => {
+		const config = {
+			headers: {
+				Authorization: `Bearer ${token}`,
+			},
+		};
+		const response = await axios.put(`${API_URL}/${id}`, data, config);
+		return response.data;
+	}
+);
+
+export const deleteTaxForm = createAsyncThunk(
+	'taxForm/deleteTaxForm',
+	async (taxFormId, { rejectWithValue }) => {
+		try {
+			const response = await axios.delete(`${API_URL}/${taxFormId}`, {
+				headers: {
+					Authorization: `Bearer ${token}`,
+				},
+			});
+			return response.data;
+		} catch (error) {
+			console.log(error);
+			return rejectWithValue('Deleting data failed');
 		}
-		const data = await response.json();
-		return data;
-	} catch (error) {
-		throw error;
 	}
-});
+);
 
-const workSlice = createSlice({
-	name: initialState.name,
-
+const taxFormSlice = createSlice({
+	name: 'taxForm',
 	initialState,
-
+	reducers: {},
 	extraReducers: (builder) => {
 		builder
-			.addCase(fetchWorkData.pending, (state) => {
+			.addCase(fetchTaxFormFormData.pending, (state) => {
 				state.status = 'loading';
 			})
-			.addCase(fetchWorkData.fulfilled, (state, action) => {
+			.addCase(fetchTaxFormFormData.fulfilled, (state, action) => {
 				state.status = 'succeeded';
 				state.data = action.payload;
 			})
-			.addCase(editWorkData.fulfilled, (state, action) => {
-				state.status = 'succeeded';
-				// Handle the successful EDIT response data if needed
+			.addCase(fetchTaxFormFormData.rejected, (state) => {
+				state.status = 'failed';
+				state.error = 'Fetching data failed';
 			})
-			.addCase(deleteWorkData.fulfilled, (state, action) => {
-				state.status = 'succeeded';
-				state.data = action.payload;
-				// Handle the successful DELETE response data if needed
+			.addCase(submitTaxForm.pending, (state) => {
+				state.status = 'loading';
 			})
-			.addCase(getWorkDataById.fulfilled, (state, action) => {
+			.addCase(submitTaxForm.fulfilled, (state) => {
 				state.status = 'succeeded';
-				state.data = action.payload;
+				state.tracker = 'successfully submitted';
+			})
+			.addCase(submitTaxForm.rejected, (state) => {
+				state.status = 'failed';
+				state.error = 'Submission failed';
+			})
+			.addCase(deleteTaxForm.pending, (state) => {
+				state.status = 'loading';
+			})
+			.addCase(deleteTaxForm.fulfilled, (state) => {
+				state.status = 'succeeded';
+				state.tracker = 'success';
+			})
+			.addCase(deleteTaxForm.rejected, (state, action) => {
+				state.status = 'failed';
+				state.error = action.error.message;
+			})
+			.addCase(updateTaxForm.pending, (state) => {
+				state.status = 'loading';
+			})
+			.addCase(updateTaxForm.fulfilled, (state) => {
+				state.status = 'succeeded';
+				state.tracker = 'success';
+			})
+			.addCase(updateTaxForm.rejected, (state, action) => {
+				state.status = 'failed';
+				state.error = action.error.message;
+				state.tracker = 'success';
 			});
 	},
 });
 
-export {
-	fetchWorkData,
-	postWorkData,
-	editWorkData,
-	deleteWorkData,
-	getWorkDataById,
-};
-export default workSlice.reducer;
+export const selectTaxForm = (state) => state.taxForm.formData;
+export const selectTaxFormStatus = (state) => state.taxForm.status;
+export const selectTaxFormError = (state) => state.taxForm.error;
+
+export default taxFormSlice.reducer;

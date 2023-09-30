@@ -1,51 +1,139 @@
 // userSlice.js
+
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 
-// Define an initial state for user data
+const API_URL = 'http://localhost:3000/user';
+const token = 'YOUR_USER_TOKEN_HERE'; // Replace with your actual token
+
 const initialState = {
 	data: null,
 	status: 'idle',
 	error: null,
+	tracker: '',
+	fetchbyid: null,
 };
 
-// Define an async thunk for fetching user data
-export const fetchUserData = createAsyncThunk(
-	'user/fetchUserData',
+export const fetchUserFormData = createAsyncThunk(
+	'user/fetchUserFormData',
 	async () => {
 		try {
-			const response = await axios.get('https://hello231.onrender.com/user');
-			console.log(response.data, 'response');
+			const response = await axios.get(API_URL);
 			return response.data;
 		} catch (error) {
-			throw error;
+			throw new Error('Fetching data failed');
 		}
 	}
 );
 
-// Create a user data slice
+export const submitUserForm = createAsyncThunk(
+	'user/submitUserForm',
+	async (formData, { getState }) => {
+		const config = {
+			headers: {
+				Authorization: `Bearer ${token}`,
+			},
+		};
+		try {
+			const response = await axios.post(API_URL, formData, config);
+
+			if (!(response.status === 200 || response.status === 201)) {
+				throw new Error('Submitting data failed');
+			}
+
+			return response.data;
+		} catch (error) {
+			throw new Error('Submitting data failed');
+		}
+	}
+);
+
+export const updateUser = createAsyncThunk(
+	'user/updateUser',
+	async ({ id, data }) => {
+		const config = {
+			headers: {
+				Authorization: `Bearer ${token}`,
+			},
+		};
+		const response = await axios.put(`${API_URL}/${id}`, data, config);
+		return response.data;
+	}
+);
+
+export const deleteUser = createAsyncThunk(
+	'user/deleteUser',
+	async (userId, { rejectWithValue }) => {
+		try {
+			const response = await axios.delete(`${API_URL}/${userId}`, {
+				headers: {
+					Authorization: `Bearer ${token}`,
+				},
+			});
+			return response.data;
+		} catch (error) {
+			console.log(error);
+			return rejectWithValue('Deleting data failed');
+		}
+	}
+);
+
 const userSlice = createSlice({
 	name: 'user',
 	initialState,
 	reducers: {},
 	extraReducers: (builder) => {
 		builder
-			.addCase(fetchUserData.pending, (state) => {
+			.addCase(fetchUserFormData.pending, (state) => {
 				state.status = 'loading';
 			})
-			.addCase(fetchUserData.fulfilled, (state, action) => {
+			.addCase(fetchUserFormData.fulfilled, (state, action) => {
 				state.status = 'succeeded';
 				state.data = action.payload;
-				state.error = null;
 			})
-			.addCase(fetchUserData.rejected, (state, action) => {
+			.addCase(fetchUserFormData.rejected, (state) => {
+				state.status = 'failed';
+				state.error = 'Fetching data failed';
+			})
+			.addCase(submitUserForm.pending, (state) => {
+				state.status = 'loading';
+			})
+			.addCase(submitUserForm.fulfilled, (state) => {
+				state.status = 'succeeded';
+				state.tracker = 'successfully submitted';
+			})
+			.addCase(submitUserForm.rejected, (state) => {
+				state.status = 'failed';
+				state.error = 'Submission failed';
+			})
+			.addCase(deleteUser.pending, (state) => {
+				state.status = 'loading';
+			})
+			.addCase(deleteUser.fulfilled, (state) => {
+				state.status = 'succeeded';
+				state.tracker = 'success';
+			})
+			.addCase(deleteUser.rejected, (state, action) => {
 				state.status = 'failed';
 				state.error = action.error.message;
+			})
+			.addCase(updateUser.pending, (state) => {
+				state.status = 'loading';
+			})
+			.addCase(updateUser.fulfilled, (state) => {
+				state.status = 'succeeded';
+				state.tracker = 'success';
+			})
+			.addCase(updateUser.rejected, (state, action) => {
+				state.status = 'failed';
+				state.error = action.error.message;
+				state.tracker = 'success';
 			});
 	},
 });
 
-// Export the async action creator
+export const selectUserForm = (state) => state.user.formData;
+export const selectUserFormStatus = (state) => state.user.status;
+export const selectUserFormError = (state) => state.user.error;
 
-// Export the reducer
 export default userSlice.reducer;

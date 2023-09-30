@@ -1,147 +1,168 @@
-// newsFormSlice.js
+// newsformSlice.js
 
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import axios from 'axios';
 
-// Define the initial state
+const API_URL = 'http://localhost:3000/news'; // Change to the appropriate news API endpoint
+const token =
+	'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiamFuYWsiLCJlbWFpbCI6ImphbmFrQGdtYWlsLmNvbSIsInJvbGUiOiJhZG1pbiIsIklzc3Vic2NyaWJlZCI6ZmFsc2UsInN1YnNjcmlwdGlvbnR5cGUiOiJmcmVlIiwic3Vic2NyaXB0aW9uZGF0ZSI6IjIwMjMtMDktMzBUMDU6MDU6NTcuNDkwWiIsInN1YnNjcmlwdGlvbmVuZGRhdGUiOiIyMDIzLTA5LTMwVDA1OjA1OjU3LjUyMFoiLCJfaWQiOiI2NTE3YWNlZTYwZTE2MGJjMWEzMTRmMjkiLCJpYXQiOjE2OTYwNTA0MzYsImV4cCI6MTY5NjEzNjgzNn0.NPyCu7Ylwm-9n43BlqO-aYO_k41h1GWcIx1QsE7o3hk';
 const initialState = {
-	name: 'newsForm', // Name is required
-	data: [],
+	data: null,
 	status: 'idle',
 	error: null,
+	tracker: '',
+	fetchById: null,
 };
 
-// Define a thunk for fetching news data
-export const fetchNewsData = createAsyncThunk(
-	'newsForm/fetchNewsData',
+export const fetchNewsFormData = createAsyncThunk(
+	'news/fetchNewsFormData',
 	async () => {
 		try {
-			const response = await fetch('https://hello231.onrender.com/news');
-			if (!response.ok) {
-				throw new Error('Network response was not ok');
-			}
-			const data = await response.json();
-			return data;
+			const response = await axios.get(API_URL);
+			return response.data;
 		} catch (error) {
-			throw error;
+			throw new Error('Fetching data failed');
 		}
 	}
 );
 
-// Define a thunk for posting news data
-export const postNewsData = createAsyncThunk(
-	'newsForm/postNewsData',
+export const submitNewsForm = createAsyncThunk(
+	'news/submitNewsForm',
 	async (formData) => {
-		console.log(formData, 'inside the data');
+		const config = {
+			headers: {
+				'Content-Type': 'multipart/form-data',
+				Authorization: `Bearer ${token}`,
+			},
+		};
 		try {
-			const formDataObj = new FormData();
-			for (const key in formData) {
-				formDataObj.append(key, formData[key]);
+			const response = await axios.post(API_URL, formData, config);
+
+			if (!(response.status === 200 || response.status === 201)) {
+				throw new Error('Submitting data failed');
 			}
 
-			const response = await fetch('https://hello231.onrender.com/news', {
-				method: 'POST',
-				body: formDataObj,
-			});
-			if (!response.ok) {
-				throw new Error('Network response was not ok');
-			}
-			const data = await response.json();
-			console.log(data);
-			return data;
+			return response.data;
 		} catch (error) {
-			throw error;
+			throw new Error('Submitting data failed');
 		}
 	}
 );
 
-export const editNewsData = createAsyncThunk(
-	'newsForm/editNewsData',
-	async ({ id, formData }) => {
-		const response = await fetch(`https://hello231.onrender.com/news/${id}`, {
-			method: 'PUT',
+export const updateNews = createAsyncThunk(
+	'news/updateNews',
+	async ({ id, data }) => {
+		const config = {
 			headers: {
-				'Content-Type': 'application/json',
+				Authorization: `Bearer ${token}`,
 			},
-			body: JSON.stringify(formData),
-		});
-		const data = await response.json();
-		return data;
+		};
+		const response = await axios.put(`${API_URL}/${id}`, data, config);
+		return response.data;
 	}
 );
 
-// Define a thunk for deleting news data
-export const deleteNewsData = createAsyncThunk(
-	'newsForm/deleteNewsData',
+export const deleteNews = createAsyncThunk(
+	'news/deleteNews',
+	async (newsId) => {
+		try {
+			const response = await axios.delete(`${API_URL}/${newsId}`, {
+				headers: {
+					Authorization: `Bearer ${token}`,
+				},
+			});
+			return response.data;
+		} catch (error) {
+			throw new Error('Deleting data failed');
+		}
+	}
+);
+
+export const fetchNewsById = createAsyncThunk(
+	'news/fetchNewsById',
 	async (id) => {
-		const response = await fetch(`https://hello231.onrender.com/news/${id}`, {
-			method: 'DELETE',
-		});
-		const data = await response.json();
-		return data;
+		const config = {
+			headers: {
+				Authorization: `Bearer ${token}`,
+			},
+		};
+		try {
+			const response = await axios.get(`${API_URL}/${id}`, config);
+			return response.data;
+		} catch (error) {
+			throw new Error('Fetching data failed');
+		}
 	}
 );
 
-// Define a thunk for getting news data by ID
-export const getNewsDataById = createAsyncThunk(
-	'newsForm/getNewsDataById',
-	async (id) => {
-		const response = await fetch(`https://hello231.onrender.com/news/${id}`);
-		const data = await response.json();
-		return data;
-	}
-);
-
-// ... rest of the code ...
-
-const newsFormSlice = createSlice({
-	name: initialState.name,
+const newsformSlice = createSlice({
+	name: 'news',
 	initialState,
-	// ... previous code ...
-
+	reducers: {},
 	extraReducers: (builder) => {
 		builder
-			// ... previous code ...
-
-			.addCase(fetchNewsData.pending, (state) => {
+			.addCase(fetchNewsFormData.pending, (state) => {
 				state.status = 'loading';
 			})
-			.addCase(fetchNewsData.fulfilled, (state, action) => {
+			.addCase(fetchNewsFormData.fulfilled, (state, action) => {
 				state.status = 'succeeded';
 				state.data = action.payload;
 			})
-			.addCase(editNewsData.fulfilled, (state, action) => {
-				state.status = 'succeeded';
-				// Update the state based on the EDIT response data
-				// For example, find the edited news item and update it in the newsData array
-				const editedNewsIndex = state.newsData.findIndex(
-					(news) => news.id === action.payload.id
-				);
-				if (editedNewsIndex !== -1) {
-					state.newsData[editedNewsIndex] = action.payload;
-				}
+			.addCase(fetchNewsFormData.rejected, (state) => {
+				state.status = 'failed';
+				state.error = 'Fetching data failed';
 			})
-
-			.addCase(deleteNewsData.fulfilled, (state, action) => {
-				state.status = 'succeeded';
-				// Update the state based on the DELETE response data
-				// For example, remove the deleted news item from the newsData array
-				state.newsData = state.newsData.filter(
-					(news) => news.id !== action.payload.id
-				);
+			.addCase(submitNewsForm.pending, (state) => {
+				state.status = 'loading';
 			})
-
-			.addCase(getNewsDataById.fulfilled, (state, action) => {
+			.addCase(submitNewsForm.fulfilled, (state) => {
 				state.status = 'succeeded';
-				// Update the state based on the GET by ID response data
-				// For example, store the retrieved news item in the newsData array
-				state.newsData = [action.payload];
+				state.tracker = 'successfully submitted';
+			})
+			.addCase(submitNewsForm.rejected, (state) => {
+				state.status = 'failed';
+				state.error = 'Submission failed';
+			})
+			.addCase(deleteNews.pending, (state) => {
+				state.status = 'loading';
+			})
+			.addCase(deleteNews.fulfilled, (state) => {
+				state.status = 'succeeded';
+				state.tracker = 'success delete';
+
+			})
+			.addCase(deleteNews.rejected, (state) => {
+				state.status = 'failed';
+				state.error = 'Deletion failed';
+			})
+			.addCase(updateNews.pending, (state) => {
+				state.status = 'loading';
+			})
+			.addCase(updateNews.fulfilled, (state) => {
+				state.status = 'succeeded';
+				state.tracker = 'success';
+			})
+			.addCase(updateNews.rejected, (state) => {
+				state.status = 'failed';
+				state.error = 'Update failed';
+				state.tracker = 'success';
+			})
+			.addCase(fetchNewsById.pending, (state) => {
+				state.status = 'loading';
+			})
+			.addCase(fetchNewsById.fulfilled, (state, action) => {
+				state.status = 'succeeded';
+				state.fetchById = action.payload;
+			})
+			.addCase(fetchNewsById.rejected, (state) => {
+				state.status = 'failed';
+				state.error = 'Fetching by Id failed';
 			});
-
-		// ... rest of the code ...
 	},
-
-	// ... rest of the code ...
 });
-// ... rest of the code ...
 
-export default newsFormSlice.reducer;
+export const selectNewsForm = (state) => state.news.formData;
+export const selectNewsFormStatus = (state) => state.news.status;
+export const selectNewsFormError = (state) => state.news.error;
+
+export default newsformSlice.reducer;

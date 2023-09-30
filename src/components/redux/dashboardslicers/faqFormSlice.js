@@ -1,157 +1,133 @@
 // faqFormSlice.js
 
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-const user = JSON.parse(localStorage.getItem('user'));
+import axios from 'axios';
 
-console.log(user, 'user from faqFormSlice.js');
-// Define your initial state here
+const API_URL = 'http://localhost:3000/faq'; // Changed the API URL to /faq
+const token =
+	'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiamFuYWsiLCJlbWFpbCI6ImphbmFrQGdtYWlsLmNvbSIsInJvbGUiOiJhZG1pbiIsIklzc3Vic2NyaWJlZCI6ZmFsc2UsInN1YnNjcmlwdGlvbnR5cGUiOiJmcmVlIiwic3Vic2NyaXB0aW9uZGF0ZSI6IjIwMjMtMDktMzBUMDU6MDU6NTcuNDkwWiIsInN1YnNjcmlwdGlvbmVuZGRhdGUiOiIyMDIzLTA5LTMwVDA1OjA1OjU3LjUyMFoiLCJfaWQiOiI2NTE3YWNlZTYwZTE2MGJjMWEzMTRmMjkiLCJpYXQiOjE2OTYwNTA0MzYsImV4cCI6MTY5NjEzNjgzNn0.NPyCu7Ylwm-9n43BlqO-aYO_k41h1GWcIx1QsE7o3hk';
 const initialState = {
-	name: 'faqForm', // Name is required
 	data: null,
 	status: 'idle',
 	error: null,
-	requestMade: false,
+	tracker: '',
+	fetchbyid: null,
 };
 
-// Define an async thunk to fetch data from the FAQ endpoint
-const fetchFAQData = createAsyncThunk('faqForm/fetchFAQData', async () => {
-	try {
-		const response = await fetch('https://hello231.onrender.com/faq');
-		if (!response.ok) {
-			throw new Error('Network response was not ok');
+export const fetchFAQFormData = createAsyncThunk(
+	'faqs/fetchFAQFormData',
+	async () => {
+		try {
+			const response = await axios.get(API_URL);
+			return response.data;
+		} catch (error) {
+			throw new Error('Fetching data failed');
 		}
-		const data = await response.json();
-		return data;
-	} catch (error) {
-		throw error;
 	}
-});
+);
 
-// Define an async thunk to post data to the FAQ endpoint
-const postFAQData = createAsyncThunk(
-	'faqForm/postFAQData',
+export const submitFAQForm = createAsyncThunk(
+	'faqs/submitFAQForm',
 	async (formData) => {
-		console.log(formData);
+		const config = {
+			headers: {
+				Authorization: `Bearer ${token}`,
+			},
+		};
 		try {
-			const response = await fetch('https://hello231.onrender.com/faq', {
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json',
-					Authorization: `Bearer ${user.token}`,
-				},
-
-				body: JSON.stringify(formData),
-			});
-			if (!response.ok) {
-				throw new Error('Network response was not ok');
+			const response = await axios.post(API_URL, formData, config);
+			if (!(response.status === 200 || response.status === 201)) {
+				throw new Error('Submitting data failed');
 			}
-			const data = await response.json();
-			console.log(data);
-			return data;
+			return response.data;
 		} catch (error) {
-			throw error;
-		}
-	}
-);
-const editFAQData = createAsyncThunk(
-	'faqForm/editFAQData',
-	async ({ id, formData }) => {
-		try {
-			const response = await fetch(`https://hello231.onrender.com/faq/${id}`, {
-				method: 'PUT',
-				headers: {
-					'Content-Type': 'application/json',
-					Authorization: `Bearer ${user.token}`,
-				},
-				body: JSON.stringify(formData),
-			});
-			if (!response.ok) {
-				throw new Error('Network response was not ok');
-			}
-			const data = await response.json();
-			return data;
-		} catch (error) {
-			throw error;
+			throw new Error('Submitting data failed');
 		}
 	}
 );
 
-const deleteFAQData = createAsyncThunk('faqForm/deleteFAQData', async (id) => {
-	console.log(id, 'indise the deleteFAQData');
+export const updateFAQ = createAsyncThunk(
+	'faqs/updateFAQ',
+	async ({ id, data }) => {
+		console.log(id, data);
+		const config = {
+			headers: {
+				Authorization: `Bearer ${token}`,
+			},
+		};
+		const response = await axios.put(`${API_URL}/${id}`, data, config);
+		return response.data;
+	}
+);
+
+export const deleteFAQ = createAsyncThunk('faqs/deleteFAQ', async (faqid) => {
 	try {
-		const response = await fetch(`http://localhost:3000/faq/${id}`, {
-			method: 'DELETE',
-			headers: { Authorization: `Bearer ${user.token}` },
+		const response = await axios.delete(`${API_URL}/${faqid}`, {
+			headers: {
+				Authorization: `Bearer ${token}`,
+			},
 		});
-		if (!response.ok) {
-			throw new Error('Network response was not ok');
-		}
-		const data = await response.json();
-		return data;
+		return response.data;
 	} catch (error) {
-		throw error;
+		throw new Error('Deleting data failed');
 	}
 });
-
-const getFAQDataById = createAsyncThunk(
-	'faqForm/getFAQDataById',
-	async (id) => {
-		try {
-			const response = await fetch(`https://hello231.onrender.com/faq/${id}`);
-			if (!response.ok) {
-				throw new Error('Network response was not ok');
-			}
-			const data = await response.json();
-			return data;
-		} catch (error) {
-			throw error;
-		}
-	}
-);
-
-// ... rest of the code ...
-
 const faqFormSlice = createSlice({
-	name: initialState.name,
+	name: 'faqs',
 	initialState,
-
-	// ... rest of the code ...
+	reducers: {},
 	extraReducers: (builder) => {
 		builder
-			.addCase(fetchFAQData.pending, (state) => {
+			.addCase(fetchFAQFormData.pending, (state) => {
 				state.status = 'loading';
 			})
-			.addCase(fetchFAQData.fulfilled, (state, action) => {
+			.addCase(fetchFAQFormData.fulfilled, (state, action) => {
 				state.status = 'succeeded';
 				state.data = action.payload;
 			})
-			// ... rest of the code ...
-			.addCase(editFAQData.fulfilled, (state, action) => {
-				state.status = 'succeeded';
-				state.requestMade = true;
-				// Handle the successful EDIT response data if needed
+			.addCase(fetchFAQFormData.rejected, (state) => {
+				state.status = 'failed';
+				state.error = 'Fetching data failed';
 			})
-			.addCase(deleteFAQData.fulfilled, (state, action) => {
-				state.status = 'succeeded';
-				state.data = action.payload;
-				state.requestMade = true;
-				// Handle the successful DELETE response data if needed
+			.addCase(submitFAQForm.pending, (state) => {
+				state.status = 'loading';
 			})
-			.addCase(getFAQDataById.fulfilled, (state, action) => {
+			.addCase(submitFAQForm.fulfilled, (state) => {
 				state.status = 'succeeded';
-				state.data = action.payload;
-				state.requestMade = true;
+				state.tracker = 'successfully submitted';
+			})
+			.addCase(submitFAQForm.rejected, (state) => {
+				state.status = 'failed';
+				state.error = 'Submission failed';
+			})
+			.addCase(deleteFAQ.pending, (state) => {
+				state.status = 'loading';
+			})
+			.addCase(deleteFAQ.fulfilled, (state, action) => {
+				state.status = 'succeeded';
+				state.tracker = 'success deleted';
+			})
+			.addCase(deleteFAQ.rejected, (state, action) => {
+				state.status = 'failed';
+				state.error = action.error.message;
+			})
+			.addCase(updateFAQ.pending, (state) => {
+				state.status = 'loading';
+			})
+			.addCase(updateFAQ.fulfilled, (state) => {
+				state.status = 'succeeded';
+				state.tracker = 'success';
+			})
+			.addCase(updateFAQ.rejected, (state, action) => {
+				state.status = 'failed';
+				state.error = action.error.message;
+				state.tracker = 'success';
 			});
-		// ... rest of the code ...
 	},
 });
 
-export {
-	fetchFAQData,
-	postFAQData,
-	editFAQData,
-	deleteFAQData,
-	getFAQDataById,
-};
-// Create a slice with reducers and actions
+export const selectFAQForm = (state) => state.faqs.formData;
+export const selectFAQFormStatus = (state) => state.faqs.status;
+export const selectFAQFormError = (state) => state.faqs.error;
+
 export default faqFormSlice.reducer;

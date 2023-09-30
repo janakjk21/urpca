@@ -94,45 +94,45 @@ export const router = createBrowserRouter([
 		element: <Orderlist></Orderlist>,
 	},
 	{
-		path: '/taxform',
+		path: '/taxform/:id?',
 		element: <Taxform></Taxform>,
 	},
 	{
-		path: '/faqform',
+		path: '/faqform/:id?',
 		element: <FAQForm></FAQForm>,
 	},
 
 	{
-		path: '/bookform',
+		path: '/bookform:id?',
 		element: <Booksform></Booksform>,
 	},
 	{
-		path: '/homesliderform',
+		path: '/homesliderform/:id?',
 		element: <HomeSlider></HomeSlider>,
 	},
 	{
-		path: '/serviceform',
+		path: '/serviceform/:id?',
 		element: <Services></Services>,
 	},
 
 	{
-		path: 'newsform',
+		path: 'newsform/:id?',
 		element: <NewsForm></NewsForm>,
 	},
 	{
-		path: 'employeform',
+		path: 'employeform/:id?',
 		element: <EmployeForm></EmployeForm>,
 	},
 	{
-		path: 'industryform',
+		path: 'industryform/:id?',
 		element: <Industriesform></Industriesform>,
 	},
 	{
-		path: 'investnepalform',
+		path: 'investnepalform/:id?',
 		element: <InvestNepalform></InvestNepalform>,
 	},
 	{
-		path: 'usertable',
+		path: 'usertable/:id?',
 		element: <Usertable></Usertable>,
 	},
 ]);
