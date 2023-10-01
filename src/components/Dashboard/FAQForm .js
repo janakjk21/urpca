@@ -14,7 +14,7 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
 const initialState = {
 	question: '',
 	answer: '',
-	ispaid: '',
+	payment: '',
 };
 export default function FaqForm() {
 	const dispatch = useDispatch();
@@ -67,7 +67,7 @@ const FAQForm = () => {
 	const [formData, setFormData] = useState({
 		question: '',
 		answer: '',
-		ispaid: '',
+		payment: '',
 	});
 
 	useEffect(() => {
@@ -76,12 +76,12 @@ const FAQForm = () => {
 			setFormData({
 				question: faq.question,
 				answer: faq.answer,
-				ispaid: faq.ispaid,
+				payment: faq.payment,
 			});
 		}
 	}, [id, faqData]);
 
-	const { question, answer, ispaid } = formData;
+	const { question, answer, payment } = formData;
 
 	const handleChange = (e) => {
 		const { name, value } = e.target;
@@ -97,7 +97,7 @@ const FAQForm = () => {
 		const formDataToSend = {
 			question,
 			answer,
-			ispaid,
+			payment,
 		};
 
 		if (id) {
@@ -150,17 +150,17 @@ const FAQForm = () => {
 					/>
 				</div>
 				<div className='mb-3'>
-					<label htmlFor='ispaid' className='form-label'>
-						ispaid
+					<label htmlFor='payment' className='form-label'>
+						payment
 					</label>
 					<select
 						className='form-select'
-						id='ispaid'
-						name='ispaid'
-						value={ispaid}
+						id='payment'
+						name='payment'
+						value={payment}
 						onChange={handleChange}>
-						<option value='free'>Free</option>
-						<option value='paid'>Paid</option>
+						<option value='true'>Free</option>
+						<option value='false'>Paid</option>
 					</select>
 				</div>
 				<button type='submit' className='btn btn-primary'>

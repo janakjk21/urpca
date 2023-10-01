@@ -3,9 +3,10 @@ import Nav from './Nav';
 import Sidebar from './Sidebar';
 import NavSidebar from './NavSidebar';
 import {
-	postWorkData,
-	deleteWorkData,
-	fetchWorkData,
+	fetchTaxFormFormData,
+	deleteTaxForm,
+	updateTaxForm,
+	submitTaxForm,
 } from '../redux/dashboardslicers/taxFormSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import axios from 'axios';
@@ -50,12 +51,12 @@ const Tax = () => {
 			ispaid: formData.paymentStatus,
 			image: formData.imageFile,
 		};
-		dispatch(postWorkData(taxData));
+		dispatch(submitTaxForm(taxData));
 	};
 	const taxData = useSelector((state) => state.tax.data);
 	const status = useSelector((state) => state.tax.status);
 	useEffect(() => {
-		dispatch(fetchWorkData());
+		dispatch(fetchTaxFormFormData());
 	}, [dispatch]);
 
 	return (

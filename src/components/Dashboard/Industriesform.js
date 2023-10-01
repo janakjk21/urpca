@@ -1,163 +1,274 @@
-import React, { useState } from 'react';
-import NavSidebar from './NavSidebar';
-import { useDispatch } from 'react-redux';
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
 import {
-	submitIndustriesForm,
-	fetchIndustriesFormData,
+	submitIndustryForm,
+	deleteIndustry,
+	updateIndustry,
+	fetchIndustryFormData,
 } from '../redux/dashboardslicers/industriesFormSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import { FaEdit, FaTrash } from 'react-icons/fa';
+import NavSidebar from './NavSidebar';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 
-const initialFormData = {
-	id: 2, // You can set the ID if it's fixed or generate dynamically
-	title: 'finance',
+const initialState = {
+	title: '',
 	description: '',
-	imageSrc: '',
-	imageAlt: 'Service Image',
-	additionalDescription: '',
-	innerImage1Src: '',
-	innerImage1Alt: 'Inner Image 1',
-	subtitle: 'we do the bestt',
+	category: '',
+	payment: '',
+	additionalDes: '',
+	image: null,
 };
 
-export default function Industriesform() {
+export default function Industries() {
+	const dispatch = useDispatch();
+	const status = useSelector((state) => state.industry.status);
+	const taxIndustryData = useSelector((state) => state.industry.data);
+	const trackerStatus = useSelector((state) => state.industry.tracker);
+
+	const [taxIndustryId, setTaxIndustryId] = useState('');
+
+	useEffect(() => {
+		dispatch(fetchIndustryFormData());
+	}, [trackerStatus]);
+
+	if (status === 'loading') {
+		return (
+			<div className='spinner-border text-primary' role='status'>
+				<span className='sr-only'>Loading...</span>
+			</div>
+		);
+	}
+
+	if (status === 'error') {
+		return <div>Error loading tax industries.</div>;
+	}
+
 	return (
 		<div>
 			<div className='wrapper'>
-				<div className='wrapper'>
-					<NavSidebar></NavSidebar>
-					<ServiceDataForm></ServiceDataForm>
+				<NavSidebar></NavSidebar>
+				<div className='content-page'>
+					<div className='content'>
+						<div className='container-fluid'>
+							<TaxIndustryForm />
+							<div className='d-flex mt-2 flex-wrap'>
+								{status === 'succeeded' &&
+									taxIndustryData.map((taxIndustry) => (
+										<TaxIndustryCard
+											key={taxIndustry._id}
+											taxIndustry={taxIndustry}
+										/>
+									))}
+							</div>
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>
 	);
 }
 
-const ServiceDataForm = () => {
+const TaxIndustryForm = () => {
+	const taxIndustryData = useSelector((state) => state.industry.data);
+	const [formData, setFormData] = useState({
+		title: '',
+		description: '',
+		category: '',
+		payment: '',
+		additionalDes: '',
+		image: null,
+	});
+	const navigate = useNavigate();
+
 	const dispatch = useDispatch();
-	const [formData, setFormData] = useState(initialFormData);
+	const { id } = useParams();
 
-	const handleChange = (event) => {
-		const { name, value } = event.target;
-		setFormData({
-			...formData,
-			[name]: value,
-		});
-	};
+	useEffect(() => {
+		if (id) {
+			const taxIndustry = taxIndustryData.find(
+				(taxIndustry) => taxIndustry._id === id
+			);
+			setFormData({
+				title: taxIndustry.title,
+				description: taxIndustry.description,
+				category: taxIndustry.category,
+				payment: taxIndustry.payment,
+				additionalDes: taxIndustry.additionalDes,
+				image: taxIndustry.image,
+			});
+		}
+	}, [id]);
 
-	const handleImageUpload = (event, propertyName) => {
-		const file = event.target.files[0];
-		if (file) {
-			const reader = new FileReader();
-			reader.onload = (e) => {
-				setFormData({
-					...formData,
-					[propertyName]: e.target.result,
-				});
-			};
-			reader.readAsDataURL(file);
+	const { title, description, category, payment, additionalDes, image } =
+		formData;
+
+	const handleChange = (e) => {
+		if (e.target.name === 'image') {
+			setFormData({
+				...formData,
+				[e.target.name]: e.target.files[0],
+			});
+		} else {
+			const { name, value } = e.target;
+			setFormData({
+				...formData,
+				[name]: value,
+			});
 		}
 	};
 
-	const handleSubmit = (event) => {
-		const data = {
-			name: formData.title,
-			description: formData.description,
-			AdditionalDescription: formData.additionalDescription,
-			image: formData.innerImage1Src,
-		};
-		event.preventDefault();
-		dispatch(submitIndustriesForm(data)); // Handle form submission here, e.g., send data to a server
-		console.log(formData);
+	const handleSubmit = async (e) => {
+		e.preventDefault();
+
+		const formDataToSend = new FormData();
+		formDataToSend.append('title', title);
+		formDataToSend.append('description', description);
+		formDataToSend.append('category', category);
+		formDataToSend.append('payment', payment);
+		formDataToSend.append('additionalDes', additionalDes);
+		formDataToSend.append('image', image);
+
+		if (id) {
+			try {
+				dispatch(updateIndustry({ id, data: formDataToSend }));
+				navigate('/industryform'); // Change this to the appropriate route
+				console.log('Data saved successfully');
+			} catch (error) {
+				console.error('Error saving data:', error);
+			}
+		} else {
+			try {
+				dispatch(submitIndustryForm(formDataToSend));
+				console.log('Data saved successfully');
+			} catch (error) {
+				console.error('Error saving data:', error);
+			}
+		}
 	};
 
 	return (
-		<div className='content-page'>
-			<div className='content'>
-				<div className='container-fluid'>
-					<div className='row'>
-						<div className='col-10' style={{ padding: '10px' }}>
-							<div className='card'>
-								<div className='card-body'>
-									<div>
-										<h1>Industries Form</h1>
-										<form onSubmit={handleSubmit}>
-											<div className='mb-3'>
-												<label htmlFor='title' className='form-label'>
-													Title
-												</label>
-												<input
-													type='text'
-													id='title'
-													name='title'
-													className='form-control'
-													value={formData.title}
-													onChange={handleChange}
-													required
-												/>
-											</div>
+		<div className='container mt-2'>
+			<form onSubmit={handleSubmit}>
+				<div className='mb-3'>
+					<label htmlFor='title' className='form-label'>
+						Title
+					</label>
+					<input
+						type='text'
+						className='form-control'
+						id='title'
+						name='title'
+						value={title}
+						onChange={handleChange}
+						placeholder='Title'
+					/>
+				</div>
+				<div className='mb-3'>
+					<label htmlFor='description' className='form-label'>
+						Description
+					</label>
+					<input
+						type='text'
+						className='form-control'
+						id='description'
+						name='description'
+						value={description}
+						onChange={handleChange}
+						placeholder='Description'
+					/>
+				</div>
+				<div className='mb-3'>
+					<label htmlFor='category' className='form-label'>
+						Category
+					</label>
+					<input
+						type='text'
+						className='form-control'
+						id='category'
+						name='category'
+						value={category}
+						onChange={handleChange}
+						placeholder='Category'
+					/>
+				</div>
+				<div className='mb-3'>
+					<label htmlFor='payment' className='form-label'>
+						Payment
+					</label>
+					<select
+						className='form-select'
+						id='payment'
+						name='payment'
+						value={payment}
+						onChange={handleChange}>
+						<option value='paid'>Paid</option>
+						<option value='unpaid'>Unpaid</option>
+					</select>
+				</div>
+				<div className='mb-3'>
+					<label htmlFor='additionalDes' className='form-label'>
+						Additional Description
+					</label>
+					<input
+						type='text'
+						className='form-control'
+						id='additionalDes'
+						name='additionalDes'
+						value={additionalDes}
+						onChange={handleChange}
+						placeholder='Additional Description'
+					/>
+				</div>
+				<div className='mb-3'>
+					<label htmlFor='image' className='form-label'>
+						Image
+					</label>
+					<input
+						type='file'
+						className='form-control'
+						id='image'
+						name='image'
+						onChange={handleChange}
+					/>
+				</div>
+				<button type='submit' className='btn btn-primary'>
+					Submit
+				</button>
+			</form>
+		</div>
+	);
+};
 
-											<div className='mb-3'>
-												<label htmlFor='description' className='form-label'>
-													Description
-												</label>
-												<textarea
-													id='description'
-													name='description'
-													className='form-control'
-													value={formData.description}
-													onChange={handleChange}
-													rows='4'
-													required
-												/>
-											</div>
+const TaxIndustryCard = ({ taxIndustry }) => {
+	const dispatch = useDispatch();
+	const navigate = useNavigate();
 
-											<div className='mb-3'>
-												<label
-													htmlFor='additionalDescription'
-													className='form-label'>
-													Additional Description
-												</label>
-												<textarea
-													id='additionalDescription'
-													name='additionalDescription'
-													className='form-control'
-													value={formData.additionalDescription}
-													onChange={handleChange}
-													rows='4'
-												/>
-											</div>
+	const handleDelete = (e) => {
+		e.preventDefault();
+		dispatch(deleteIndustry(taxIndustry._id));
+	};
 
-											<div className='mb-3'>
-												<label htmlFor='innerImage1Src' className='form-label'>
-													Inner Image 1 Source
-												</label>
-												<input
-													type='file'
-													id='innerImage1Src'
-													name='innerImage1Src'
-													className='form-control'
-													accept='image/*'
-													onChange={(e) =>
-														handleImageUpload(e, 'innerImage1Src')
-													}
-												/>
-												{formData.innerImage1Src && (
-													<img
-														src={formData.innerImage1Src}
-														alt='Uploaded Image'
-														style={{ marginTop: '10px', maxWidth: '100%' }}
-													/>
-												)}
-											</div>
-
-											<button type='submit' className='btn btn-primary'>
-												Submit
-											</button>
-										</form>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
+	return (
+		<div className='col-md-4 mb-3'>
+			<div className='card'>
+				<div className='card-body'>
+					<h5 className='card-title'>{taxIndustry.title}</h5>
+					<p className='card-text'>{taxIndustry.description}</p>
+					<button className='btn btn-secondary'>
+						<Link
+							to={`/industryform/${taxIndustry._id}`}
+							style={{ textDecoration: 'none' }}>
+							<FaEdit /> Edit
+						</Link>
+					</button>
+					<button
+						className='btn btn-danger ml-2'
+						onClick={(e) => {
+							handleDelete(e);
+						}}>
+						<FaTrash /> Delete
+					</button>
 				</div>
 			</div>
 		</div>

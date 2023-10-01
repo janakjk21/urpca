@@ -32,6 +32,7 @@ import Investinnepal from './components/investinnepal/Investinnepal';
 import Industriesform from './components/Dashboard/Industriesform';
 import InvestNepalform from './components/Dashboard/InvestNepalform';
 import { Usertable } from './components/Dashboard/Usertable';
+import NewTaxhome from './components/Tax/NewTaxhome';
 
 export const router = createBrowserRouter([
 	{
@@ -43,11 +44,11 @@ export const router = createBrowserRouter([
 		element: <Aboutus />,
 	},
 	{
-		path: '/services/:id',
+		path: '/services/:id?',
 		element: <Consulting />,
 	},
 	{
-		path: '/industry/:id',
+		path: '/industry/:id?',
 		element: <Industries />,
 	},
 	{
@@ -55,10 +56,14 @@ export const router = createBrowserRouter([
 		element: <Tax />,
 	},
 	{
+		path: '/taxhome',
+		element: <NewTaxhome />,
+	},
+	{
 		path: '/tax/:id',
 		element: <CaseStudySingle />,
 	},
-	{ path: '/investinnepal/:id', element: <Investinnepal></Investinnepal> },
+	{ path: '/investinnepal/:id?', element: <Investinnepal></Investinnepal> },
 	{
 		path: '/faq',
 		element: <Faq />,
@@ -72,7 +77,7 @@ export const router = createBrowserRouter([
 		element: <Personaldetails />,
 	},
 	{
-		path: 'news/:id',
+		path: 'news/:id?',
 		element: <News></News>,
 	},
 

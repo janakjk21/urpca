@@ -4,7 +4,8 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 
 const API_URL = 'http://localhost:3000/employee';
-const token = 'YOUR_EMPLOYEE_TOKEN_HERE'; // Replace with your actual token
+const token =
+	'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiamFuYWsiLCJlbWFpbCI6ImphbmFrNTVAZ21haWwuY29tIiwicm9sZSI6ImFkbWluIiwiSXNzdWJzY3JpYmVkIjpmYWxzZSwic3Vic2NyaXB0aW9udHlwZSI6ImZyZWUiLCJzdWJzY3JpcHRpb25kYXRlIjoiMjAyMy0xMC0wMVQxMToyMTowOS43ODlaIiwic3Vic2NyaXB0aW9uZW5kZGF0ZSI6IjIwMjMtMTAtMDFUMTE6MjE6MDkuODE5WiIsIl9pZCI6IjY1MTk1NjM0NTFhNjBkZDE3NjBjYTYxMCIsImlhdCI6MTY5NjE4NDgwOCwiZXhwIjoxNjk2MjcxMjA4fQ.nurMy7EnZWziCH4uOtuSxzs_cqAMCjIJDo94JO9hjMQ';
 
 const initialState = {
 	data: null,
@@ -17,8 +18,13 @@ const initialState = {
 export const fetchEmployeeFormData = createAsyncThunk(
 	'employees/fetchEmployeeFormData',
 	async () => {
+		const config = {
+			headers: {
+				Authorization: `Bearer ${token}`,
+			},
+		};
 		try {
-			const response = await axios.get(API_URL);
+			const response = await axios.get(API_URL, config);
 			return response.data;
 		} catch (error) {
 			throw new Error('Fetching data failed');
@@ -36,6 +42,7 @@ export const submitEmployeeForm = createAsyncThunk(
 		};
 		try {
 			const response = await axios.post(API_URL, formData, config);
+			console.log(response, 'response');
 
 			if (!(response.status === 200 || response.status === 201)) {
 				throw new Error('Submitting data failed');
@@ -136,4 +143,4 @@ export const selectEmployeeForm = (state) => state.employees.formData;
 export const selectEmployeeFormStatus = (state) => state.employees.status;
 export const selectEmployeeFormError = (state) => state.employees.error;
 
-export default employeeSlicer.reducer;
+export default employeeSlice.reducer;

@@ -125,12 +125,9 @@ const Navfordesktop = (props) => {
 												</ul>
 											</li>
 											<li className='has-sub right-view'>
-												<Link to='/tax/1'>
-													Tax <FaAngleDown></FaAngleDown>
+												<Link to='/taxhome'>
+													Tax 
 												</Link>
-												<ul className='sub-menu'>
-													{/* ... (other case study links) */}
-												</ul>
 											</li>
 											<li className='has-sub'>
 												<Link to='/investinnepal/1'>
@@ -145,40 +142,7 @@ const Navfordesktop = (props) => {
 													</li>
 												</ul>
 											</li>
-											<li className='has-sub'>
-												<Link to='/faq'>
-													Resources <FaAngleDown></FaAngleDown>
-												</Link>
-												<ul className='sub-menu'>
-													<li>
-														<Link to='/news/1'>News </Link>
-													</li>
-													<li>
-														<Link to='/faqfullpage'>Faq</Link>
-													</li>
-													<li>
-														<Link to='/faqfullpage'>Articles</Link>
-													</li>
-												</ul>
-											</li>
-
-											<li className='has-sub'>
-												<Link to='/faq'>Books</Link>
-												<ul className='sub-menu'>
-													<li>
-														<Link to='/faq'>Faq</Link>
-													</li>
-													<li>
-														<Link to='/faqfullpage'>Faq fullpage</Link>
-													</li>
-												</ul>
-											</li>
-											<li className='has-sub right-view'>
-												<Link to='/login'>Login</Link>
-												<ul className='sub-menu'>
-													{/* ... (other news links) */}
-												</ul>
-											</li>
+										
 										</ul>
 									</nav>
 								</div>

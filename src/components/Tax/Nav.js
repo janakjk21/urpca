@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import logo from '../Assets/images/logo.png';
+import logo from '../../Assets/images/logo.png';
 import {
 	FaFacebookF,
 	FaTwitter,
@@ -28,6 +28,7 @@ export default function Nav() {
 			window.removeEventListener('resize', handleResize);
 		};
 	}, []);
+
 	return <>{isSmallScreen ? <Navformobile /> : <Navfordesktop />}</>;
 }
 
@@ -92,7 +93,6 @@ const Navfordesktop = (props) => {
 									/>
 								</Link>
 								<div className='mobile-menu-right' />
-
 								<div className='main-menu f-right'>
 									<nav id='mobile-menu-right'>
 										<ul>
@@ -100,54 +100,104 @@ const Navfordesktop = (props) => {
 												<Link to='/'>Home</Link>
 											</li>
 											<li>
-												<Link to='/aboutus'>About</Link>
+												<Link to='/insights'>Insights</Link>
 											</li>
-
-											<li className='has-sub'>
-												<Link to='/services/1'>
-													Services <FaAngleDown></FaAngleDown>
-												</Link>
+											<li>
+												<Link to='/insights'>Direct Tax</Link>
 												<ul className='sub-menu'>
 													<li>
-														<Link to='/faq'>Tax Filings</Link>
+														<Link to='/insights'>Overview</Link>
 													</li>
 													<li>
-														<Link to='/faqfullpage'>Audit & Assurance</Link>
+														<Link to='/insights'>Employment Income</Link>
+														<ul className='sub-menu'>
+															<li>
+																<Link to='/insights'>
+																	Taxation of an Individual
+																</Link>
+															</li>
+															<li>
+																<Link to='/insights'>Social Security Fund</Link>
+															</li>
+														</ul>
+													</li>
+													<li>
+														<Link to='/insights'>Income From Business</Link>
+													</li>
+													<li>
+														<Link to='/insights'>Permanent Establishment</Link>
+													</li>
+													<li>
+														<Link to='/insights'>Income from Investment</Link>
+													</li>
+													<li>
+														<Link to='/insights'>Administrative Aspects</Link>
+													</li>
+												</ul>
+											</li>
+											<li>
+												<Link to='/insights'>Indirect Tax</Link>
+												<ul className='sub-menu'>
+													<li>
+														<Link to='/insights'>VAT</Link>
+													</li>
+													<li>
+														<Link to='/insights'>Customs</Link>
+													</li>
+													<li>
+														<Link to='/insights'>Excise Duty</Link>
 													</li>
 												</ul>
 											</li>
-											<li className='has-sub right-view'>
-												<Link to='/industry/1'>
-													Industries <FaAngleDown></FaAngleDown>
-												</Link>
-												<ul className='sub-menu'>
-													{/* ... (other case study links) */}
-												</ul>
-											</li>
-											<li className='has-sub right-view'>
-												<Link to='/tax/1'>
-													Tax <FaAngleDown></FaAngleDown>
-												</Link>
-												<ul className='sub-menu'>
-													{/* ... (other case study links) */}
-												</ul>
-											</li>
-											<li className='has-sub'>
-												<Link to='/investinnepal/1'>
-													Invest In Nepal <FaAngleDown></FaAngleDown>
-												</Link>
+											<li>
+												<Link to='/insights'>Act and Directives</Link>
 												<ul className='sub-menu'>
 													<li>
-														<Link to='/faq'>Faq</Link>
+														<Link to='/insights'>Income Tax</Link>
+														<ul className='sub-menu'>
+															<li>
+																<Link to='/insights'>
+																	Act, Rules and Directives
+																</Link>
+															</li>
+															<li>
+																<Link to='/insights'>
+																	Income Tax Directives Chapter Wise
+																</Link>
+															</li>
+															<li>
+																<Link to='/insights'>
+																	Income Tax Act 2058 - Chapterwise
+																</Link>
+															</li>
+														</ul>
 													</li>
 													<li>
-														<Link to='/faqfullpage'>Faq fullpage</Link>
+														<Link to='/insights'>Value Added Tax</Link>
+														<ul className='sub-menu'>
+															<li>
+																<Link to='/insights'>
+																	Act, Rules and Directives
+																</Link>
+															</li>
+														</ul>
+													</li>
+													<li>
+														<Link to='/insights'>Excise Duty</Link>
+														<ul className='sub-menu'>
+															<li>
+																<Link to='/insights'>Act and Duty</Link>
+															</li>
+														</ul>
 													</li>
 												</ul>
+											</li>
+											<li>
+												<Link to='/insights'>Notice and Circulars</Link>
 											</li>
 											<li className='has-sub'>
 												<Link to='/faq'>
-													Resources <FaAngleDown></FaAngleDown>
+													Resources 
 												</Link>
 												<ul className='sub-menu'>
 													<li>
@@ -171,12 +221,6 @@ const Navfordesktop = (props) => {
 													<li>
 														<Link to='/faqfullpage'>Faq fullpage</Link>
 													</li>
-												</ul>
-											</li>
-											<li className='has-sub right-view'>
-												<Link to='/login'>Login</Link>
-												<ul className='sub-menu'>
-													{/* ... (other news links) */}
 												</ul>
 											</li>
 										</ul>
@@ -208,27 +252,91 @@ const Navformobile = (props) => {
 								<Link to='/'>Home</Link>
 							</li>
 							<li>
-								<Link to='/aboutus'>About</Link>
+								<Link to='/insights'>Insights</Link>
 							</li>
 							<li className='has-sub'>
-								<Link to='#'>Page</Link>
+								<Link to='#'>Direct Tax</Link>
+								<ul className='sub-menu'>
+									<li>
+										<Link to='/insights'>Overview</Link>
+									</li>
+									<li>
+										<Link to='/insights'>Employment Income</Link>
+										<ul className='sub-menu'>
+											<li>
+												<Link to='/insights'>Taxation of an Individual</Link>
+											</li>
+											<li>
+												<Link to='/insights'>Social Security Fund</Link>
+											</li>
+										</ul>
+									</li>
+									<li>
+										<Link to='/insights'>Income From Business</Link>
+									</li>
+									<li>
+										<Link to='/insights'>Permanent Establishment</Link>
+									</li>
+									<li>
+										<Link to='/insights'>Income from Investment</Link>
+									</li>
+									<li>
+										<Link to='/insights'>Administrative Aspects</Link>
+									</li>
+								</ul>
 							</li>
-							<li className='has-sub'>
-								<li>
-									<Link to='/faq'>Faq</Link>
-								</li>
-								<li>
-									<Link to='/faqfullpage'>Faq fullpage</Link>
-								</li>
-								<li>
-									<Link to='/Pricing'>Pricing</Link>
-								</li>
+							<li>
+								<Link to='/insights'>Indirect Tax</Link>
+								<ul className='sub-menu'>
+									<li>
+										<Link to='/insights'>VAT</Link>
+									</li>
+									<li>
+										<Link to='/insights'>Customs</Link>
+									</li>
+									<li>
+										<Link to='/insights'>Excise Duty</Link>
+									</li>
+								</ul>
 							</li>
-							<li className='has-sub right-view'>
-								<Link to='/casestudy'>Case Study</Link>
-							</li>
-							<li className='has-sub right-view'>
-								<Link to='/Consulting'>Services</Link>
+							<li>
+								<Link to='/insights'>Act and Directives</Link>
+								<ul className='sub-menu'>
+									<li>
+										<Link to='/insights'>Income Tax</Link>
+										<ul className='sub-menu'>
+											<li>
+												<Link to='/insights'>Act, Rules and Directives</Link>
+											</li>
+											<li>
+												<Link to='/insights'>
+													Income Tax Directives Chapter Wise
+												</Link>
+											</li>
+											<li>
+												<Link to='/insights'>
+													Income Tax Act 2058 - Chapterwise
+												</Link>
+											</li>
+										</ul>
+									</li>
+									<li>
+										<Link to='/insights'>Value Added Tax</Link>
+										<ul className='sub-menu'>
+											<li>
+												<Link to='/insights'>Act, Rules and Directives</Link>
+											</li>
+										</ul>
+									</li>
+									<li>
+										<Link to='/insights'>Excise Duty</Link>
+										<ul className='sub-menu'>
+											<li>
+												<Link to='/insights'>Act and Duty</Link>
+											</li>
+										</ul>
+									</li>
+								</ul>
 							</li>
 						</ul>
 					</nav>
