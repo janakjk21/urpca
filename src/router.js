@@ -33,6 +33,7 @@ import Industriesform from './components/Dashboard/Industriesform';
 import InvestNepalform from './components/Dashboard/InvestNepalform';
 import { Usertable } from './components/Dashboard/Usertable';
 import NewTaxhome from './components/Tax/NewTaxhome';
+import { UserPrivateRoute, AdminPrivateRoute } from './PrivateRoute';
 
 export const router = createBrowserRouter([
 	{
@@ -85,59 +86,61 @@ export const router = createBrowserRouter([
 	// 	path: '/books',
 	// 	element: <Book></Book>,
 	// },
-
-	{
-		path: '/dashboard',
-		element: <Dashboard></Dashboard>,
-	},
 	{
 		path: '/login',
 		element: <Login></Login>,
 	},
 	{
-		path: '/orderlist',
-		element: <Orderlist></Orderlist>,
-	},
-	{
-		path: '/taxform/:id?',
-		element: <Taxform></Taxform>,
-	},
-	{
-		path: '/faqform/:id?',
-		element: <FAQForm></FAQForm>,
+		path: '/dashboard',
+		element: <AdminPrivateRoute element={<Dashboard />} />,
 	},
 
 	{
-		path: '/bookform:id?',
-		element: <Booksform></Booksform>,
+		path: '/orderlist',
+		element: <AdminPrivateRoute element={<Orderlist />} />,
 	},
 	{
+		path: '/taxform/:id?',
+		element: <AdminPrivateRoute element={<Taxform></Taxform>} />,
+	},
+	{
+		path: '/faqform/:id?',
+		element: <AdminPrivateRoute element={<FAQForm></FAQForm>} />,
+	},
+	{
+		path: '/booksform/:id?',
+		element: <AdminPrivateRoute element={<Booksform></Booksform>} />,
+	},
+
+	{
 		path: '/homesliderform/:id?',
-		element: <HomeSlider></HomeSlider>,
+		element: <AdminPrivateRoute element={<HomeSlider></HomeSlider>} />,
 	},
 	{
 		path: '/serviceform/:id?',
-		element: <Services></Services>,
+		element: <AdminPrivateRoute element={<Services></Services>} />,
 	},
 
 	{
 		path: 'newsform/:id?',
-		element: <NewsForm></NewsForm>,
+		element: <AdminPrivateRoute element={<NewsForm></NewsForm>} />,
 	},
 	{
 		path: 'employeform/:id?',
-		element: <EmployeForm></EmployeForm>,
+		element: <AdminPrivateRoute element={<EmployeForm></EmployeForm>} />,
 	},
 	{
 		path: 'industryform/:id?',
-		element: <Industriesform></Industriesform>,
+		element: <AdminPrivateRoute element={<Industriesform></Industriesform>} />,
 	},
 	{
 		path: 'investnepalform/:id?',
-		element: <InvestNepalform></InvestNepalform>,
+		element: (
+			<AdminPrivateRoute element={<InvestNepalform></InvestNepalform>} />
+		),
 	},
 	{
 		path: 'usertable/:id?',
-		element: <Usertable></Usertable>,
+		element: <AdminPrivateRoute element={<Usertable></Usertable>} />,
 	},
 ]);

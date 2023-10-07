@@ -11,11 +11,6 @@ import { FaEdit, FaTrash } from 'react-icons/fa';
 import NavSidebar from './NavSidebar';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 
-const initialState = {
-	question: '',
-	answer: '',
-	payment: '',
-};
 export default function FaqForm() {
 	const dispatch = useDispatch();
 	const status = useSelector((state) => state.faqForm.status);
@@ -79,7 +74,7 @@ const FAQForm = () => {
 				payment: faq.payment,
 			});
 		}
-	}, [id, faqData]);
+	}, [id]);
 
 	const { question, answer, payment } = formData;
 
@@ -90,7 +85,7 @@ const FAQForm = () => {
 			[name]: value,
 		});
 	};
-
+	console.log(formData, 'formData');
 	const handleSubmit = async (e) => {
 		e.preventDefault();
 
@@ -159,8 +154,8 @@ const FAQForm = () => {
 						name='payment'
 						value={payment}
 						onChange={handleChange}>
-						<option value='true'>Free</option>
-						<option value='false'>Paid</option>
+						<option value='paid'>Free</option>
+						<option value='unpaid'>Paid</option>
 					</select>
 				</div>
 				<button type='submit' className='btn btn-primary'>
@@ -186,6 +181,8 @@ const FaqCard = ({ faq }) => {
 				<div className='card-body'>
 					<h5 className='card-title'>{faq.question}</h5>
 					<p className='card-text'>{faq.answer}</p>
+					<h3 className='card-text'> {faq.payment}</h3>
+
 					<button className='btn btn-secondary'>
 						<Link to={`/faqform/${faq._id}`} style={{ textDecoration: 'none' }}>
 							<FaEdit /> Edit

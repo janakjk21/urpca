@@ -192,13 +192,9 @@ const Navfordesktop = (props) => {
 													</li>
 												</ul>
 											</li>
-											<li>
-												<Link to='/insights'>Notice and Circulars</Link>
-											</li>
+
 											<li className='has-sub'>
-												<Link to='/faq'>
-													Resources 
-												</Link>
+												<Link to='/faq'>Resources</Link>
 												<ul className='sub-menu'>
 													<li>
 														<Link to='/news/1'>News </Link>

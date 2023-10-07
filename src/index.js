@@ -6,6 +6,7 @@ import { configureStore } from '@reduxjs/toolkit';
 import { Provider } from 'react-redux';
 
 import { router } from './router';
+import App from './App';
 
 import 'regenerator-runtime/runtime.js';
 
@@ -13,7 +14,9 @@ import store from './components/redux/store';
 
 ReactDOM.render(
 	<Provider store={store}>
-		<RouterProvider router={router} />
+		
+			<App />
+		
 	</Provider>,
 	document.getElementById('root')
 );

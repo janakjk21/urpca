@@ -1,11 +1,12 @@
-// employeeSlice.js
+// bookSlice.js
 
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 
-const API_URL = 'http://localhost:3000/employee';
-const user = JSON.parse(localStorage.getItem('user'));
-const token = user?.token;
+const API_URL = 'http://localhost:3000/book'; // Update the API URL for books
+const token =
+	'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiamFuYWsiLCJlbWFpbCI6ImphbmFrNTVAZ21haWwuY29tIiwicm9sZSI6ImFkbWluIiwiSXNzdWJzY3JpYmVkIjpmYWxzZSwic3Vic2NyaXB0aW9udHlwZSI6ImZyZWUiLCJzdWJzY3JpcHRpb25kYXRlIjoiMjAyMy0xMC0wMVQxMToyMTowOS43ODlaIiwic3Vic2NyaXB0aW9uZW5kZGF0ZSI6IjIwMjMtMTAtMDFUMTE6MjE6MDkuODE5WiIsIl9pZCI6IjY1MTk1NjM0NTFhNjBkZDE3NjBjYTYxMCIsImlhdCI6MTY5NjI1NDczMiwiZXhwIjoxNjk2MzQxMTMyfQ.J_UhPIwOBcIAH0ul9mpvV1ntixoXG70bwEgieX1TF0w'; // Update the authorization token
+
 const initialState = {
 	data: null,
 	status: 'idle',
@@ -14,8 +15,8 @@ const initialState = {
 	fetchbyid: null,
 };
 
-export const fetchEmployeeFormData = createAsyncThunk(
-	'employees/fetchEmployeeFormData',
+export const fetchBookFormData = createAsyncThunk(
+	'books/fetchBookFormData',
 	async () => {
 		const config = {
 			headers: {
@@ -31,10 +32,9 @@ export const fetchEmployeeFormData = createAsyncThunk(
 	}
 );
 
-export const submitEmployeeForm = createAsyncThunk(
-	'employees/submitEmployeeForm',
+export const submitBookForm = createAsyncThunk(
+	'books/submitBookForm',
 	async (formData) => {
-		console.log(formData, 'formData chaleyo yooo ');
 		const config = {
 			headers: {
 				Authorization: `Bearer ${token}`,
@@ -42,7 +42,6 @@ export const submitEmployeeForm = createAsyncThunk(
 		};
 		try {
 			const response = await axios.post(API_URL, formData, config);
-			console.log(response, 'response');
 
 			if (!(response.status === 200 || response.status === 201)) {
 				throw new Error('Submitting data failed');
@@ -55,8 +54,8 @@ export const submitEmployeeForm = createAsyncThunk(
 	}
 );
 
-export const updateEmployee = createAsyncThunk(
-	'employees/updateEmployee',
+export const updateBook = createAsyncThunk(
+	'books/updateBook',
 	async ({ id, data }) => {
 		const config = {
 			headers: {
@@ -68,11 +67,11 @@ export const updateEmployee = createAsyncThunk(
 	}
 );
 
-export const deleteEmployee = createAsyncThunk(
-	'employees/deleteEmployee',
-	async (employeeId, { rejectWithValue }) => {
+export const deleteBook = createAsyncThunk(
+	'books/deleteBook',
+	async (bookId, { rejectWithValue }) => {
 		try {
-			const response = await axios.delete(`${API_URL}/${employeeId}`, {
+			const response = await axios.delete(`${API_URL}/${bookId}`, {
 				headers: {
 					Authorization: `Bearer ${token}`,
 				},
@@ -85,53 +84,53 @@ export const deleteEmployee = createAsyncThunk(
 	}
 );
 
-const employeeSlice = createSlice({
-	name: 'employees',
+const bookSlice = createSlice({
+	name: 'books',
 	initialState,
 	reducers: {},
 	extraReducers: (builder) => {
 		builder
-			.addCase(fetchEmployeeFormData.pending, (state) => {
+			.addCase(fetchBookFormData.pending, (state) => {
 				state.status = 'loading';
 			})
-			.addCase(fetchEmployeeFormData.fulfilled, (state, action) => {
+			.addCase(fetchBookFormData.fulfilled, (state, action) => {
 				state.status = 'succeeded';
 				state.data = action.payload;
 			})
-			.addCase(fetchEmployeeFormData.rejected, (state) => {
+			.addCase(fetchBookFormData.rejected, (state) => {
 				state.status = 'failed';
 				state.error = 'Fetching data failed';
 			})
-			.addCase(submitEmployeeForm.pending, (state) => {
+			.addCase(submitBookForm.pending, (state) => {
 				state.status = 'loading';
 			})
-			.addCase(submitEmployeeForm.fulfilled, (state) => {
+			.addCase(submitBookForm.fulfilled, (state) => {
 				state.status = 'succeeded';
 				state.tracker = 'successfully submitted';
 			})
-			.addCase(submitEmployeeForm.rejected, (state) => {
+			.addCase(submitBookForm.rejected, (state) => {
 				state.status = 'failed';
 				state.error = 'Submission failed';
 			})
-			.addCase(deleteEmployee.pending, (state) => {
+			.addCase(deleteBook.pending, (state) => {
 				state.status = 'loading';
 			})
-			.addCase(deleteEmployee.fulfilled, (state) => {
+			.addCase(deleteBook.fulfilled, (state) => {
 				state.status = 'succeeded';
 				state.tracker = 'success';
 			})
-			.addCase(deleteEmployee.rejected, (state, action) => {
+			.addCase(deleteBook.rejected, (state, action) => {
 				state.status = 'failed';
 				state.error = action.error.message;
 			})
-			.addCase(updateEmployee.pending, (state) => {
+			.addCase(updateBook.pending, (state) => {
 				state.status = 'loading';
 			})
-			.addCase(updateEmployee.fulfilled, (state) => {
+			.addCase(updateBook.fulfilled, (state) => {
 				state.status = 'succeeded';
 				state.tracker = 'success';
 			})
-			.addCase(updateEmployee.rejected, (state, action) => {
+			.addCase(updateBook.rejected, (state, action) => {
 				state.status = 'failed';
 				state.error = action.error.message;
 				state.tracker = 'success';
@@ -139,8 +138,8 @@ const employeeSlice = createSlice({
 	},
 });
 
-export const selectEmployeeForm = (state) => state.employees.formData;
-export const selectEmployeeFormStatus = (state) => state.employees.status;
-export const selectEmployeeFormError = (state) => state.employees.error;
+export const selectBookForm = (state) => state.books.formData;
+export const selectBookFormStatus = (state) => state.books.status;
+export const selectBookFormError = (state) => state.books.error;
 
-export default employeeSlice.reducer;
+export default bookSlice.reducer;

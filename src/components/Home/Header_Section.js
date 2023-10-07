@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 
 import Slider from 'react-slick';
 
@@ -10,8 +10,18 @@ import image2 from '../../Assets/images/bg/2.jpg';
 import image3 from '../../Assets/images/bg/3.jpg';
 
 import { FaAngleLeft, FaAngleRight } from 'react-icons/fa';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchHomeFormData } from '../redux/dashboardslicers/homeSlicer';
 
 export default function Header_Section() {
+	const dispatch = useDispatch();
+	const status = useSelector((state) => state.home.status);
+	const homssliderdata = useSelector((state) => state.home.data);
+	const tracker = useSelector((state) => state.home.tracker);
+
+	useEffect(() => {
+		dispatch(fetchHomeFormData());
+	}, [tracker]);
 	var settings = {
 		dots: true,
 		infinite: true,
@@ -29,12 +39,25 @@ export default function Header_Section() {
 				{' '}
 				<div className='home-carousel'>
 					<Slider {...settings}>
-						<SlideItem
-							image={image1}
-							title='Make a Good Plan & Grow Your Business'
-							description='We have almost 35+ years of experience for providing consulting services solutions'
-						/>
-						<SlideItem
+						{homssliderdata ? (
+							homssliderdata.map((slide, index) => (
+								// console.log index
+
+								<SlideItem
+									key={index}
+									image={index === 0 ? image1 : index === 1 ? image2 : image3}
+									title={slide.title}
+									description={slide.description}
+								/>
+							))
+						) : (
+							<SlideItem
+								image={image1}
+								title='Make a Good Plan '
+								description='We have almost 35+ years of experience for providing consulting services solutions'
+							/>
+						)}
+						{/* <SlideItem
 							image={image2}
 							title='Make a Good Plan & Grow Your Business'
 							description='We have almost 35+ years of experience for providing consulting services solutions'
@@ -43,7 +66,7 @@ export default function Header_Section() {
 							image={image3}
 							title='Make a Good Plan & Grow Your Business'
 							description='We have almost 35+ years of experience for providing consulting services solutions'
-						/>
+						/> */}
 					</Slider>
 				</div>
 			</section>
@@ -51,7 +74,8 @@ export default function Header_Section() {
 	);
 }
 
-const SlideItem = ({ image, title, description }) => {
+const SlideItem = ({ image, title, description, key }) => {
+	console.log(image, 'this is employee image');
 	return (
 		<div className='slide-item' style={{ backgroundImage: `url(${image})` }}>
 			<div className='image-layer' />

@@ -65,7 +65,11 @@ export default function EmployeeForm() {
 
 const EmployeeFormComponent = () => {
 	const employeeFormData = useSelector((state) => state.employee.data);
-	const [formData, setFormData] = useState(initialState);
+	const [formData, setFormData] = useState({
+		name: '',
+		designation: '',
+		image: null,
+	});
 
 	const { name, designation, image } = formData;
 	const navigate = useNavigate();
@@ -97,21 +101,21 @@ const EmployeeFormComponent = () => {
 			});
 		}
 	};
-
+	console.log(formData, name, designation, image, 'formData');
 	const handleSubmit = async (e) => {
 		e.preventDefault();
 
 		const formDataToSend = new FormData();
 		formDataToSend.append('name', name);
-		formDataToSend.append('designation:', designation);
+		formDataToSend.append('designation', designation);
+
 		formDataToSend.append('image', image);
-		console.log(formDataToSend, 'formDataToSend', formData);
 
 		if (id) {
 			try {
 				dispatch(updateEmployee({ id, data: formDataToSend }));
 				navigate('/employeeform'); // Change this to the appropriate route
-				console.log('Data saved successfully');
+				console.log('Data saved successfully',formDataToSend);
 			} catch (error) {
 				console.error('Error saving data:', error);
 			}

@@ -4,8 +4,8 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 
 const API_URL = 'http://localhost:3000/user';
-const token = 'YOUR_USER_TOKEN_HERE'; // Replace with your actual token
-
+const token =
+	'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiamFuYWsiLCJlbWFpbCI6ImphbmFrNTVAZ21haWwuY29tIiwicm9sZSI6ImFkbWluIiwiSXNzdWJzY3JpYmVkIjpmYWxzZSwic3Vic2NyaXB0aW9udHlwZSI6ImZyZWUiLCJzdWJzY3JpcHRpb25kYXRlIjoiMjAyMy0xMC0wMVQxMToyMTowOS43ODlaIiwic3Vic2NyaXB0aW9uZW5kZGF0ZSI6IjIwMjMtMTAtMDFUMTE6MjE6MDkuODE5WiIsIl9pZCI6IjY1MTk1NjM0NTFhNjBkZDE3NjBjYTYxMCIsImlhdCI6MTY5NjY5NzEyMiwiZXhwIjoxNjk2NzgzNTIyfQ.rK5GOqHGNkTDLBdTM7eKJpAMhPHamyfQqb_LWp7dXXs';
 const initialState = {
 	data: null,
 	status: 'idle',
@@ -17,8 +17,14 @@ const initialState = {
 export const fetchUserFormData = createAsyncThunk(
 	'user/fetchUserFormData',
 	async () => {
+		const config = {
+			headers: {
+				Authorization: `Bearer ${token}`,
+			},
+		};
 		try {
-			const response = await axios.get(API_URL);
+			const response = await axios.get(API_URL, config);
+			console.log(response, 'this is response');
 			return response.data;
 		} catch (error) {
 			throw new Error('Fetching data failed');
@@ -56,7 +62,11 @@ export const updateUser = createAsyncThunk(
 				Authorization: `Bearer ${token}`,
 			},
 		};
-		const response = await axios.put(`${API_URL}/${id}`, data, config);
+		const response = await axios.put(
+			`${API_URL}/editsuersubscription/${id}`,
+			data,
+			config
+		);
 		return response.data;
 	}
 );
@@ -65,7 +75,7 @@ export const deleteUser = createAsyncThunk(
 	'user/deleteUser',
 	async (userId, { rejectWithValue }) => {
 		try {
-			const response = await axios.delete(`${API_URL}/${userId}`, {
+			const response = await axios.delete(`${API_URL}/deleteuser/${userId}`, {
 				headers: {
 					Authorization: `Bearer ${token}`,
 				},
@@ -111,7 +121,7 @@ const userSlice = createSlice({
 			})
 			.addCase(deleteUser.fulfilled, (state) => {
 				state.status = 'succeeded';
-				state.tracker = 'success';
+				state.tracker = 'success delete';
 			})
 			.addCase(deleteUser.rejected, (state, action) => {
 				state.status = 'failed';
@@ -122,12 +132,11 @@ const userSlice = createSlice({
 			})
 			.addCase(updateUser.fulfilled, (state) => {
 				state.status = 'succeeded';
-				state.tracker = 'success';
+				state.tracker = 'success update';
 			})
 			.addCase(updateUser.rejected, (state, action) => {
 				state.status = 'failed';
 				state.error = action.error.message;
-				state.tracker = 'success';
 			});
 	},
 });

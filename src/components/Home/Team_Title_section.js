@@ -10,7 +10,17 @@ import {
 
 import CustomAccordion from '../FAQ/CustomAccordion';
 import 'react-accessible-accordion/dist/fancy-example.css';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchEmployeeFormData } from '../redux/dashboardslicers/employeeSlicer';
+import { fetchFAQFormData } from '../redux/dashboardslicers/faqFormSlice';
 export default function Team_Title_section() {
+	const dispatch = useDispatch();
+
+	const employedata = useSelector((state) => state.employee.data);
+	console.log(employedata, 'employedata');
+	useEffect(() => {
+		dispatch(fetchEmployeeFormData());
+	}, []);
 	return (
 		<>
 			{/*Team Section Titile End */}
@@ -46,26 +56,19 @@ export default function Team_Title_section() {
 				<div className='section-content'>
 					<div className='container'>
 						<div className='row  d-flex justify-content-center'>
-							<SingleTeam
-								imgSrc={team1}
-								name='Jack Mehoff'
-								designation='Engineer'
-							/>
-							<SingleTeam
-								imgSrc={team1}
-								name='Jack Mehoff'
-								designation='Engineer'
-							/>
-							<SingleTeam
-								imgSrc={team1}
-								name='Jack Mehoff'
-								designation='Engineer'
-							/>
-							<SingleTeam
-								imgSrc={team1}
-								name='Jack Mehoff'
-								designation='Engineer'
-							/>
+							{/* // if data is in employedata map it  */}
+							{employedata ? (
+								employedata.map((employee) => (
+									<SingleTeam
+										key={employee.id}
+										imgSrc={employee.image}
+										name={employee.name}
+										designation={employee.designation}
+									/>
+								))
+							) : (
+								<></>
+							)}
 						</div>
 						<FAQ></FAQ>
 					</div>
@@ -76,6 +79,7 @@ export default function Team_Title_section() {
 }
 
 const SingleTeam = ({ imgSrc, name, designation }) => {
+	console.log(imgSrc, 'imgSrc', 'this is image ');
 	return (
 		<div className='col-md-6 col-lg-6 col-xl-3'>
 			<div className='team-block mrb-30'>
@@ -116,29 +120,35 @@ const SingleTeam = ({ imgSrc, name, designation }) => {
 };
 
 function FAQ() {
-	const data = [
-		{
-			title: 'Q: What happens during Freshers',
-			content:
-				' Leverage agile frameworks to provide a robust synopsis forhigh level overviews. Iterative approaches to corporatestrategy foster collaborative thinking to further the overallvalue proposition. Organically grow the holistic world view ofdisruptive innovation via workplace diversity and empowerment',
-		},
+	// const data = [
+	// 	{
+	// 		title: 'Q: What happens during Freshers',
+	// 		content:
+	// 			' Leverage agile frameworks to provide a robust synopsis forhigh level overviews. Iterative approaches to corporatestrategy foster collaborative thinking to further the overallvalue proposition. Organically grow the holistic world view ofdisruptive innovation via workplace diversity and empowerment',
+	// 	},
 
-		{
-			title: 'Two',
-			content:
-				' Leverage agile frameworks to provide a robust synopsis forhigh level overviews. Iterative approaches to corporatestrategy foster collaborative thinking to further the overallvalue proposition. Organically grow the holistic world view ofdisruptive innovation via workplace diversity and empowerment',
-		},
-		{
-			title: 'Q: What happens during Freshers',
-			content:
-				' Leverage agile frameworks to provide a robust synopsis forhigh level overviews. Iterative approaches to corporatestrategy foster collaborative thinking to further the overallvalue proposition. Organically grow the holistic world view ofdisruptive innovation via workplace diversity and empowerment',
-		},
-		{
-			title: 'Q: What happens during Freshers',
-			content:
-				' Leverage agile frameworks to provide a robust synopsis forhigh level overviews. Iterative approaches to corporatestrategy foster collaborative thinking to further the overallvalue proposition. Organically grow the holistic world view ofdisruptive innovation via workplace diversity and empowerment',
-		},
-	];
+	// 	{
+	// 		title: 'Two',
+	// 		content:
+	// 			' Leverage agile frameworks to provide a robust synopsis forhigh level overviews. Iterative approaches to corporatestrategy foster collaborative thinking to further the overallvalue proposition. Organically grow the holistic world view ofdisruptive innovation via workplace diversity and empowerment',
+	// 	},
+	// 	{
+	// 		title: 'Q: What happens during Freshers',
+	// 		content:
+	// 			' Leverage agile frameworks to provide a robust synopsis forhigh level overviews. Iterative approaches to corporatestrategy foster collaborative thinking to further the overallvalue proposition. Organically grow the holistic world view ofdisruptive innovation via workplace diversity and empowerment',
+	// 	},
+	// 	{
+	// 		title: 'Q: What happens during Freshers',
+	// 		content:
+	// 			' Leverage agile frameworks to provide a robust synopsis forhigh level overviews. Iterative approaches to corporatestrategy foster collaborative thinking to further the overallvalue proposition. Organically grow the holistic world view ofdisruptive innovation via workplace diversity and empowerment',
+	// 	},
+	// ];
+	const dispatch = useDispatch();
+
+	const data = useSelector((state) => state.faqForm.data);
+	useEffect(() => {
+		dispatch(fetchFAQFormData());
+	}, []);
 	return (
 		<>
 			<section
@@ -164,7 +174,7 @@ function FAQ() {
 						</div>
 						<div className='col-lg-7'>
 							<div className='faq-block'>
-								<CustomAccordion items={data} />
+								{data ? <CustomAccordion items={data} /> : <></>}
 							</div>
 						</div>
 					</div>

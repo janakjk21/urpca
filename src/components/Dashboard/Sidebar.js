@@ -106,7 +106,7 @@ const Sidebar1 = () => {
 					</Link>
 				</li>
 				<li className='side-nav-item'>
-					<Link to='/bookform' className='side-nav-link'>
+					<Link to='/booksform' className='side-nav-link'>
 						<AiOutlineSolution />
 						<span> Book form</span>
 					</Link>

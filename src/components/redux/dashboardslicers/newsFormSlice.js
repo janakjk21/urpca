@@ -5,7 +5,7 @@ import axios from 'axios';
 
 const API_URL = 'http://localhost:3000/news'; // Change to the appropriate news API endpoint
 const token =
-	'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiamFuYWsiLCJlbWFpbCI6ImphbmFrQGdtYWlsLmNvbSIsInJvbGUiOiJhZG1pbiIsIklzc3Vic2NyaWJlZCI6ZmFsc2UsInN1YnNjcmlwdGlvbnR5cGUiOiJmcmVlIiwic3Vic2NyaXB0aW9uZGF0ZSI6IjIwMjMtMDktMzBUMDU6MDU6NTcuNDkwWiIsInN1YnNjcmlwdGlvbmVuZGRhdGUiOiIyMDIzLTA5LTMwVDA1OjA1OjU3LjUyMFoiLCJfaWQiOiI2NTE3YWNlZTYwZTE2MGJjMWEzMTRmMjkiLCJpYXQiOjE2OTYwNTA0MzYsImV4cCI6MTY5NjEzNjgzNn0.NPyCu7Ylwm-9n43BlqO-aYO_k41h1GWcIx1QsE7o3hk';
+	'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiamFuYWsiLCJlbWFpbCI6ImphbmFrNTVAZ21haWwuY29tIiwicm9sZSI6ImFkbWluIiwiSXNzdWJzY3JpYmVkIjpmYWxzZSwic3Vic2NyaXB0aW9udHlwZSI6ImZyZWUiLCJzdWJzY3JpcHRpb25kYXRlIjoiMjAyMy0xMC0wMVQxMToyMTowOS43ODlaIiwic3Vic2NyaXB0aW9uZW5kZGF0ZSI6IjIwMjMtMTAtMDFUMTE6MjE6MDkuODE5WiIsIl9pZCI6IjY1MTk1NjM0NTFhNjBkZDE3NjBjYTYxMCIsImlhdCI6MTY5NjI1NDczMiwiZXhwIjoxNjk2MzQxMTMyfQ.J_UhPIwOBcIAH0ul9mpvV1ntixoXG70bwEgieX1TF0w';
 const initialState = {
 	data: null,
 	status: 'idle',
@@ -129,7 +129,6 @@ const newsformSlice = createSlice({
 			.addCase(deleteNews.fulfilled, (state) => {
 				state.status = 'succeeded';
 				state.tracker = 'success delete';
-
 			})
 			.addCase(deleteNews.rejected, (state) => {
 				state.status = 'failed';

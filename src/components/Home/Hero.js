@@ -30,9 +30,9 @@ export default function Hero() {
 
 			<Team_Title_section></Team_Title_section>
 			<Contact_Section></Contact_Section>
-			<Consulting_section></Consulting_section>
+			{/* <Consulting_section></Consulting_section> */}
 
-			<News_Section></News_Section>
+			{/* <News_Section></News_Section> */}
 			<Footer></Footer>
 		</div>
 	);

@@ -1,199 +1,264 @@
 import React, { useEffect, useState } from 'react';
-import Nav from './Nav';
-import Sidebar from './Sidebar';
-import NavSidebar from './NavSidebar';
+import axios from 'axios';
 import {
-	fetchTaxFormFormData,
-	deleteTaxForm,
-	updateTaxForm,
-	submitTaxForm,
+fetchTaxFormFormData,submitTaxForm,updateTaxForm,deleteTaxForm
 } from '../redux/dashboardslicers/taxFormSlice';
 import { useDispatch, useSelector } from 'react-redux';
-import axios from 'axios';
-import { async } from 'regenerator-runtime';
 import { FaEdit, FaTrash } from 'react-icons/fa';
-const Tax = () => {
+import NavSidebar from './NavSidebar';
+import { Link, useNavigate, useParams } from 'react-router-dom';
+
+const initialState = {
+	title: '',
+	description: '',
+	category: '',
+	payment: '',
+	additionalDes: '',
+	image: null,
+};
+
+export default function Taxes() {
 	const dispatch = useDispatch();
+	const status = useSelector((state) => state.tax.status);
+	const taxData = useSelector((state) => state.tax.data);
+	const trackerStatus = useSelector((state) => state.tax.tracker);
+
+	const [taxId, setTaxId] = useState('');
+
+	useEffect(() => {
+		dispatch(fetchTaxFormFormData());
+	}, [trackerStatus]);
+
+	if (status === 'loading') {
+		return (
+			<div className='spinner-border text-primary' role='status'>
+				<span className='sr-only'>Loading...</span>
+			</div>
+		);
+	}
+
+	if (status === 'error') {
+		return <div>Error loading taxes.</div>;
+	}
+
+	return (
+		<div>
+			<div className='wrapper'>
+				<NavSidebar></NavSidebar>
+				<div className='content-page'>
+					<div className='content'>
+						<div className='container-fluid'>
+							<TaxForm />
+							<div className='d-flex mt-2 flex-wrap'>
+								{status === 'succeeded' &&
+									taxData.map((tax) => <TaxCard key={tax._id} tax={tax} />)}
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	);
+}
+
+const TaxForm = () => {
+	const taxData = useSelector((state) => state.tax.data);
 	const [formData, setFormData] = useState({
-		name: '',
+		title: '',
 		description: '',
-		imageFile: null,
-		paymentStatus: '',
+		category: '',
+		payment: '',
+		additionalDes: '',
+		image: null,
 	});
+	const navigate = useNavigate();
+
+	const dispatch = useDispatch();
+	const { id } = useParams();
+
+	useEffect(() => {
+		if (id) {
+			const tax = taxData.find((tax) => tax._id === id);
+			setFormData({
+				title: tax.title,
+				description: tax.description,
+				category: tax.category,
+				payment: tax.payment,
+				additionalDes: tax.additionalDes,
+				image: tax.image,
+			});
+		}
+	}, [id]);
+
+	const { title, description, category, payment, additionalDes, image } =
+		formData;
 
 	const handleChange = (e) => {
-		const { name, value, type } = e.target;
-		if (type === 'file') {
-			const imageFile = e.target.files[0];
-			setFormData((prevData) => ({
-				...prevData,
-				imageFile,
-			}));
+		if (e.target.name === 'image') {
+			setFormData({
+				...formData,
+				[e.target.name]: e.target.files[0],
+			});
 		} else {
-			setFormData((prevData) => ({
-				...prevData,
+			const { name, value } = e.target;
+			setFormData({
+				...formData,
 				[name]: value,
-			}));
+			});
 		}
 	};
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
 
-		// You would normally send formData and imageFile to your backend here
+		const formDataToSend = new FormData();
+		formDataToSend.append('title', title);
+		formDataToSend.append('description', description);
+		formDataToSend.append('category', category);
+		formDataToSend.append('payment', payment);
+		formDataToSend.append('additionalDes', additionalDes);
+		formDataToSend.append('image', image);
 
-		// Reset the form after submission
-		// const data = dispatch(postWorkData(formData));
-
-		const taxData = {
-			title: formData.name,
-			description: formData.description,
-			ispaid: formData.paymentStatus,
-			image: formData.imageFile,
-		};
-		dispatch(submitTaxForm(taxData));
+		if (id) {
+			try {
+				dispatch(updateTaxForm({ id, data: formDataToSend }));
+				navigate('/taxform');
+				console.log('Data saved successfully');
+			} catch (error) {
+				console.error('Error saving data:', error);
+			}
+		} else {
+			try {
+				dispatch(submitTaxForm(formDataToSend));
+				console.log('Data saved successfully');
+			} catch (error) {
+				console.error('Error saving data:', error);
+			}
+		}
 	};
-	const taxData = useSelector((state) => state.tax.data);
-	const status = useSelector((state) => state.tax.status);
-	useEffect(() => {
-		dispatch(fetchTaxFormFormData());
-	}, [dispatch]);
 
 	return (
-		<div className='wrapper'>
-			<div className='wrapper'>
-				<NavSidebar></NavSidebar>
-				<div className='content-page'>
-					<div className='content'>
-						<div className='container-fluid'>
-							<div className='row'>
-								<div className='col-10' style={{ padding: '10px' }}>
-									<div className='card'>
-										<div className='card-body'>
-											<h1>Tax Form</h1>
-											<form onSubmit={handleSubmit}>
-												<div className='mb-3'>
-													<label htmlFor='title' className='form-label'>
-														Title
-													</label>
-													<input
-														type='text'
-														id='title'
-														name='title'
-														className='form-control'
-														value={formData.title}
-														onChange={handleChange}
-													/>
-												</div>
-
-												<div className='mb-3'>
-													<label htmlFor='description' className='form-label'>
-														Description
-													</label>
-													<textarea
-														id='description'
-														name='description'
-														className='form-control'
-														value={formData.description}
-														onChange={handleChange}
-													/>
-												</div>
-
-												<div className='mb-3'>
-													<label htmlFor='paymentStatus' className='form-label'>
-														Payment Status
-													</label>
-													<select
-														id='paymentStatus'
-														className='form-select'
-														value={formData.paymentStatus}
-														onChange={handleChange}>
-														<option value=''>Select Payment Status</option>
-														<option value='paid'>Paid</option>
-														<option value='unpaid'>Unpaid</option>
-													</select>
-												</div>
-												<div className='mb-3'>
-													<label htmlFor='imageFile' className='form-label'>
-														Image Upload
-													</label>
-													<input
-														type='file'
-														id='imageFile'
-														name='imageFile'
-														className='form-control'
-														onChange={handleChange}
-													/>
-												</div>
-
-												<button type='submit' className='btn btn-primary'>
-													Submit
-												</button>
-											</form>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
+		<div className='container mt-2'>
+			<form onSubmit={handleSubmit}>
+				<div className='mb-3'>
+					<label htmlFor='title' className='form-label'>
+						Title
+					</label>
+					<input
+						type='text'
+						className='form-control'
+						id='title'
+						name='title'
+						value={title}
+						onChange={handleChange}
+						placeholder='Title'
+					/>
 				</div>
-			</div>
-			{status === 'succeeded' ? (
-				<ProductCard data={taxData} />
-			) : (
-				<div>Loading...</div>
-			)}
+				<div className='mb-3'>
+					<label htmlFor='description' className='form-label'>
+						Description
+					</label>
+					<input
+						type='text'
+						className='form-control'
+						id='description'
+						name='description'
+						value={description}
+						onChange={handleChange}
+						placeholder='Description'
+					/>
+				</div>
+				<div className='mb-3'>
+					<label htmlFor='category' className='form-label'>
+						Category
+					</label>
+					<input
+						type='text'
+						className='form-control'
+						id='category'
+						name='category'
+						value={category}
+						onChange={handleChange}
+						placeholder='Category'
+					/>
+				</div>
+				<div className='mb-3'>
+					<label htmlFor='payment' className='form-label'>
+						Payment
+					</label>
+					<select
+						className='form-select'
+						id='payment'
+						name='payment'
+						value={payment}
+						onChange={handleChange}>
+						<option value='paid'>Paid</option>
+						<option value='unpaid'>Unpaid</option>
+					</select>
+				</div>
+				<div className='mb-3'>
+					<label htmlFor='additionalDes' className='form-label'>
+						Additional Description
+					</label>
+					<input
+						type='text'
+						className='form-control'
+						id='additionalDes'
+						name='additionalDes'
+						value={additionalDes}
+						onChange={handleChange}
+						placeholder='Additional Description'
+					/>
+				</div>
+				<div className='mb-3'>
+					<label htmlFor='image' className='form-label'>
+						Image
+					</label>
+					<input
+						type='file'
+						className='form-control'
+						id='image'
+						name='image'
+						onChange={handleChange}
+					/>
+				</div>
+				<button type='submit' className='btn btn-primary'>
+					Submit
+				</button>
+			</form>
 		</div>
 	);
 };
 
-export default Tax;
-
-const ProductCard = ({ data }) => {
+const TaxCard = ({ tax }) => {
 	const dispatch = useDispatch();
-	const handledelete = (e, id) => {
-		console.log(id);
+	const navigate = useNavigate();
+
+	const handleDelete = (e) => {
 		e.preventDefault();
-
-		dispatch(deleteWorkData(id));
+		dispatch(deleteTax(tax._id));
 	};
-	return (
-		<>
-			{' '}
-			{data.map((item, index) => (
-				<div className='row justify-content-center ' key={index}>
-					<div className='col-md-12 col-xl-10'>
-						<div className='card shadow-0 border rounded-3'>
-							<div className='card-body'>
-								<div className='row'>
-									<div className='col-md-9 col-lg-9 col-xl-9'>
-										{/* <h5>{item.question}</h5> */}
 
-										<p className='text-truncate mb-4 mb-md-0'>
-											{item.description}
-										</p>
-									</div>
-									<div className='col-md-4 col-lg-3 col-xl-3 border-sm-start-none border-start'>
-										<div className='d-flex flex mt-4'>
-											<button
-												className='btn btn-danger btn-sm m-2 '
-												type='button'
-												onClick={(e) => {
-													handledelete(e, item._id);
-												}}>
-												<FaTrash />
-											</button>
-											<button className='btn btn-primary btn-sm' type='button'>
-												<FaEdit />{' '}
-											</button>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
+	return (
+		<div className='col-md-4 mb-3'>
+			<div className='card'>
+				<div className='card-body'>
+					<h5 className='card-title'>{tax.title}</h5>
+					<p className='card-text'>{tax.description}</p>
+					<button className='btn btn-secondary'>
+						<Link to={`/taxform/${tax._id}`} style={{ textDecoration: 'none' }}>
+							<FaEdit /> Edit
+						</Link>
+					</button>
+					<button
+						className='btn btn-danger ml-2'
+						onClick={(e) => {
+							handleDelete(e);
+						}}>
+						<FaTrash /> Delete
+					</button>
 				</div>
-			))}
-		</>
+			</div>
+		</div>
 	);
 };

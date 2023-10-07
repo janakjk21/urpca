@@ -1,10 +1,15 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import contactus_background from '../../Assets/images/bg/vid.jpg';
 import Nav from '../Nav';
 import './login.css';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { registerUser } from '../redux/dashboardslicers/signupSlice';
 import { loginUser } from '../redux/dashboardslicers/loginSlice';
+import { useNavigate } from 'react-router-dom';
+import {
+	isAuthenticatedpaiduser,
+	isAuthenticatedadmin,
+} from '../../PrivateRoute';
 
 export default function Login() {
 	return (
@@ -17,14 +22,32 @@ export default function Login() {
 
 const Formsection = () => {
 	const dispatch = useDispatch();
+	const navigate = useNavigate();
 	const [signIn, setSignIn] = useState(true);
 	const [name, setName] = useState(''); // State for name input
 	const [email, setEmail] = useState(''); // State for email input
 	const [password, setPassword] = useState(''); // State for password input
 	const [role, setRole] = useState('admin'); // State for password input
+	const [user, setUser] = useState({}); // State for password input
+
+	const state = useSelector((state) => state.login.status);
+
+	useEffect(() => {
+		if (isAuthenticatedadmin()) {
+			navigate('/dashboard');
+		} else if (isAuthenticatedpaiduser()) {
+			navigate('/taxhome');
+		} else {
+			navigate('/login');
+		}
+	}, [state]);
 	const slide = () => {
 		setSignIn(!signIn);
 	};
+	useEffect(() => {
+		setUser(JSON.parse(localStorage.getItem('user')));
+	}, []);
+	console.log(user, 'user state');
 
 	const handleNameChange = (event) => {
 		setName(event.target.value);
@@ -40,8 +63,28 @@ const Formsection = () => {
 	const handleLogin = (e) => {
 		// Replace with actual credentials
 		e.preventDefault();
+
 		if (signIn) {
-			dispatch(loginUser({ email, password }));
+			if (user) {
+				if (isAuthenticatedadmin()) {
+					navigate('/dashboard');
+				} else if (isAuthenticatedpaiduser()) {
+					navigate('/taxhome');
+				} else {
+					navigate('/orderrequest');
+				}
+			} else {
+				dispatch(loginUser({ email, password }));
+			}
+			// dispatch(loginUser({ email, password }));
+			// if (isAuthenticatedadmin()) {
+			// 	navigate('/dashboard');
+			// } else if (isAuthenticatedpaiduser()) {
+			// 	navigate('/taxhome');
+			// } else {
+			// 	navigate('/orderrequest');
+			// }
+
 			console.log('login');
 		} else {
 			console.log('sign in');

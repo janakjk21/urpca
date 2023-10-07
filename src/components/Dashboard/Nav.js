@@ -1,9 +1,10 @@
 import React from 'react';
 import logo from '../../Assets/images/logo.png';
-import { Link } from 'react-router-dom';
+import { Link, Navigate, useNavigate } from 'react-router-dom';
 import Dropdown from 'rc-dropdown';
 import { useState } from 'react';
 import { useEffect } from 'react';
+import { FaUser } from 'react-icons/fa';
 export default function Nav() {
 	const [isSmallScreen, setIsSmallScreen] = useState(false);
 
@@ -35,6 +36,12 @@ export default function Nav() {
 }
 
 const Navfordesktop = (props) => {
+	const navigate = useNavigate();
+	const handlelogout = (e) => {
+		e.preventDefault();
+		localStorage.removeItem('user');
+		navigate('/login');
+	};
 	return (
 		<>
 			<div className='navbar-custom'>
@@ -101,6 +108,14 @@ const Navfordesktop = (props) => {
 								</form>
 							</div>
 						</li>
+						<button
+							className='btn btn-primary'
+							onClick={(e) => {
+								handlelogout(e);
+							}}>
+							<FaUser></FaUser>
+						</button>
+
 						{/* item*/}
 					</ul>
 				</div>
