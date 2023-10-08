@@ -30,13 +30,16 @@ const authSlice = createSlice({
 export const registerUser = createAsyncThunk(
 	'auth/registerUser',
 	async (userData) => {
-		const response = await fetch('http://localhost:3000/user/register', {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json',
-			},
-			body: JSON.stringify(userData),
-		});
+		const response = await fetch(
+			'https://hello231.onrender.com/user/register',
+			{
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify(userData),
+			}
+		);
 		if (!response.ok) {
 			throw new Error('Registration failed.');
 		} else {

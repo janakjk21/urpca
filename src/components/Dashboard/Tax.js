@@ -1,12 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import {
-fetchTaxFormFormData,submitTaxForm,updateTaxForm,deleteTaxForm
+	fetchTaxFormFormData,
+	submitTaxForm,
+	updateTaxForm,
+	deleteTaxForm,
 } from '../redux/dashboardslicers/taxFormSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { FaEdit, FaTrash } from 'react-icons/fa';
 import NavSidebar from './NavSidebar';
 import { Link, useNavigate, useParams } from 'react-router-dom';
+import { InfinitySpin } from 'react-loader-spinner';
 
 const initialState = {
 	title: '',
@@ -31,9 +35,16 @@ export default function Taxes() {
 
 	if (status === 'loading') {
 		return (
-			<div className='spinner-border text-primary' role='status'>
-				<span className='sr-only'>Loading...</span>
-			</div>
+			<InfinitySpin
+				style={{
+					position: 'fixed',
+					top: '50%',
+					left: '50%',
+					transform: 'translate(-50%, -50%)',
+					width: '200px', // Adjust width as needed
+					color: '#536DE6', // Change the color to #536DE6
+				}}
+			/>
 		);
 	}
 
@@ -236,7 +247,7 @@ const TaxCard = ({ tax }) => {
 
 	const handleDelete = (e) => {
 		e.preventDefault();
-		dispatch(deleteTax(tax._id));
+		dispatch(deleteTaxForm(tax._id));
 	};
 
 	return (

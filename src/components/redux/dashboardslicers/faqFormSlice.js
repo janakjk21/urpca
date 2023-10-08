@@ -3,7 +3,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 
-const API_URL = 'http://localhost:3000/faq'; // Changed the API URL to /faq
+const API_URL = 'https://hello231.onrender.com/faq'; // Changed the API URL to /faq
 const user = JSON.parse(localStorage.getItem('user'));
 const token = user?.token;
 // take the token data from local storage

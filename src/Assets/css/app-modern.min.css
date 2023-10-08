@@ -171,7 +171,7 @@ html[data-bs-theme='dark'][data-topbar-color='light'] {
 	--ct-body-line-height: 1.5;
 	--ct-body-color: #6c757d;
 	--ct-body-color-rgb: 108, 117, 125;
-	--ct-body-bg: #fafbfe;
+	--ct-body-bg: #F8F9FA;
 	--ct-body-bg-rgb: 250, 251, 254;
 	--ct-emphasis-color: rgba(108, 117, 125, 0.75);
 	--ct-emphasis-color-rgb: 108, 117, 125;
@@ -2575,7 +2575,7 @@ progress {
 }
 
 .table-primary {
-	--ct-table-color: #313a46;
+	--ct-table-color: #F8F9FA;
 	--ct-table-bg: #dde2fa;
 	--ct-table-border-color: #ccd1e8;
 	--ct-table-striped-bg: #313a46;
@@ -16586,6 +16586,7 @@ html[data-menu-color='dark'] .logo.logo-dark {
 .wrapper {
 	height: 100%;
 	width: 100%;
+
 }
 
 .content-page {
@@ -16595,6 +16596,7 @@ html[data-menu-color='dark'] .logo.logo-dark {
 	padding: 0 0.75rem var(--ct-footer-height);
 	-webkit-transition: all 0.25s ease-in-out;
 	transition: all 0.25s ease-in-out;
+	box-shadow: rgba(255, 255, 255, 0.1) 0px 1px 1px 0px inset, rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px;
 }
 
 @media (max-width: 768px) {
@@ -16653,8 +16655,9 @@ html[data-sidenav-user='true'] .leftbar-user {
 	color: var(--ct-menu-item-color);
 	-webkit-transition: all 0.25s ease-in-out;
 	transition: all 0.25s ease-in-out;
-	font-size: var(--ct-menu-item-font-size);
+	font-size: calc(var(--ct-menu-item-font-size) * 1.18);
 	padding: var(--ct-menu-item-padding-y) var(--ct-menu-item-padding-x);
+	box-shadow: rgba(255, 255, 255, 0.1) 0px 1px 1px 0px inset, rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px;
 }
 
 .side-nav .side-nav-link:active,

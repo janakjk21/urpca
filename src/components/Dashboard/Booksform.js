@@ -10,6 +10,7 @@ import {
 	deleteBook,
 } from '../redux/dashboardslicers/bookSlice';
 import NavSidebar from './NavSidebar';
+import { InfinitySpin } from 'react-loader-spinner';
 const BookCard = ({ book }) => {
 	const dispatch = useDispatch();
 
@@ -91,7 +92,6 @@ const BookForm = () => {
 		formDataToSend.append('Name', name);
 		formDataToSend.append('Author', author);
 		formDataToSend.append('Price', price);
-		
 
 		formDataToSend.append('PDF', pdfFile);
 		console.log(formDataToSend, 'formDataToSend');
@@ -183,9 +183,16 @@ const Books = () => {
 
 	if (status === 'loading') {
 		return (
-			<div className='spinner-border text-primary' role='status'>
-				<span className='sr-only'>Loading...</span>
-			</div>
+			<InfinitySpin
+				style={{
+					position: 'fixed',
+					top: '50%',
+					left: '50%',
+					transform: 'translate(-50%, -50%)',
+					width: '200px', // Adjust width as needed
+					color: '#536DE6', // Change the color to #536DE6
+				}}
+			/>
 		);
 	}
 

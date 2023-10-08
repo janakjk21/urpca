@@ -10,6 +10,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { FaEdit, FaTrash } from 'react-icons/fa';
 import NavSidebar from './NavSidebar';
 import { Link, useNavigate, useParams } from 'react-router-dom';
+import { InfinitySpin } from 'react-loader-spinner';
 
 export default function NewsForms() {
 	const dispatch = useDispatch();
@@ -25,9 +26,16 @@ export default function NewsForms() {
 
 	if (status === 'loading') {
 		return (
-			<div class='spinner-border text-primary' role='status'>
-				<span class='sr-only'>Loading...</span>
-			</div>
+			<InfinitySpin
+				style={{
+					position: 'fixed',
+					top: '50%',
+					left: '50%',
+					transform: 'translate(-50%, -50%)',
+					width: '200px', // Adjust width as needed
+					color: '#536DE6', // Change the color to #536DE6
+				}}
+			/>
 		);
 	}
 

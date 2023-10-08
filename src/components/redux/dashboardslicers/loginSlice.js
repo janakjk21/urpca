@@ -12,7 +12,7 @@ export const loginUser = createAsyncThunk(
 	'login/loginUser',
 	async (credentials) => {
 		try {
-			const response = await fetch('http://localhost:3000/user/login', {
+			const response = await fetch('https://hello231.onrender.com/user/login', {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',

@@ -13,6 +13,7 @@ import {
 	submitHomeForm,
 	updateHome,
 } from '../redux/dashboardslicers/homeSlicer';
+import { InfinitySpin } from 'react-loader-spinner';
 
 const HomeSliderForm = () => {
 	const dispatch = useDispatch();
@@ -154,9 +155,16 @@ export default function HomeSliderFormPage() {
 
 	if (status === 'loading') {
 		return (
-			<div className='spinner-border text-primary' role='status'>
-				<span className='sr-only'>Loading...</span>
-			</div>
+			<InfinitySpin
+				style={{
+					position: 'fixed',
+					top: '50%',
+					left: '50%',
+					transform: 'translate(-50%, -50%)',
+					width: '200px', // Adjust width as needed
+					color: '#536DE6', // Change the color to #536DE6
+				}}
+			/>
 		);
 	}
 

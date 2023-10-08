@@ -3,7 +3,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 
-const API_URL = 'http://localhost:3000/employee';
+const API_URL = 'https://hello231.onrender.com/employee';
 const user = JSON.parse(localStorage.getItem('user'));
 const token = user?.token;
 const initialState = {

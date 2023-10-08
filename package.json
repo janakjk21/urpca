@@ -78,6 +78,7 @@
     "localforage": "^1.10.0",
     "lodash": "^4.17.21",
     "match-sorter": "^6.3.1",
+    "react-loader-spinner": "^5.4.5",
     "react-router-dom": "^6.9.0",
     "redux": "^4.2.1",
     "toastify-js": "^1.12.0",

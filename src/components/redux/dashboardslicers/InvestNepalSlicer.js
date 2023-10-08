@@ -3,9 +3,9 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 
-const API_URL = 'http://localhost:3000/invest';
-const token =
-	'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiamFuYWsiLCJlbWFpbCI6ImphbmFrNTVAZ21haWwuY29tIiwicm9sZSI6ImFkbWluIiwiSXNzdWJzY3JpYmVkIjpmYWxzZSwic3Vic2NyaXB0aW9udHlwZSI6ImZyZWUiLCJzdWJzY3JpcHRpb25kYXRlIjoiMjAyMy0xMC0wMVQxMToyMTowOS43ODlaIiwic3Vic2NyaXB0aW9uZW5kZGF0ZSI6IjIwMjMtMTAtMDFUMTE6MjE6MDkuODE5WiIsIl9pZCI6IjY1MTk1NjM0NTFhNjBkZDE3NjBjYTYxMCIsImlhdCI6MTY5NjI1NDczMiwiZXhwIjoxNjk2MzQxMTMyfQ.J_UhPIwOBcIAH0ul9mpvV1ntixoXG70bwEgieX1TF0w';
+const API_URL = 'https://hello231.onrender.com/invest';
+const user = JSON.parse(localStorage.getItem('user'));
+const token = user?.token;
 const initialState = {
 	data: null,
 	status: 'idle',
@@ -24,7 +24,7 @@ export const fetchInvestNepalFormData = createAsyncThunk(
 		};
 		try {
 			const response = await axios.get(API_URL, config);
-			console.log(response.data, 'response.data')
+			console.log(response.data, 'response.data');
 			return response.data;
 		} catch (error) {
 			throw new Error('Fetching data failed');
@@ -95,7 +95,7 @@ const investNepalSlicer = createSlice({
 			})
 			.addCase(fetchInvestNepalFormData.fulfilled, (state, action) => {
 				state.status = 'succeeded';
-				console.log(action.payload, 'action.payload')
+				console.log(action.payload, 'action.payload');
 				state.data = action.payload;
 			})
 			.addCase(fetchInvestNepalFormData.rejected, (state) => {
@@ -119,7 +119,7 @@ const investNepalSlicer = createSlice({
 			.addCase(deleteInvestNepal.fulfilled, (state) => {
 				state.status = 'succeeded';
 				state.tracker = 'success';
-				state.tracker='success delete'
+				state.tracker = 'success delete';
 			})
 			.addCase(deleteInvestNepal.rejected, (state, action) => {
 				state.status = 'failed';
@@ -131,7 +131,6 @@ const investNepalSlicer = createSlice({
 			.addCase(updateInvestNepal.fulfilled, (state) => {
 				state.status = 'succeeded';
 				state.tracker = 'success update';
-				
 			})
 			.addCase(updateInvestNepal.rejected, (state, action) => {
 				state.status = 'failed';

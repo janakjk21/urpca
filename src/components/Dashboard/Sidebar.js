@@ -16,7 +16,7 @@ export default function Sidebar() {
 		<div
 			className='leftside-menu '
 			style={{
-				backgroundColor: '#313A46',
+				backgroundColor: '#536DE6',
 				color: '#ffffff',
 			}}>
 			{/* Brand Logo Light */}
@@ -62,9 +62,8 @@ const Sidebar1 = () => {
 				<li className='side-nav-title'>Navigation</li>
 				<li className='side-nav-item'>
 					<Link to='/dashboard' className='side-nav-link'>
-						<AiOutlineDashboard />
-						<span className='badge bg-success float-end'>5</span>
-						<span> Dashboards </span>
+						<AiOutlineDashboard style={{ color: 'green' }} />
+						<span > Dashboards </span>
 					</Link>
 				</li>
 				{/* ... Other links ... */}
