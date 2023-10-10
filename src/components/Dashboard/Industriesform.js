@@ -62,6 +62,7 @@ export default function Industries() {
 							<TaxIndustryForm />
 							<div className='d-flex mt-2 flex-wrap'>
 								{status === 'succeeded' &&
+									taxIndustryData &&
 									taxIndustryData.map((taxIndustry) => (
 										<TaxIndustryCard
 											key={taxIndustry._id}

@@ -5,6 +5,7 @@ import CustomAccordion from './CustomAccordion';
 import 'react-accessible-accordion/dist/fancy-example.css';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchFAQFormData } from '../redux/dashboardslicers/faqFormSlice';
+import { Link } from 'react-router-dom';
 
 export default function FAQ() {
 	const pageTitle = 'Frequently Asked Questions';
@@ -14,6 +15,9 @@ export default function FAQ() {
 	const faqData = useSelector((state) => state.faqForm.data);
 	const status = useSelector((state) => state.faqForm.status);
 
+	const unpaidFaqData = faqData
+		.filter((faq) => faq.payment === 'unpaid')
+		.slice(0, 3);
 	useEffect(() => {
 		dispatch(fetchFAQFormData());
 	}, [dispatch]);
@@ -60,16 +64,16 @@ export default function FAQ() {
 								Seamlessly optimal rather than just in web &amp; apps
 								development optimal alignments for intuitive.
 							</p>
-							<a
-								href='#'
+							<Link
+								href='/faq'
 								className='cs-btn-one btn-gradient-color btn-md mrb-lg-60'>
 								More Question?
-							</a>
+							</Link>
 						</div>
 						<div className='col-lg-7'>
 							<div className='faq-block'>
 								{status === 'succeeded' ? (
-									<CustomAccordion items={faqData} />
+									<CustomAccordion items={unpaidFaqData} />
 								) : (
 									<div class='preloader'></div>
 								)}

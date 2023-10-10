@@ -162,8 +162,8 @@ const FAQForm = () => {
 						name='payment'
 						value={payment}
 						onChange={handleChange}>
-						<option value='paid'>Free</option>
-						<option value='unpaid'>Paid</option>
+						<option value='unpaid'>Free</option>
+						<option value='paid'>Paid</option>
 					</select>
 				</div>
 				<button type='submit' className='btn btn-primary'>

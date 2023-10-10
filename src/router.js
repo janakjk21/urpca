@@ -86,6 +86,7 @@ export const router = createBrowserRouter([
 	// 	path: '/books',
 	// 	element: <Book></Book>,
 	// },
+	// priveate dashboard routes
 	{
 		path: '/login',
 		element: <Login></Login>,

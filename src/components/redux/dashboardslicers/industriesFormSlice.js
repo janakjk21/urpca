@@ -3,7 +3,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 
-const API_URL = 'https://hello231.onrender.com/industry';
+const API_URL = 'http://localhost:3000/industry';
 const user = JSON.parse(localStorage.getItem('user'));
 const token = user?.token;
 const initialState = {
@@ -76,6 +76,7 @@ export const deleteIndustry = createAsyncThunk(
 					Authorization: `Bearer ${token}`,
 				},
 			});
+			console.log(response);
 			return response.data;
 		} catch (error) {
 			console.log(error);

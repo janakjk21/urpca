@@ -12,9 +12,14 @@ import {
 import { Link } from 'react-router-dom';
 import Dropdown from 'rc-dropdown';
 import 'rc-dropdown/assets/index.css';
+import { useSelector } from 'react-redux';
 
 export default function Nav() {
 	const [isSmallScreen, setIsSmallScreen] = useState(false);
+
+	// if staus is succed then only allow to read title data
+
+	// console.log(title.title_invest, 'title');
 
 	useEffect(() => {
 		const handleResize = () => {
@@ -32,6 +37,8 @@ export default function Nav() {
 }
 
 const Navfordesktop = (props) => {
+	const title = useSelector((state) => state.title.data);
+	const status = useSelector((state) => state.title.status);
 	return (
 		<header className='header-style-two'>
 			<div className='header-wrapper'>
@@ -125,9 +132,7 @@ const Navfordesktop = (props) => {
 												</ul>
 											</li>
 											<li className='has-sub right-view'>
-												<Link to='/taxhome'>
-													Tax 
-												</Link>
+												<Link to='/taxhome'>Tax</Link>
 											</li>
 											<li className='has-sub'>
 												<Link to='/investinnepal/1'>
@@ -137,12 +142,16 @@ const Navfordesktop = (props) => {
 													<li>
 														<Link to='/faq'>Faq</Link>
 													</li>
-													<li>
-														<Link to='/faqfullpage'>Faq fullpage</Link>
-													</li>
+													{status === 'succeeded' &&
+														title.title_invest.map((investTitle) => (
+															<li key={investTitle.id}>
+																<Link to={`/investinnepal/${investTitle.id}`}>
+																	{investTitle.title}
+																</Link>
+															</li>
+														))}
 												</ul>
 											</li>
-										
 										</ul>
 									</nav>
 								</div>

@@ -76,6 +76,9 @@ export const deleteFAQ = createAsyncThunk('faqs/deleteFAQ', async (faqid) => {
 		throw new Error('Deleting data failed');
 	}
 });
+
+// change tracker to  state.tracker = `success at ${new Date().toISOString()}`;
+
 const faqFormSlice = createSlice({
 	name: 'faqs',
 	initialState,

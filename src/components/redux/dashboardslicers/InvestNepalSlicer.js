@@ -83,6 +83,23 @@ export const deleteInvestNepal = createAsyncThunk(
 		}
 	}
 );
+export const fetchInvestNepalFormById = createAsyncThunk(
+	'investNepal/fetchInvestNepalFormById',
+	async (id) => {
+		const config = {
+			headers: {
+				Authorization: `Bearer ${token}`,
+			},
+		};
+		try {
+			const response = await axios.get(`${API_URL}/${id}`, config);
+			console.log(response.data, 'response.data');
+			return response.data;
+		} catch (error) {
+			throw new Error('Fetching data failed');
+		}
+	}
+);
 
 const investNepalSlicer = createSlice({
 	name: 'investNepal',
@@ -136,6 +153,17 @@ const investNepalSlicer = createSlice({
 				state.status = 'failed';
 				state.error = action.error.message;
 				state.tracker = 'success';
+			})
+			.addCase(fetchInvestNepalFormById.pending, (state) => {
+				state.status = 'loading';
+			})
+			.addCase(fetchInvestNepalFormById.fulfilled, (state, action) => {
+				state.status = 'succeeded';
+				state.data = action.payload;
+			})
+			.addCase(fetchInvestNepalFormById.rejected, (state) => {
+				state.status = 'failed';
+				state.error = 'Fetching data failed';
 			});
 	},
 });

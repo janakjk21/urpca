@@ -103,7 +103,6 @@ const YourComponent = () => {
 				category: service.category,
 				payment: service.payment,
 				additionalDes: service.additionalDes,
-				email: service.email,
 			});
 		}
 	}, [id]);
@@ -136,7 +135,7 @@ const YourComponent = () => {
 		formDataToSend.append('category', category);
 		formDataToSend.append('payment', payment);
 		formDataToSend.append('additionalDes', additionalDes);
-		formDataToSend.append('email', email);
+
 		formDataToSend.append('image', image);
 		console.log(formDataToSend, FormData, 'formDataToSend');
 
@@ -232,20 +231,7 @@ const YourComponent = () => {
 						placeholder='Additional Description'
 					/>
 				</div>
-				<div className='mb-3'>
-					<label htmlFor='email' className='form-label'>
-						Email
-					</label>
-					<input
-						type='email'
-						className='form-control'
-						id='email'
-						name='email'
-						value={email}
-						onChange={handleChange}
-						placeholder='Email'
-					/>
-				</div>
+
 				<div className='mb-3'>
 					<label htmlFor='image' className='form-label'>
 						Image
@@ -282,13 +268,14 @@ const ServiceCard = ({ service }) => {
 		e.preventDefault();
 		dispatch(deleteService(service._id));
 	};
-
+	console.log(service,"this is service");
 	return (
 		<div className='col-md-4 mb-3'>
 			<div className='card'>
 				<div className='card-body'>
 					<h5 className='card-title'>{service.title}</h5>
 					<p className='card-text'>{service.description}</p>
+					<img src={`https://hello231.onrender.com${service.image}`} />
 					<button className='btn btn-secondary'>
 						<Link
 							to={`/serviceform/${service._id}`}

@@ -196,11 +196,15 @@ const EmployeeCard = ({ employee }) => {
 		e.preventDefault();
 		dispatch(deleteEmployee(employee._id));
 	};
-
+	console.log(employee, 'employee');
 	return (
 		<div className='col-md-4 mb-3'>
 			<div className='card'>
 				<div className='card-body'>
+					<img
+						src={`https://hello231.onrender.com${employee.image}`}
+						alt='Employee'
+					/>
 					<h5 className='card-title'>{employee.name}</h5>
 					<p className='card-text'>Designation: {employee.designation}</p>
 					<button

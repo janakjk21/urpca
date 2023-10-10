@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Nav from '../Nav';
 import Header_Section from './Header_Section';
 import Feature_Section from './Feature_Section';
@@ -18,8 +18,14 @@ import Service_Section from './Service_Section';
 import Consulting_section from './Consulting_section';
 import News_Section from './News_Section';
 import Contact_Section from './Contact_Section';
+import { fetchTitleData } from '../redux/dashboardslicers/titleSlicer';
+import { useDispatch } from 'react-redux';
 
 export default function Hero() {
+	const dispatch = useDispatch();
+	useEffect(() => {
+		dispatch(fetchTitleData());
+	}, []);
 	return (
 		<div>
 			<Nav></Nav>

@@ -9,6 +9,7 @@ import {
 	deleteInvestNepal,
 	fetchInvestNepalFormData,
 } from '../redux/dashboardslicers/InvestNepalSlicer';
+import { InfinitySpin } from 'react-loader-spinner';
 
 const initialState = {
 	title: '',
@@ -16,7 +17,6 @@ const initialState = {
 	category: '',
 	payment: '',
 	additionalDes: '',
-
 	image: null,
 };
 
@@ -207,6 +207,7 @@ const InvestNepalCard = ({ investNepal }) => {
 				<div className='card-body'>
 					<h5 className='card-title'>{investNepal.title}</h5>
 					<p className='card-text'>{investNepal.description}</p>
+					<img src={`https://hello231.onrender.com${investNepal.image}`} />
 					<button className='btn btn-secondary'>
 						<Link
 							to={`/investnepalform/${investNepal._id}`}

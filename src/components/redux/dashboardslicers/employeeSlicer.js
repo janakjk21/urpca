@@ -77,6 +77,7 @@ export const deleteEmployee = createAsyncThunk(
 					Authorization: `Bearer ${token}`,
 				},
 			});
+			console.log(response, 'response');
 			return response.data;
 		} catch (error) {
 			console.log(error);

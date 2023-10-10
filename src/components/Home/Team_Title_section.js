@@ -61,7 +61,7 @@ export default function Team_Title_section() {
 								employedata.map((employee) => (
 									<SingleTeam
 										key={employee.id}
-										imgSrc={employee.image}
+										imgSrc={`https://hello231.onrender.com${employee.image}`}
 										name={employee.name}
 										designation={employee.designation}
 									/>
@@ -79,7 +79,12 @@ export default function Team_Title_section() {
 }
 
 const SingleTeam = ({ imgSrc, name, designation }) => {
-	console.log(imgSrc, 'imgSrc', 'this is image ');
+	console.log(
+		imgSrc,
+		'imgSrc',
+		'this is image ',
+		`https://hello231.onrender.com${imgSrc}`
+	);
 	return (
 		<div className='col-md-6 col-lg-6 col-xl-3'>
 			<div className='team-block mrb-30'>

@@ -14,6 +14,7 @@ import serviceSlice from './dashboardslicers/servicesSlice';
 import signupSlice from './dashboardslicers/signupSlice';
 import taxSlice from './dashboardslicers/taxFormSlice';
 import bookSlice from './dashboardslicers/bookSlice';
+import titleSlicer from './dashboardslicers/titleSlicer';
 
 const store = configureStore({
 	reducer: {
@@ -31,6 +32,7 @@ const store = configureStore({
 		signup: signupSlice,
 		tax: taxSlice,
 		book: bookSlice,
+		title: titleSlicer,
 	},
 });
 console.log(store.getState(), 'store');

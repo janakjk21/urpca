@@ -1,32 +1,10 @@
 import React from 'react';
 import newsimage from '../../Assets/images/news/single-news.jpg';
 import { useParams } from 'react-router-dom';
-export default function Singlenews() {
+export default function Singlenews({ newsData }) {
 	// convert the following html to jsx
 	// <div>
-	const newsData = [
-		{
-			id: 1,
-			category: 'Business',
-			author: 'Admin',
-			date: '01 Jan, 2020',
-			title: 'Nanotech immersion along the highway',
-			content: [
-				'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptatem rerum voluptas harum provident fugiat tempora...',
-				'provident fugiat tempora architecto mollitia quos maiores perspiciatis obcaecati placeat aunty koi thako...',
-				'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Necessitatibus dolor eaque officia impedit corporis exercitationem vel nulla iure sequi ipsam...',
-				'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptatem rerum voluptas harum provident fugiat tempora architecto mollitia quos maiores perspiciatis, obcaecati, placeat aut. Architecto eaque accusamus minima quis in earum dignissimos suscipit esse, saepe repudiandae similique, expedita sed quam dolore impedit deleniti atque.',
-			],
-			quote: {
-				text: 'provident fugiat tempora architecto mollitia quos maiores perspiciatis obcaecati placeat aunty koi thako Architecto eaque accusamus minima in earum impedit atque',
-				author: 'Sophie Brown of Google Inc.',
-			},
-		},
-		// Add more news items here...
-	];
-	const { id } = useParams();
-
-	const selectedItem = newsData.find((item) => item.id === parseInt(id));
+	console.log(newsData);
 	return (
 		<div>
 			<section className='blog-single-news pdt-110 pdb-90'>
@@ -35,36 +13,44 @@ export default function Singlenews() {
 						<div className='col-xl-8 col-lg-7'>
 							<div className='single-news-details news-wrapper mrb-30'>
 								<div className='news-thumb'>
-									<img className='img-full' src={newsimage} alt='' />
+									<img
+										className='img-full'
+										src={
+											newsData.image
+												? `https://hello231.onrender.com${newsData.image}`
+												: '/images/default-image.jpg'
+										}
+										alt='News Image'
+									/>
 									<div className='news-top-meta'>
-										<span className='entry-category'>
-											{selectedItem.category}
-										</span>
+										<span className='entry-category'>{newsData.category}</span>
 									</div>
 								</div>
 								<div className='single-news-content'>
 									<div className='news-bottom-meta mrt-20 mrb-10'>
 										<span className='entry-author mrr-20'>
 											<i className='far fa-user mrr-10 text-primary-color' />
-											{selectedItem.author}
+											{/* {newsData.author} */}
 										</span>
 										<span className='entry-date'>
 											<i className='far fa-calendar-alt mrr-10 text-primary-color' />
-											{selectedItem.date}
+											{newsData.date}
 										</span>
 									</div>
 									<h3 className='entry-title text-capitalize mrb-20'>
-										<a href='#'>{selectedItem.title}</a>
+										<a href='#'>{newsData.title}</a>
 									</h3>
 									<div className='entry-content'>
-										{selectedItem.content.map((paragraph, index) => (
+										{/* {newsData.content.map((paragraph, index) => (
 											<p key={index}>{paragraph}</p>
-										))}
+										))} */}
+										{newsData.description}
+										{}
 										<blockquote className='block-quote'>
-											<p>{selectedItem.quote.text}</p>
+											{/* <p>{newsData.quote.text}</p> */}
 											<span>
 												<strong className='text-secondary-color'>
-													- {selectedItem.quote.author}
+													{/* - {newsData.quote.author} */}
 												</strong>
 											</span>
 										</blockquote>
