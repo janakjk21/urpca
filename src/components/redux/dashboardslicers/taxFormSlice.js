@@ -79,6 +79,20 @@ export const deleteTaxForm = createAsyncThunk(
 		}
 	}
 );
+export const fetchTaxById = createAsyncThunk('tax/fetchTaxById', async (id) => {
+	const config = {
+		headers: {
+			Authorization: `Bearer ${token}`,
+		},
+	};
+	try {
+		const response = await axios.get(`${API_URL}/${id}`, config);
+		console.log(response.data, 'response.data');
+		return response.data;
+	} catch (error) {
+		throw new Error('Fetching data failed');
+	}
+});
 
 const taxFormSlice = createSlice({
 	name: 'taxForm',
@@ -130,6 +144,17 @@ const taxFormSlice = createSlice({
 				state.status = 'failed';
 				state.error = action.error.message;
 				state.tracker = 'success';
+			})
+			.addCase(fetchTaxById.pending, (state) => {
+				state.status = 'loading';
+			})
+			.addCase(fetchTaxById.fulfilled, (state, action) => {
+				state.status = 'succeeded';
+				state.data = action.payload;
+			})
+			.addCase(fetchTaxById.rejected, (state) => {
+				state.status = 'failed';
+				state.error = 'Fetching data failed';
 			});
 	},
 });

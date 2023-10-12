@@ -4,9 +4,7 @@ import { useParams } from 'react-router-dom';
 export default function Singlenews({ newsData }) {
 	// convert the following html to jsx
 	// <div>
-
-	const { id } = useParams();
-
+	console.log(newsData,"this is i news data");
 	return (
 		<div>
 			<section className='blog-single-news pdt-110 pdb-90'>
@@ -15,7 +13,15 @@ export default function Singlenews({ newsData }) {
 						<div className='col-xl-8 col-lg-7'>
 							<div className='single-news-details news-wrapper mrb-30'>
 								<div className='news-thumb'>
-									<img className='img-full' src={news.image} alt='' />
+									<img
+										className='img-full'
+										src={
+											newsData.image
+												? `https://hello231.onrender.com${newsData.image}`
+												: '/images/default-image.jpg'
+										}
+										alt='News Image'
+									/>
 									<div className='news-top-meta'>
 										<span className='entry-category'>
 											{/* {newsData.category} */}
@@ -37,14 +43,14 @@ export default function Singlenews({ newsData }) {
 										<a href='#'>{newsData.title}</a>
 									</h3>
 									<div className='entry-content'>
-										{newsData.content.map((paragraph, index) => (
+										{/* {newsData.content.map((paragraph, index) => (
 											<p key={index}>{paragraph}</p>
-										))}
+										))} */}
 										<blockquote className='block-quote'>
-											<p>{newsData.quote.text}</p>
+											{/* <p>{newsData.quote.text}</p> */}
 											<span>
 												<strong className='text-secondary-color'>
-													- {newsData.quote.author}
+													{/* - {newsData.quote.author} */}
 												</strong>
 											</span>
 										</blockquote>

@@ -12,6 +12,8 @@ import {
 import { Link } from 'react-router-dom';
 import Dropdown from 'rc-dropdown';
 import 'rc-dropdown/assets/index.css';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchTitleData } from '../redux/dashboardslicers/titleSlicer';
 
 export default function Nav() {
 	const [isSmallScreen, setIsSmallScreen] = useState(false);
@@ -33,6 +35,24 @@ export default function Nav() {
 }
 
 const Navfordesktop = (props) => {
+	const dispatch = useDispatch();
+	useEffect(() => {
+		dispatch(fetchTitleData());
+	}, []);
+	const title = useSelector((state) => state.title.data);
+	const status = useSelector((state) => state.title.status);
+	console.log(status, 'status');
+	console.log(title, 'title');
+
+	if (status === 'succeeded') {
+		console.log(
+			title.title_tax.filter(
+				(tax) => tax.category === 'directtax',
+				'direct tax',
+				status
+			)
+		);
+	}
 	return (
 		<header className='header-style-two'>
 			<div className='header-wrapper'>
@@ -108,6 +128,19 @@ const Navfordesktop = (props) => {
 													<li>
 														<Link to='/insights'>Overview</Link>
 													</li>
+													{status === 'succeeded' && (
+														<ul>
+															{title.title_tax
+																.filter((tax) => tax.category === 'directtax')
+																.map((tax) => (
+																	<li key={tax._id}>
+																		<Link to={`/tax/${tax.id}`}>
+																			{tax.title}
+																		</Link>
+																	</li>
+																))}
+														</ul>
+													)}
 													<li>
 														<Link to='/insights'>Employment Income</Link>
 														<ul className='sub-menu'>
@@ -138,6 +171,19 @@ const Navfordesktop = (props) => {
 											<li>
 												<Link to='/insights'>Indirect Tax</Link>
 												<ul className='sub-menu'>
+													{status === 'succeeded' && (
+														<ul>
+															{title.title_tax
+																.filter((tax) => tax.category === 'indirecttax')
+																.map((tax) => (
+																	<li key={tax._id}>
+																		<Link to={`/tax/${tax.id}`}>
+																			{tax.title}
+																		</Link>
+																	</li>
+																))}
+														</ul>
+													)}
 													<li>
 														<Link to='/insights'>VAT</Link>
 													</li>
@@ -153,6 +199,21 @@ const Navfordesktop = (props) => {
 												<Link to='/insights'>Act and Directives</Link>
 												<ul className='sub-menu'>
 													<li>
+														{status === 'succeeded' && (
+															<ul>
+																{title.title_tax
+																	.filter(
+																		(tax) => tax.category === 'actdirective'
+																	)
+																	.map((tax) => (
+																		<li key={tax._id}>
+																			<Link to={`/tax/${tax.id}`}>
+																				{tax.title}
+																			</Link>
+																		</li>
+																	))}
+															</ul>
+														)}
 														<Link to='/insights'>Income Tax</Link>
 														<ul className='sub-menu'>
 															<li>

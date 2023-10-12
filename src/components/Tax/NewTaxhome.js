@@ -5,7 +5,7 @@ import News from '../News/News';
 import Tax from './Tax';
 import News_Section from '../Home/News_Section';
 
-export default function NewTaxhome() {
+export default function NewTaxhome() {2
 	return (
 		<div>
 			<Nav></Nav>

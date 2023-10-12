@@ -84,7 +84,23 @@ export const deleteIndustry = createAsyncThunk(
 		}
 	}
 );
-
+export const fetchIndustryFormById = createAsyncThunk(
+	'industries/fetchIndustryFormById',
+	async (id) => {
+		const config = {
+			headers: {
+				Authorization: `Bearer ${token}`,
+			},
+		};
+		try {
+			const response = await axios.get(`${API_URL}/${id}`, config);
+			console.log(response.data, 'response.data');
+			return response.data;
+		} catch (error) {
+			throw new Error('Fetching data failed');
+		}
+	}
+);
 const industriesFormSlicer = createSlice({
 	name: 'industries',
 	initialState,
@@ -135,6 +151,17 @@ const industriesFormSlicer = createSlice({
 				state.status = 'failed';
 				state.error = action.error.message;
 				state.tracker = 'success';
+			})
+			.addCase(fetchIndustryFormById.pending, (state) => {
+				state.status = 'loading';
+			})
+			.addCase(fetchIndustryFormById.fulfilled, (state, action) => {
+				state.status = 'succeeded';
+				state.data = action.payload;
+			})
+			.addCase(fetchIndustryFormById.rejected, (state) => {
+				state.status = 'failed';
+				state.error = 'Fetching data failed';
 			});
 	},
 });

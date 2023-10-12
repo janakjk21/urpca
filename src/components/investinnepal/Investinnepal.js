@@ -8,7 +8,6 @@ import { useParams } from 'react-router-dom';
 
 export default function Investinnepal() {
 	const dispatch = useDispatch();
-	const [selectedData, setSelectedData] = useState({});
 	const pageTitle = 'News';
 
 	const breadcrumbs = [

@@ -1,39 +1,27 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import CaseStudyimg from '../../Assets/images/case-study/case-study_01.jpg';
 import Nav from '../Nav';
 import Pagetitle from '../Pagetitle';
 import Footer from '../Footer';
+import CaseStudy from './CaseStudySingle';
+import { useDispatch, useSelector } from 'react-redux';
+import CaseStudySingle from './CaseStudySingle';
+import { fetchTaxById } from '../redux/dashboardslicers/taxFormSlice';
 
 export default function Tax() {
 	const pageTitle = 'About Us';
 
 	const breadcrumbs = [{ label: 'Home', link: '/' }, { label: 'CaseStudy' }];
+	const { id } = useParams();
+	const dispatch = useDispatch();
 
-	const caseStudies = [
-		{
-			id: 1,
-			imageSrc: `${CaseStudyimg}`,
-			category: 'Consulting',
-			title: 'Business Solution',
-			link: 'page-single-case-study.html', // Replace this with the actual link
-		},
-		{
-			id: 2,
-			imageSrc: `${CaseStudyimg}`,
-			category: 'Consulting',
-			title: 'Business Solution',
-			link: 'page-single-case-study.html', // Replace this with the actual link
-		},
-		{
-			id: 11,
-			imageSrc: `${CaseStudyimg}`,
-			category: 'Consulting',
-			title: 'Business Solution',
-			link: 'page-single-case-study.html', // Replace this with the actual link
-		},
-		// Add more case study data
-	];
+	useEffect(() => {
+		dispatch(fetchTaxById(id));
+	}, []);
+	const status = useSelector((state) => state.tax.status);
+	const taxData = useSelector((state) => state.tax.data);
+	console.log(taxData, 'taxData');
 
 	return (
 		<div>
@@ -45,7 +33,14 @@ export default function Tax() {
 				<div className='section-content'>
 					<div className='container'>
 						<div className='row'>
-							{caseStudies.map((study, index) => (
+							{status === 'succeeded' ? (
+								<CaseStudySingle taxData={taxData}></CaseStudySingle>
+							) : (
+								// <CaseStudySingle taxData={taxData}></CaseStudySingle>
+								<h2>loading</h2>
+							)}
+							{/* <CaseStudySingle></CaseStudySingle> */}
+							{/* {caseStudies.map((study, index) => (
 								<CaseStudyItem
 									key={index}
 									imageSrc={study.imageSrc}
@@ -53,7 +48,7 @@ export default function Tax() {
 									title={study.title}
 									id={study.id}
 								/>
-							))}
+							))} */}
 						</div>
 					</div>
 				</div>
@@ -62,24 +57,3 @@ export default function Tax() {
 		</div>
 	);
 }
-
-const CaseStudyItem = ({ id, imageSrc, category, title }) => {
-	return (
-		<div className='col-md-6 col-lg-6 col-xl-4'>
-			<div className='case-study-item mrb-30'>
-				<div className='case-study-thumb'>
-					<img className='img-full' src={imageSrc} alt='' />
-					<div className='case-study-link-icon'>
-						<Link to={`/industry/${id}`}>
-							<i className='webex-icon-attachment1' />
-						</Link>
-					</div>
-					<div className='case-study-details p-4'>
-						<h6 className='case-study-category side-line mrb-5'>{category}</h6>
-						<h4 className='case-study-title'>{title}</h4>
-					</div>
-				</div>
-			</div>
-		</div>
-	);
-};

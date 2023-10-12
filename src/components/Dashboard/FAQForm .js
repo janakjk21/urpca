@@ -11,11 +11,14 @@ import { FaEdit, FaTrash } from 'react-icons/fa';
 import NavSidebar from './NavSidebar';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { InfinitySpin } from 'react-loader-spinner';
+import Spinner from '../Spinner';
+import Errorpage from '../Errorpage';
 
 export default function FaqForm() {
 	const dispatch = useDispatch();
 	const status = useSelector((state) => state.faqForm.status);
 	const faqData = useSelector((state) => state.faqForm.data);
+	const error = useSelector((state) => state.faqForm.error);
 	const trackerStatus = useSelector((state) => state.faqForm.tracker);
 
 	useEffect(() => {
@@ -23,28 +26,23 @@ export default function FaqForm() {
 	}, [trackerStatus]);
 
 	if (status === 'loading') {
-		return (
-			<InfinitySpin
-				style={{
-					position: 'fixed',
-					top: '50%',
-					left: '50%',
-					transform: 'translate(-50%, -50%)',
-					width: '200px', // Adjust width as needed
-					color: '#536DE6', // Change the color to #536DE6
-				}}
-			/>
-		);
+		return <Spinner></Spinner>;
 	}
-
-	if (status === 'error') {
-		return <div>Error loading FAQs.</div>;
+	console.log(status);
+	if (status === 'failed') {
+		return (
+			<>
+				<Errorpage message={status}></Errorpage>
+			</>
+		);
 	}
 
 	return (
 		<div>
 			<div className='wrapper'>
 				<NavSidebar />
+				{/* <Errorpage message={{ error, status }}></Errorpage> */}
+				{/* <Spinner></Spinner> */}
 				<div className='content-page'>
 					<div className='content'>
 						<div className='container-fluid'>
@@ -56,6 +54,7 @@ export default function FaqForm() {
 						</div>
 					</div>
 				</div>
+				{status === 'failed' && <Errorpage message={error}></Errorpage>}
 			</div>
 		</div>
 	);

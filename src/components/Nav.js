@@ -8,6 +8,7 @@ import {
 	FaArrowDown,
 	FaAngleDown,
 	FaNewspaper,
+	FaUser,
 } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 import Dropdown from 'rc-dropdown';
@@ -128,6 +129,14 @@ const Navfordesktop = (props) => {
 													Industries <FaAngleDown></FaAngleDown>
 												</Link>
 												<ul className='sub-menu'>
+													{status === 'succeeded' &&
+														title.title_industry.map((indusrytitle) => (
+															<li key={indusrytitle.id}>
+																<Link to={`/industry/${indusrytitle.id}`}>
+																	{indusrytitle.title}
+																</Link>
+															</li>
+														))}
 													{/* ... (other case study links) */}
 												</ul>
 											</li>
@@ -151,6 +160,13 @@ const Navfordesktop = (props) => {
 															</li>
 														))}
 												</ul>
+											</li>
+											<li className='has-sub'>
+												<Link to='/login'>
+													<button className='btn btn-circle'>
+														<FaUser></FaUser>
+													</button>
+												</Link>
 											</li>
 										</ul>
 									</nav>

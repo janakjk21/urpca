@@ -1,30 +1,26 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import news1 from '../../Assets/images/news/01.jpg';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchNewsFormData } from '../redux/dashboardslicers/newsFormSlice';
+import { Link } from 'react-router-dom';
 export default function News_Section() {
-	const newsData = [
-		{
-			imageSrc: `${news1}`,
-			category: 'Business',
-			title: 'Tech Entrepreneur Credits Paper For Success',
-			date: '01 Jan, 2020',
-			author: 'Admin',
-		},
-		{
-			imageSrc: `${news1}`,
-			category: 'Business',
-			title: 'Tech Entrepreneur Credits Paper For Success',
-			date: '01 Jan, 2020',
-			author: 'Admin',
-		},
-		{
-			imageSrc: `${news1}`,
-			category: 'Business',
-			title: 'Tech Entrepreneur Credits Paper For Success',
-			date: '01 Jan, 2020',
-			author: 'Admin',
-		},
-		// Add more news items as needed
-	];
+	const dispatch = useDispatch();
+	const status = useSelector((state) => state.news.status);
+	const newsData = useSelector((state) => state.news.data);
+	const trackerStatus = useSelector((state) => state.news.tracker);
+
+	console.log(trackerStatus, 'trackerStatus', newsData);
+
+	useEffect(() => {
+		dispatch(fetchNewsFormData());
+	}, []);
+
+	const unpaidNewsData =
+		newsData && newsData.length > 0
+			? newsData.filter((data) => data.payment === 'unpaid').slice(0, 4)
+			: [];
+
+	console.log(unpaidNewsData, 'unpaidNewsData');
 	return (
 		<>
 			{/* Clients Section End */}
@@ -52,9 +48,21 @@ export default function News_Section() {
 				<div className='section-content'>
 					<div className='container'>
 						<div className='row'>
-							{newsData.map((newsItem, index) => (
+							{/* {newsData.map((newsItem, index) => (
 								<div className='col-md-6 col-lg-6 col-xl-4' key={index}>
 									<NewsItem {...newsItem} />
+								</div>
+							))} */}
+							{unpaidNewsData.map((newsItem, index) => (
+								<div className='col-md-6 col-lg-6 col-xl-4' key={index}>
+									<NewsItem
+										imageSrc={`https://hello231.onrender.com${newsItem.image}`}
+										category={newsItem.category}
+										title={newsItem.title}
+										date={newsItem.date}
+										author={newsItem.author}
+										_id={newsItem._id}
+									/>
 								</div>
 							))}
 						</div>
@@ -65,7 +73,7 @@ export default function News_Section() {
 	);
 }
 
-const NewsItem = ({ imageSrc, category, title, date, author }) => {
+const NewsItem = ({ imageSrc, category, title, date, author, _id }) => {
 	return (
 		<div className='news-wrapper mrb-30 mrb-sm-40'>
 			<div className='news-thumb'>
@@ -77,7 +85,7 @@ const NewsItem = ({ imageSrc, category, title, date, author }) => {
 			<div className='news-details'>
 				<div className='news-description mb-20'>
 					<h4 className='the-title mrb-30'>
-						<a href='#'>{title}</a>
+						<Link to={`/news/${_id}`}>{title}</Link>
 					</h4>
 					<div className='news-bottom-meta'>
 						<span className='entry-date mrr-20'>

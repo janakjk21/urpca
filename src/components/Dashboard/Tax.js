@@ -147,7 +147,7 @@ const TaxForm = () => {
 			}
 		}
 	};
-
+	console.log(formData);
 	return (
 		<div className='container mt-2'>
 			<form onSubmit={handleSubmit}>
@@ -183,15 +183,17 @@ const TaxForm = () => {
 					<label htmlFor='category' className='form-label'>
 						Category
 					</label>
-					<input
-						type='text'
+					<select
 						className='form-control'
 						id='category'
 						name='category'
 						value={category}
-						onChange={handleChange}
-						placeholder='Category'
-					/>
+						onChange={handleChange}>
+						<option value=''>Select a category</option>
+						<option value='directtax'>Direct Tax</option>
+						<option value='indirecttax'>Indirect Tax</option>
+						<option value='actdirective'>Act & Directive</option>
+					</select>
 				</div>
 				<div className='mb-3'>
 					<label htmlFor='payment' className='form-label'>

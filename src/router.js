@@ -52,17 +52,14 @@ export const router = createBrowserRouter([
 		path: '/industry/:id?',
 		element: <Industries />,
 	},
-	{
-		path: '/tax',
-		element: <Tax />,
-	},
+
 	{
 		path: '/taxhome',
 		element: <NewTaxhome />,
 	},
 	{
-		path: '/tax/:id',
-		element: <CaseStudySingle />,
+		path: '/tax/:id?',
+		element: <Tax />,
 	},
 	{ path: '/investinnepal/:id?', element: <Investinnepal></Investinnepal> },
 	{

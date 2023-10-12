@@ -11,6 +11,7 @@ import { FaEdit, FaTrash } from 'react-icons/fa';
 import NavSidebar from './NavSidebar';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { InfinitySpin } from 'react-loader-spinner';
+import Error from '../Errorpage';
 
 const initialState = {
 	title: '',
@@ -49,7 +50,7 @@ export default function Industries() {
 	}
 
 	if (status === 'error') {
-		return <div>Error loading tax industries.</div>;
+		return <Error></Error>;
 	}
 
 	return (

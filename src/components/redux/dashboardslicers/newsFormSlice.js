@@ -11,7 +11,6 @@ const initialState = {
 	status: 'idle',
 	error: null,
 	tracker: '',
-	fetchById: null,
 };
 
 export const fetchNewsFormData = createAsyncThunk(
@@ -88,6 +87,7 @@ export const fetchNewsById = createAsyncThunk(
 		};
 		try {
 			const response = await axios.get(`${API_URL}/${id}`, config);
+			console.log(response.data, 'response.data');
 			return response.data;
 		} catch (error) {
 			throw new Error('Fetching data failed');
@@ -151,7 +151,7 @@ const newsformSlice = createSlice({
 			})
 			.addCase(fetchNewsById.fulfilled, (state, action) => {
 				state.status = 'succeeded';
-				state.fetchById = action.payload;
+				state.data = action.payload;
 			})
 			.addCase(fetchNewsById.rejected, (state) => {
 				state.status = 'failed';
